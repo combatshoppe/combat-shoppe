@@ -4,7 +4,7 @@ npm v8.5.0
 # Setup Dev Environment
 run 'npm install'
 run 'node server.js'
-run 'bower install'
+run 'bower install' on linux or 'npm install -g bower' on windows
 
 # Links
 https://www.tutorialspoint.com/meanjs/meanjs_project_setup.htm
