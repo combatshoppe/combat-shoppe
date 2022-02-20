@@ -15,160 +15,158 @@ version history: [location of file]
 /* Import other stylesheets
 -----------------------------------------------------------------------------*/
 
+
 /* @import url("otherstylesheet.css"); */
 
 
 /* Remove margin, padding and border from everything
 -----------------------------------------------------------------------------*/
 
-*
-	{
-	margin: 0;
-	padding: 0;
-
-	border: 0;
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
 }
+
 
 /* Styles for layout
 -----------------------------------------------------------------------------*/
 
-.clear
-	{
-	clear:both;
+.clear {
+    clear: both;
 }
 
-
-
-.right
-	{
-	float: right;
+.right {
+    float: right;
 }
 
-
-
-.left
-	{
-	float: left;
+.left {
+    float: left;
 }
+
 
 /* Set up the document
 -----------------------------------------------------------------------------*/
 
-body
-	{
-	font: 62.5%/1.5  "Lucida Grande", "Lucida Sans", Tahoma, Verdana, sans-serif;
-	background: url(/images/background.jpg) repeat;
-	color: #000000;
-	text-align:center;
+body {
+    font: 62.5%/1.5 "Lucida Grande", "Lucida Sans", Tahoma, Verdana, sans-serif;
+    background: url(/images/background.jpg) repeat;
+    color: #000000;
+    text-align: center;
 }
 
-
-
-#wrapper
-	{
-	width: 980px; /* Set page width here - you can also use percentage */
-	text-align:left;
-	margin-left:auto;
-	margin-right:auto;
-	background-color: #FFFFFF;
+#wrapper {
+    width: 980px;
+    /* Set page width here - you can also use percentage */
+    text-align: left;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #FFFFFF;
 }
 
 
 /* Typography
 -----------------------------------------------------------------------------*/
 
-h1
-	{
-	font-size: 2.2em; /* Equivalent to 22pt */
+h1 {
+    font-size: 2.2em;
+    /* Equivalent to 22pt */
 }
 
-h2
-	{
-	font-size: 2.0em; /* Equivalent to 20pt */
+h2 {
+    font-size: 2.0em;
+    /* Equivalent to 20pt */
 }
 
-h3
-	{
-	font-size: 1.8em; /* Equivalent to 18pt */
+h3 {
+    font-size: 1.8em;
+    /* Equivalent to 18pt */
 }
 
-h4
-	{
-	font-size: 1.6em; /* Equivalent to 18pt */
+h4 {
+    font-size: 1.6em;
+    /* Equivalent to 18pt */
 }
 
-h5
-	{
-	font-size: 1.4em; /* Equivalent to 14pt */
+h5 {
+    font-size: 1.4em;
+    /* Equivalent to 14pt */
 }
 
-p, q, cite
-	{
-	font-size: 1.2em; /* Equivalent to 12pt */
+p,
+q,
+cite {
+    font-size: 1.2em;
+    /* Equivalent to 12pt */
 }
 
-ul, ol, dl
-	{
-	list-style: none;
-	font-size: 1.2em; /* Equivalent to 12pt */
+ul,
+ol,
+dl {
+    list-style: none;
+    font-size: 1.2em;
+    /* Equivalent to 12pt */
 }
 
-li, dd, dt
-	{
-	font-size: 1.2em; /* Equivalent to 12pt */
+li,
+dd,
+dt {
+    font-size: 1.2em;
+    /* Equivalent to 12pt */
 }
+
 
 /* Header
 -----------------------------------------------------------------------------*/
-
 
 
 /* Navigation
 -----------------------------------------------------------------------------*/
 
 
-
 /* Footer
 -----------------------------------------------------------------------------*/
-
 
 
 /* Homepage
 -----------------------------------------------------------------------------*/
 
 
-
 /* Your template
 -----------------------------------------------------------------------------*/
+
+.button {
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    background-color: #4CAF50;
+}
 
 
 /* Forms
 -----------------------------------------------------------------------------*/
 
-
-
-input.text
-	{
-	padding: 3px;
-	border: 1px solid #999999;
+input.text {
+    padding: 3px;
+    border: 1px solid #999999;
 }
 
 
 /* Tables
 -----------------------------------------------------------------------------*/
 
-
-
-table
-
-	{
-  	border-spacing: 0;
-	border-collapse: collapse;
+table {
+    border-spacing: 0;
+    border-collapse: collapse;
 }
 
-td
-
-	{
-  	text-align: left;
-	font-weight: normal;
+td {
+    text-align: left;
+    font-weight: normal;
 }
