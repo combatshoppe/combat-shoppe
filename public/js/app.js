@@ -1,1 +1,1 @@
-angular.module('combatShoppeApp', ['ngRoute', 'appRoutes', 'MainCtrl', 'SimulatorCtrl']);
+angular.module('combatShoppeApp', ['ngRoute', 'appRoutes', 'MainCtrl', 'SimulatorCtrl', 'HomebrewCtrl']);
