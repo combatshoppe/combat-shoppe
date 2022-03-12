@@ -1,0 +1,29 @@
+{
+  "name": "combatshoppe",
+  "version": "0.0.1",
+  "description": "A one-stop combat shoppe!",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/combatshoppe/combat-shoppe.git"
+  },
+  "keywords": [
+    "5e",
+    "D&D",
+    "combat"
+  ],
+  "author": "Dru Ellering",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/combatshoppe/combat-shoppe/issues"
+  },
+  "homepage": "https://github.com/combatshoppe/combat-shoppe#readme",
+  "dependencies": {
+    "angular": "^1.8.2",
+    "express": "^4.17.2",
+    "mongoose": "^6.2.1"
+  }
+}
