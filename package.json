@@ -24,6 +24,7 @@
   "dependencies": {
     "angular": "^1.8.2",
     "express": "^4.17.2",
-    "mongoose": "^6.2.1"
+    "mongoose": "^6.2.1",
+    "requirejs": "^2.3.6"
   }
 }

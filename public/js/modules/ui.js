@@ -3,8 +3,8 @@
  * A file for all dynamic UI elements.
  */
 
-/** imports */
-import { Position } from 'data-utils.js'
+ /** Create a new AngularJS module */
+ var uiModule = angular.module('uiModule', ['DataModule'])
 
 /** Class representing a point. */
 class ElementHTML {
@@ -55,7 +55,7 @@ class ElementHTML {
 	 * @param {Position} position - The position to check if it is inside the element
 	 * @returns {Boolean}
 	 */
-	in(position) : Boolean {
+	in(position) {
 		// Error checking
 		if (this.dom == null) return;
 		// Check if outside
@@ -67,6 +67,3 @@ class ElementHTML {
 		return true;
 	}
 }
-
-/** export allows us to pass these to other files when it is imported */
-export { ElementHTML };

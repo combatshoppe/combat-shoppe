@@ -10,7 +10,7 @@ angular.module('appRoutes', []).config(['$routeProvider',
             // simulator page that will use the SimulatorController
             .when('/simulator', {
                 templateUrl: 'views/simulator.html',
-                controller: 'StudentController'
+                controller: 'SimulatorController'
             })
             // homebrew page that will use the HomebrewController
             .when('/homebrewBuilder', {
