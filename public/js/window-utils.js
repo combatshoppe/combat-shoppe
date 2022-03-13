@@ -51,16 +51,19 @@
 	 * @param {Array[]} args - Any additional arguments to apply to the function call
 	 */
 	_call(position, allDisplays, functionName, args) {
+		let done = false;
 		// Loop through all displays
-		allDisplays.forEach((display, i) => {
+		allDisplays.every((display, i) => {
+			// Return if finished
+			if (done) return;
 			// Skip if the display us not active
-			if (!display.active) continue;
+			if (!display.active) return true;
 			// Check if the click is in the display
-			if (!display.in()) continue;
+			if (!display.in()) return true;
 			// The mouse is over the display and can be passed off to it!
 			if (args.length === 0) display[functionName]();
 			else display[functionName].apply(display, args);
-			return;
+			return false;
 		});
 	}
 
