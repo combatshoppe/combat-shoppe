@@ -118,7 +118,7 @@ class SinglePlacement extends Placement {
 			if (display.active) display.deactivate();
 		}
 		// Activate the new display
-		dispaly.activate(Position(0, 0), this.width, this.height);
+		display.activate(Position(0, 0), this.width, this.height);
 	}
 
 	/**
