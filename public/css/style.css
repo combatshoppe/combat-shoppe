@@ -197,3 +197,86 @@ td {
     text-align: left;
     font-weight: normal;
 }
+
+/* Other
+-----------------------------------------------------------------------------*/
+.sidewin {
+    -ms-flex: 0 0 230px;
+    flex: 0 0 230px;
+    background-color: greenyellow;
+}
+
+.mainwin {
+	margin: 0;
+	background-color: purple;
+	width: calc(100% - 230px);
+	min-width: calc(100% - 230px);
+	height: 100%;
+	min-height: 100%;
+}
+
+.toprow {
+	margin: 0;
+	background-color: #123456;
+	width: 100%;
+	min-width: 100%;
+	height: calc(100% - 70px);
+	min-height: calc(100% - 70px);
+}
+
+.botrow {
+	margin: 0;
+	background-color: #123456;
+	width: 100%;
+	min-width: 100%;
+	height: 70px;
+	min-height: 70px;
+}
+
+.bg-purple {
+  background: rgb(48,0,50);
+}
+.bg-gray {
+  background: rgb(74,74,74);
+}
+.bg-blue {
+  background: rgb(50,101,196);
+}
+.bg-red {
+  background: rgb(196,50,53);
+}
+
+body, html, .container-fluid {
+  height: 100%;
+	min-height: 100%;
+	width: 100%;
+	min-width: 100%;
+}
+
+.navbar-custom {
+  width:100%;
+  background:yellow;
+	height: 75px;
+}
+
+.ng-fill {
+	height: calc(100% - 75px);
+	min-height: calc(100% - 75px);
+	width: 100%;
+	min-width: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+.article-tree {
+  height:100%;
+  width: 25%;
+  float:left;
+  background: pink;
+}
+
+.content-area {
+  overflow: auto;
+  height: 100%;
+  background:orange;
+}
