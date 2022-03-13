@@ -6,6 +6,8 @@
  /** imports */
  import { Position } from './data-utils.js'
 
+class Display {}
+
  /**
   * Implimentation for the Window class responsible for placing Displays
 	*/
@@ -138,3 +140,6 @@ class SinglePlacement extends Placement {
 		}
 	}
 }
+
+// export allows us to pass these to other files when it is imported
+export { Placement, SinglePlacement, Display };
