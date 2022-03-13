@@ -119,7 +119,7 @@ class SinglePlacement extends Placement {
 		// Remove all currently active displays
 		allDisplays.forEach((display, i) => {
 			if (display.active) display.deactivate();
-		}
+		});
 		// Activate the new display
 		display.activate(Position(0, 0), this.width, this.height);
 	}
