@@ -25,7 +25,7 @@ var db = require('./config/db');
 app.use(express.static(__dirname + '/public'));
 
 // frontend routes =========================================================
-app.get('/', function(req, res) {
+app.get('*', function(req, res) {
 	console.log(req.url);
 	res.sendFile(__dirname + '/index.html');
 });
