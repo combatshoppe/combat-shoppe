@@ -55,7 +55,7 @@ class ElementHTML {
 	 * @param {Position} position - The position to check if it is inside the element
 	 * @returns {Boolean}
 	 */
-	in(position) : Boolean {
+	in(position) {
 		// Error checking
 		if (this.dom == null) return;
 		// Check if outside
