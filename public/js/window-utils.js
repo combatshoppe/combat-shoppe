@@ -4,7 +4,7 @@
  */
 
  /** imports */
- import { Position } from 'data-utils.js'
+ import { Position } from './data-utils.js'
 
  /**
   * Implimentation for the Window class responsible for placing Displays

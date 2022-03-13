@@ -4,8 +4,8 @@
  */
 
  /** imports */
- import { Position } from 'data-utils.js'
- import { Display, Placement } from 'window-utils.js'
+ import { Position } from './data-utils.js'
+ import { Display, Placement } from './window-utils.js'
 
 /** A bridge class whose implementation is held by the display and placement
  * classes. The window knows nothing about which displays are active
