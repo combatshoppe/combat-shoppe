@@ -4,7 +4,12 @@
  * import across the app.
  */
 
-/** Class representing a point. */
+/** Create a new AngularJS module */
+var DataModule = angular.module('DataModule', [])
+
+/**
+ * Class representing a point.
+ */
 class Position {
 	/**
    * Create a point.
@@ -16,6 +21,3 @@ class Position {
     this.y = y;
   }
 }
-
-// export allows us to pass these to other files when it is imported
-export { Position };
