@@ -1,8 +1,8 @@
-/*
-data-utils.js
-A file for all enums and extremely basic shared classes that many files can
-import across the app.
-*/
+/**
+ * data-utils.js
+ * A file for all enums and extremely basic shared classes that many files can
+ * import across the app.
+ */
 
 /** Class representing a point. */
 class Position {
