@@ -1,7 +1,7 @@
-/*
-ui.js
-A file for all dynamic UI elements.
-*/
+/**
+ * ui.js
+ * A file for all dynamic UI elements.
+ */
 
 /** imports */
 import { Position } from 'data-utils.js'
@@ -29,7 +29,9 @@ class ElementHTML {
 		// Create the DOM
 		this.dom = document.createElement(element);
 		// The element is positioned relative to its first positioned (not static)
-		// ancestor element
+		// ancestor element. Find details here:
+		// https://www.w3schools.com/cssref/pr_class_position.asp
+		// https://www.javascripttutorial.net/javascript-dom/javascript-style/
 		this.dom.style.position = 'absolute';
 		// Set the actual position
 		this.dom.style.left = position.x.toString() + 'px';
