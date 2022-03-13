@@ -1,6 +1,6 @@
 /**
- * display.js
- * A file for the DisplayController bridge
+ * window.js
+ * A file for the Window bridge
  */
 
  /** imports */
@@ -8,7 +8,7 @@
  import { Display, Placement } from 'window-utils.js'
 
 /** A bridge class whose implementation is held by the display and placement
- * classes. The display controller knows nothing about which displays are active
+ * classes. The window knows nothing about which displays are active
  * or how to deal with them. This structure means that the UI can easily be
  * changed!
  */
@@ -44,12 +44,13 @@ class Window {
 		// Set other style variables
 		this.dom.style.color = "#123456"
 	}
+
 	/**
 	 * Adds a display to the window
 	 * @param {Display} display - The display to add
 	 */
 	addDisplay(display) {
-		placement.addDisplay(display);
+		placement.addDisplay(display, displays);
 		this.displays.push(display);
 	}
 
@@ -64,7 +65,7 @@ class Window {
 		if (i == -1) return;
 		// Remove the display if it exists
 		this.displays.splice(i, 1);
-		this.placement.removeDisplay(display);
+		this.placement.removeDisplay(display, displays);
 	}
 
 	/**
@@ -75,9 +76,9 @@ class Window {
 		// Get the local position
 		let position = Position(event.screenX - this.offset.x, event.screenY - this.offset.y);
 		// Left click
-		if (event.button === 0) placement.onLeftClick(position);
+		if (event.button === 0) placement.onLeftClick(position, displays);
 		// Right click
-		else if (event.button === 2) placement.onRightClick(position);
+		else if (event.button === 2) placement.onRightClick(position, displays);
 	}
 
 	/**
@@ -87,7 +88,7 @@ class Window {
 	onScroll(event) {
 		// Get the local position and call the proper method
 		let position = Position(event.screenX - this.offset.x, event.screenY - this.offset.y);
-		placement.onScroll(position);
+		placement.onScroll(position, displays);
 	}
 
 	/**
@@ -98,6 +99,6 @@ class Window {
 		// Make sure this is a drag event
 		if (event.button !== 0) return;
 		// Call the proper method
-		placement.onDrag(event.movementX, event.movementY);
+		placement.onDrag(position, displays, event.movementX, event.movementY);
 	}
 }
