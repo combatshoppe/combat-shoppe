@@ -4,7 +4,7 @@
  */
 
 /** imports */
-import { Position } from 'data-utils.js'
+import { Position } from './data-utils.js'
 
 /** Class representing a point. */
 class ElementHTML {
