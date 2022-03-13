@@ -6,11 +6,9 @@
  /** imports */
  import { Position } from 'data-utils.js'
 
- /** A bridge class whose implementation is held by the display and placement
-  * classes. The window knows nothing about which displays are active
-  * or how to deal with them. This structure means that the UI can easily be
-  * changed!
-  */
+ /**
+  * Implimentation for the Window class responsible for placing Displays
+	*/
  class Placement {
  	/**
  	 * Creates a visible window
@@ -24,25 +22,25 @@
 	}
 
 	/**
-	 * Virtual function that adds a display to the window. Must be overriden by a
-	 * subclass.
-	 * @param {Display} display - The display being added
+	 * Virtual function that activates a display in the window. Must be overriden
+	 * by a subclass.
+	 * @param {Display} display - The display being removed
 	 * @param {Array[Display]} allDisplays - All other existing displays
-	 * @throws If Placement.addDisplay is not defined
+	 * @throws If Placement.activateDisplay is not defined
 	 */
-	addDisplay(display, allDisplays) {
-		throw 'Placement.addDisplay is not defined!';
+	activateDisplay(display, allDisplays) {
+		throw 'Placement.activateDisplay is not defined!';
 	}
 
 	/**
-	 * Virtual function that removes a display to the window. Must be overriden by
-	 * a subclass.
+	 * Virtual function that removes a display from the visual window. Must be
+	 * overriden by a subclass.
 	 * @param {Display} display - The display being removed
 	 * @param {Array[Display]} allDisplays - All other existing displays
-	 * @throws If Placement.removeDisplay is not defined
+	 * @throws If Placement.deactivateDisplay is not defined
 	 */
-	removeDisplay(display, allDisplays) {
-		throw 'Placement.removeDisplay is not defined!';
+	deactivateDisplay(display, allDisplays) {
+		throw 'Placement.deactivateDisplay is not defined!';
 	}
 
 	/**
@@ -102,5 +100,38 @@
 	 */
 	onDrag(position, allDisplays, dx, dy) {
 		this._call(position, allDisplays, "onDrag", [dx, dy]);
+	}
+}
+
+/**
+ * Subclass of the Placement that only holds one active window.
+ */
+class SinglePlacement extends Placement {
+	/**
+	 * Function that activates a display in the window.
+	 * @param {Display} display - The display being added
+	 * @param {Array[Display]} allDisplays - All other existing displays
+	 */
+	activateDisplay(display, allDisplays) {
+		// Remove all currently active displays
+		allDisplays.forEach((display, i) => {
+			if (display.active) display.deactivate();
+		}
+		// Activate the new display
+		display.activate(Position(0, 0), this.width, this.height);
+	}
+
+	/**
+	 * Function that deactivates a display in the window.
+	 * @param {Display} display - The display being removed
+	 * @param {Array[Display]} allDisplays - All other existing displays
+	 */
+	deactivateDisplay(display, allDisplays) {
+		// Remove the display
+		display.deactivate();
+		// Activate a display if we have another to activate
+		if (allDisplays.length !== 0) {
+			allDisplays[allDisplays.length - 1].activate(Position(0, 0), this.width, this.height);
+		}
 	}
 }

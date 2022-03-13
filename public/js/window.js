@@ -50,7 +50,7 @@ class Window {
 	 * @param {Display} display - The display to add
 	 */
 	addDisplay(display) {
-		placement.addDisplay(display, displays);
+		placement.activateDisplay(display, displays);
 		this.displays.push(display);
 	}
 
