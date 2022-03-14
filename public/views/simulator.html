@@ -2,17 +2,31 @@
 <html>
 
 <head>
-    <title>Simulator</title>
+	<title>Simulator</title>
+	<style>
+	  my-sidebar {background-color:#323456;}
+	</style>
 </head>
 
 <body>
 
-    <h1>Simulator</h1>
-    <a class="edit button" onclick="Edit()">Edit</a>
-    <a class="leftarrow button" onclick="LeftArrow()">&lt--</a>
-    <a class="rightarrow button" onclick="RightArrow()">--&gt</a>
-    <a class="leftarrow button" onclick="DubLeftArrow()" style="right: 59%;">&lt&lt--</a>
-    <a class="rightarrow button" onclick="DubRightArrow()" style="left: 59%;">--&gt&gt</a>
+
+
+
+	<div class="container-fluid bg-red">
+		<div class="row toprow bg-blue">
+			<div class="col mainwin" name="MainWindow"> </div>
+			<div class="col sidewin" name="SideWindow"> </div>
+		</div>
+		<div class="row botrow bg-blue">
+		</div>
+  </div>
+
+	<a class="edit button" onclick="Edit()">Edit</a>
+	<a class="leftarrow button" onclick="LeftArrow()">&lt--</a>
+	<a class="rightarrow button" onclick="RightArrow()">--&gt</a>
+	<a class="leftarrow button" onclick="DubLeftArrow()" style="right: 59%;">&lt&lt--</a>
+	<a class="rightarrow button" onclick="DubRightArrow()" style="left: 59%;">--&gt&gt</a>
 
 </body>
 

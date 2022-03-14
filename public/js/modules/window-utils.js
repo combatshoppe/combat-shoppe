@@ -15,33 +15,25 @@ class Window {
 	/**
 	 * Creates a visible window
 	 * @constructor
-	 * @param {Position} offset - Upper left corner of the Window
+	 * @param {Position} dom - DOM to attach to the window
 	 * @param {Placement} placement - The placement for the controller to use
 	 */
-	constructor(offset, placement) {
+	constructor(dom, placement) {
 		// Init variables
+		this.drag = false;
 		this.displays = [];
+		this.dom = dom;
 		this.placement = placement;
-		this._previous = new Position(0, 0);
-		this._offset = offset;
-		// Create the DOM
-		this.dom = document.createElement('div');
+		// Disable default right click for the window
+		this.dom.oncontextmenu = this.onClick;
+		// Init the placement
+		this.placement.init(this.dom.clientWidth, this.dom.clientHeight);
 		// Add an onClick event to the DOM
 		this.dom.onclick = this.onClick;
 		this.dom.onscroll = this.onScroll;
 		this.dom.onmousemove = this.onMove;
-		// The element is positioned absolutely to the browser. Find details here:
-		// https://www.w3schools.com/cssref/pr_class_position.asp
-		// https://www.javascripttutorial.net/javascript-dom/javascript-style/
-		this.dom.style.position = 'fixed';
-		// Set the actual position
-		this.dom.style.left = offset.x.toString() + 'px';
-		this.dom.style.top = offset.y.toString() + 'px';
-		// Set width and height
-		this.dom.style.width = placement.width.toString() + 'px';
-		this.dom.style.height = placement.height.toString() + 'px';
-		// Set other style variables
-		this.dom.style.color = "#123456"
+		// Save this to the DOM
+		this.dom.window = this;
 	}
 
 	/**
@@ -49,7 +41,7 @@ class Window {
 	 * @param {Display} display - The display to add
 	 */
 	addDisplay(display) {
-		placement.activateDisplay(display, displays);
+		this.placement.activateDisplay(display, displays);
 		this.displays.push(display);
 	}
 
@@ -72,12 +64,19 @@ class Window {
 	 * @param {MouseEvent} event - Occurs when mouse interacts with the window
 	 */
 	onClick(event) {
+		// Stop if this is the end of a drag
+		if (event.currentTarget.window.drag) {
+			event.currentTarget.window.drag = false;
+			return false;
+		}
+		let placement = event.currentTarget.window.placement;
+		let displays = event.currentTarget.window.displays;
 		// Get the local position
-		let position = new Position(event.screenX - this.offset.x, event.screenY - this.offset.y);
+		let position = new Position(event.offsetX, event.offsetY);
 		// Left click
-		if (event.button === 0) placement.onLeftClick(position, displays);
+		if (event.button === 0) return placement.onLeftClick(position, displays);
 		// Right click
-		else if (event.button === 2) placement.onRightClick(position, displays);
+		else if (event.button === 2) return placement.onRightClick(position, displays);
 	}
 
 	/**
@@ -85,8 +84,10 @@ class Window {
 	 * @param {MouseEvent} event - Occurs when mouse interacts with the window
 	 */
 	onScroll(event) {
+		let placement = event.currentTarget.window.placement;
+		let displays = event.currentTarget.window.displays;
 		// Get the local position and call the proper method
-		let position = new Position(event.screenX - this.offset.x, event.screenY - this.offset.y);
+		let position = new Position(event.offsetX, event.offsetY);
 		placement.onScroll(position, displays);
 	}
 
@@ -95,9 +96,13 @@ class Window {
 	 * @param {MouseEvent} event - Occurs when mouse interacts with the window
 	 */
 	onMove(event) {
+		let placement = event.currentTarget.window.placement;
+		let displays = event.currentTarget.window.displays;
 		// Make sure this is a drag event
-		if (event.button !== 0) return;
-		// Call the proper method
+		if (event.buttons === 0 || event.button !== 0) return;
+		event.currentTarget.window.drag = true;
+		// Get the local position and call the proper method
+		let position = new Position(event.offsetX, event.offsetY);
 		placement.onDrag(position, displays, event.movementX, event.movementY);
 	}
 }
@@ -109,12 +114,20 @@ class Display {}
 	*/
  class Placement {
  	/**
- 	 * Creates a visible window
+ 	 * Creates a Placement object
  	 * @constructor
+ 	 */
+ 	constructor() {
+		this.width = 0;
+		this.height = 0;
+	}
+
+	/**
+ 	 * Inits the placement with its width and height
  	 * @param {Position} width - Width of the window
  	 * @param {Placement} height - Height of the window
  	 */
- 	constructor(width, height) {
+ 	init(width, height) {
 		this.width = width;
 		this.height = height;
 	}
@@ -169,18 +182,26 @@ class Display {}
 	 * Call onRightClick for all displays
 	 * @param {Position} position - Position of the mouse
 	 * @param {Array[Display]} allDisplays - All existing displays
+	 * @returns {Boolean}
 	 */
 	onRightClick(position, allDisplays) {
 		this._call(position, allDisplays, "onRightClick");
+		console.log(`Right click on ${this}`);
+		// Stop the context menu from appearing
+		return false;
 	}
 
 	/**
 	 * Call onRightClick for all displays
 	 * @param {Position} position - Position of the mouse
 	 * @param {Array[Display]} allDisplays - All existing displays
+	 * @returns {Boolean}
 	 */
 	onLeftClick(position, allDisplays) {
 		this._call(position, allDisplays, "onLeftClick");
+		console.log(`Left click on ${this}`);
+		// Stop the context menu from appearing
+		return false;
 	}
 
 	/**
@@ -190,6 +211,7 @@ class Display {}
 	 */
 	onScroll(position, allDisplays) {
 		this._call(position, allDisplays, "onScroll");
+		console.log(`Scroll on ${this}`);
 	}
 
 	/**
@@ -201,5 +223,6 @@ class Display {}
 	 */
 	onDrag(position, allDisplays, dx, dy) {
 		this._call(position, allDisplays, "onDrag", [dx, dy]);
+		console.log(`Drag on ${this}`);
 	}
 }

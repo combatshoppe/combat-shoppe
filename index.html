@@ -31,24 +31,28 @@
     <script src="js/app.js"></script>
 </head>
 
-<body ng-app="combatShoppeApp" ng-controller="MainController">
-    <div class="container">
 
-        <!-- HEADER -->
-        <nav class="navbar navbar-inverse">
-            <ul class="nav navbar-nav">
-                <a class="homebrew button" href="/homebrewBuilder">Homebrew Builder</a>
-            </ul>
-            <div class="navbar-header">
-                <a class="navbar-brand" href="/">5e Combat Shoppe</a>
-            </div>
-            <ul class="nav navbar-nav">
-                <a class="simulator button" href="/simulator">Battle Simulator</a>
-            </ul>
-        </nav>
-        <!-- ANGULAR DYNAMIC CONTENT -->
-        <div ng-view></div>
-    </div>
+<body ng-app="combatShoppeApp" ng-controller="MainController">
+	<div class="container-fluid">
+		<!-- HEADER -->
+		<div class="container bg-purple">
+			<nav class="navbar navbar-inverse navbar-custom">
+					<ul class="nav navbar-nav">
+							<a class="homebrew button" href="/homebrewBuilder">Homebrew Builder</a>
+					</ul>
+					<div class="navbar-header">
+							<a class="navbar-brand" href="/">5e Combat Shoppe</a>
+					</div>
+					<ul class="nav navbar-nav">
+							<a class="simulator button" href="/simulator">Battle Simulator</a>
+					</ul>
+			</nav>
+		</div>
+		<!-- ANGULAR DYNAMIC CONTENT -->
+		<div class="container ng-fill bg-blue" ng-view> </div>
+
+	</div>
+
 </body>
 
 </html>
