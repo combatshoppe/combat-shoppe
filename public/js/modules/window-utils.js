@@ -24,13 +24,17 @@ class Window {
 		this.displays = [];
 		this.dom = dom;
 		this.placement = placement;
+		// Disable default right click for the window
+		this.dom.oncontextmenu = this.onClick;
 		// Init the placement
 		this.placement.init(this.dom.clientWidth, this.dom.clientHeight);
 		// Add an onClick event to the DOM
 		this.dom.onclick = this.onClick;
 		this.dom.onscroll = this.onScroll;
 		this.dom.onmousemove = this.onMove;
+		// Save this to the DOM
 		this.dom.window = this;
+
 	}
 
 	/**
@@ -64,16 +68,16 @@ class Window {
 		// Stop if this is the end of a drag
 		if (event.currentTarget.window.drag) {
 			event.currentTarget.window.drag = false;
-			return;
+			return false;
 		}
 		let placement = event.currentTarget.window.placement;
 		let displays = event.currentTarget.window.displays;
 		// Get the local position
 		let position = new Position(event.offsetX, event.offsetY);
 		// Left click
-		if (event.button === 0) placement.onLeftClick(position, displays);
+		if (event.button === 0) return placement.onLeftClick(position, displays);
 		// Right click
-		else if (event.button === 2) placement.onRightClick(position, displays);
+		else if (event.button === 2) return placement.onRightClick(position, displays);
 	}
 
 	/**
@@ -179,20 +183,26 @@ class Display {}
 	 * Call onRightClick for all displays
 	 * @param {Position} position - Position of the mouse
 	 * @param {Array[Display]} allDisplays - All existing displays
+	 * @returns {Boolean}
 	 */
 	onRightClick(position, allDisplays) {
 		this._call(position, allDisplays, "onRightClick");
 		console.log(`Right click on ${this}`);
+		// Stop the context menu from appearing
+		return false;
 	}
 
 	/**
 	 * Call onRightClick for all displays
 	 * @param {Position} position - Position of the mouse
 	 * @param {Array[Display]} allDisplays - All existing displays
+	 * @returns {Boolean}
 	 */
 	onLeftClick(position, allDisplays) {
 		this._call(position, allDisplays, "onLeftClick");
 		console.log(`Left click on ${this}`);
+		// Stop the context menu from appearing
+		return false;
 	}
 
 	/**
