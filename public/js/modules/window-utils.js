@@ -15,7 +15,7 @@ class Window {
 	/**
 	 * Creates a visible window
 	 * @constructor
-	 * @param {Position} offset - Upper left corner of the Window
+	 * @param {Position} dom - DOM to attach to the window
 	 * @param {Placement} placement - The placement for the controller to use
 	 */
 	constructor(dom, placement) {
@@ -34,7 +34,6 @@ class Window {
 		this.dom.onmousemove = this.onMove;
 		// Save this to the DOM
 		this.dom.window = this;
-
 	}
 
 	/**
