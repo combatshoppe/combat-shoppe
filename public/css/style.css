@@ -135,15 +135,51 @@ dt {
 
 .title {
     font-family: "Title";
-    font-size: 40px;
+    font-size: 50px;
+    text-decoration: none;
     color: black
 }
 
 .header {
+    position: relative;
     font-family: "Buttons";
     font-size: 20px;
     background-color: gray;
-    border-radius: 10px;
+    color: white;
+    padding: 15px 32px;
+    width: 200px;
+    text-align: center;
+    -webkit-transition-duration: 0.4s;
+    /* Safari */
+    transition-duration: 0.4s;
+    text-decoration: none;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.header:after {
+    content: "";
+    background: white;
+    display: block;
+    position: absolute;
+    padding-top: 300%;
+    padding-left: 350%;
+    margin-left: -35px!important;
+    margin-top: -120%;
+    opacity: 0;
+    transition: all 0.8s
+}
+
+.header:active:after {
+    padding: 0;
+    margin: 0;
+    opacity: 1;
+    transition: 0s
+}
+
+.navbar-nav {
+    padding-left: 15px;
+    padding-right: 15px;
 }
 
 
@@ -163,9 +199,6 @@ dt {
 -----------------------------------------------------------------------------*/
 
 .button {
-    border: none;
-    color: white;
-    padding: 15px 32px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
@@ -290,7 +323,7 @@ html,
 .navbar-custom {
     width: 100%;
     background: lightgray;
-    height: 75px;
+    height: 85px;
 }
 
 .ng-fill {

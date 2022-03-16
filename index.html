@@ -34,20 +34,22 @@
 
 <body ng-app="combatShoppeApp" ng-controller="MainController">
     <div class="container-fluid">
+
         <!-- HEADER -->
-        <div class="container bg-purple">
-            <nav class="navbar navbar-inverse navbar-custom">
-                <ul class="nav navbar-nav">
+        <div id="header">
+            <nav class="navbar navbar-custom">
+                <div class="navbar-nav">
                     <a class="header button" href="/homebrewBuilder">Homebrew Builder</a>
-                </ul>
+                </div>
                 <div class="navbar-header">
                     <a class="title" href="/">5e Combat Shoppe</a>
                 </div>
-                <ul class="nav navbar-nav">
+                <div class="navbar-nav">
                     <a class="header button" href="/simulator">Battle Simulator</a>
-                </ul>
+                </div>
             </nav>
         </div>
+
         <!-- ANGULAR DYNAMIC CONTENT -->
         <div class="container ng-fill bg-blue" ng-view> </div>
 
