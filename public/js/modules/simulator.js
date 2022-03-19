@@ -47,8 +47,8 @@ class Simulator {
 				break;
 			}
 
-			// Run round on grid
-			stepForward();
+			// Run one round on grid
+			_forward();
 
 			// Update displays and animations
 			UpdateDisplays();
@@ -56,7 +56,7 @@ class Simulator {
 	}
 
 	/**
-	 * Run the simulation through one turn of combat
+	 * Run the simulation through one turn of combat and update displays
 	 */
 	stepForward() {
 		throw 'Simulator.stepForward is not defined!';
@@ -64,29 +64,29 @@ class Simulator {
 
 		// Loop through all spaces for TileObjects and run their actions
 		// 		or develop deltas system and run through all of those
-		GridMovement();
+		_forward();
 		UpdateDisplays();
 
 	}
 
 	/**
-	 * Revert the simulation back one turn of combat
+	 * Revert the simulation back one turn of combat and update displays
 	 */
 	stepBackward() {
 		throw 'Simulator.stepBackward is not defined!';
-		ReverseGridMovement();
+		_backward();
 		UpdateDisplays();
 	}
 
 	/**
-	 * 
+	 * Run the simulation through one turn of combat without updating displays
 	 */
 	_forward() {
 		throw 'Simulator._forward is not defined!';
 	}
 
 	/**
-	 * 
+	 * Revert the simulation back one turn of combat without updating displays
 	 */
 	_backward() {
 		throw 'Simulator._backward is not defined!';
@@ -106,10 +106,11 @@ class Simulator {
 	 * @returns {Position[]}
 	 */
 	 _pathfind(start, goal) {
-		throw 'Simulator._pathfind is not defined!';
+
 		// Init open and closed list
 		var openList = [];
 		var closedList = [];
+		var finalPath = [];
 
 		// Add starting node
 		let dist = start.distanceTo(goal);
@@ -127,8 +128,15 @@ class Simulator {
 			if (currentNode.position == goal) {
 				// Backtrack to get path
 
-				// - Loop back and return list of nodes
-				return;
+				while (currentNode != startNode) {
+
+					// Add current node position to the list of path positions
+					finalPath.append(currentNode.position);
+					// Travel backwards to parent node of current node
+					currentNode = currentNode.parentNode;
+
+				}
+				return finalPath;
 			} 
 
 			// Generate children
@@ -162,11 +170,18 @@ class Simulator {
 				neighbor.f = neighbor.g + neighbor.h;
 
 				// Child is is openList
-				if (neighbor.position in openList) {
+				var openListNeighbor = null;
+				openList.foreach ((node) => {
+					if (node.position.x == neighbor.position.x & node.position.y == neighbor.position.y) {
+						openListNeighbor = node;
+						break;
+					}
+				});
 
-					// - if child.position is in openList's nodes positions
-						// - if child.g > openList node's g
-							// - continue to beginning of loop
+				if (neighbor.position in openList) {
+					if (neighbor.position.g > openListNeighbor.position.g) {
+						continue;
+					}
 				}
 
 				// Add child to openList
@@ -208,7 +223,7 @@ class Node {
 	 	this.g = g;
         this.h = h;
         this.f = g + h;
-        this.parent = new Position(-1, -1);
+        this.parent = null; // new Position(-1, -1);
 	 }
 
 	 /**
