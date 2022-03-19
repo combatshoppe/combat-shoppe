@@ -134,3 +134,26 @@ class ElementHTML {
 		return false;
 	}
 }
+
+/**
+ * Subclass of the ElementHTML that represents non clickable grid lines.
+ */
+class GridLine extends ElementHTML {
+	/**
+	 * Overriden constructor for GridLine
+	 * @param {Position} offset - The place to put the element relative to parent
+	 * @param {int} width - Width of the DOM
+	 * @param {int} height - Height of the DOM
+	 * @param {DOM} parent - The DOM of the parent
+	 * @constructor
+	 */
+	constructor(offset, width, height, parent = null) {
+		this.dom = null;
+		create(offset, width, height, parent);
+		// Horizontal line
+		if (width > height) this.dom.style.borderTop = '2px';
+		// Vertical line
+		else this.dom.style.borderLeft = '2px';
+	}
+
+}
