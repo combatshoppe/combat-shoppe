@@ -131,8 +131,8 @@ class Display {
 	 */
 	in(position) {
 		// Check if outside
-		if (position.x > this.width) return false;
-		if (position.y > this.height) return false;
+		if (position.x > this.width + this.offset.x) return false;
+		if (position.y > this.height + this.offset.y) return false;
 		if (position.x < this.offset.x) return false;
 		if (position.y < this.offset.y) return false;
 		// If not outside, must be inside
