@@ -207,7 +207,8 @@ td {
 }
 
 .mainwin {
-	margin: 0;
+	margin: 0px;
+	padding: 0px;
 	background-color: purple;
 	width: calc(100% - 230px);
 	min-width: calc(100% - 230px);

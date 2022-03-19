@@ -41,7 +41,7 @@ class Window {
 	 * @param {Display} display - The display to add
 	 */
 	addDisplay(display) {
-		this.placement.activateDisplay(display, this.displays);
+		this.placement.activateDisplay(this.dom, display, this.displays);
 		this.displays.push(display);
 	}
 
@@ -117,6 +117,7 @@ class Display {
 	 * @constructor
 	 */
 	constructor() {
+		this.dom = null;
 		this.active = false;
 		this.offset = new Position(0, 0);
 		this.width = 0;
@@ -140,25 +141,43 @@ class Display {
 	}
 
 	/**
-	 * Virtual function that visually creates and activates a display.
+	 * Virtual helper that visually creates and activates a display.
+	 */
+	_activate() {
+
+	}
+
+	/**
+	 * Virtual helper function that removes a display from the visual window.
+	 */
+	_deactivate() {
+
+	}
+
+	/**
+	 * Function that visually creates and activates a display.
 	 * @param {Position} offset - The display being removed
+	 * @param {Position} parent - Parent DOM to attach to the display
 	 * @param {int} width - Width of the display
 	 * @param {int} height - Height of the display
-	 * @throws If Display.activate is not defined
 	 */
-	activate(offset, width, height) {
+	activate(offset, parent, width, height) {
 		this.offset = offset;
+		this.parent = parent;
 		this.width = width;
 		this.height = height;
+		console.log(`${width}`)
+		this._activate();
 		this.active = true;
 	}
 
 	/**
 	 * Function that removes a display from the visual window.
-	 * @throws If Display.deactivate is not defined
 	 */
-	deactivate(display, allDisplays) {
+	deactivate() {
+		this._deactivate();
 		this.active = false;
+		this.parent = null;
 	}
 
 	/**
@@ -188,8 +207,10 @@ class Display {
 	/**
 	 * Function that defines what to do when the Display is dragged on and no
 	 * clickable objects are able to be dragged. Unless overriden, nothing it done.
+	 * @param {float} dx - The movement in the x direction
+	 * @param {float} dy - The movement in the y direction
 	 */
-	onDrag() {
+	onDrag(dx, dy) {
 		return;
 	}
 }
@@ -224,7 +245,7 @@ class Placement {
 	 * @param {Array[Display]} allDisplays - All other existing displays
 	 * @throws If Placement.activateDisplay is not defined
 	 */
-	activateDisplay(display, allDisplays) {
+	activateDisplay(parent, display, allDisplays) {
 		throw 'Placement.activateDisplay is not defined!';
 	}
 
