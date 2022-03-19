@@ -4,7 +4,7 @@
  */
 
 /** Create a new AngularJS module */
-var WindowUtilsModule = angular.module('WindowUtilsModule', ['DataModule'])
+var WindowUtilsModule = angular.module('WindowUtilsModule', ['DataModule', 'UIModule'])
 
 /** A bridge class whose implementation is held by the display and placement
  * classes. The window knows nothing about which displays are active
@@ -41,7 +41,7 @@ class Window {
 	 * @param {Display} display - The display to add
 	 */
 	addDisplay(display) {
-		this.placement.activateDisplay(display, displays);
+		this.placement.activateDisplay(display, this.displays);
 		this.displays.push(display);
 	}
 
@@ -56,7 +56,7 @@ class Window {
 		if (i == -1) return;
 		// Remove the display if it exists
 		this.displays.splice(i, 1);
-		this.placement.removeDisplay(display, displays);
+		this.placement.removeDisplay(display, this.displays);
 	}
 
 	/**
@@ -107,12 +107,97 @@ class Window {
 	}
 }
 
-class Display {}
+/**
+ * Implimentation for the Dispaly class responsible for dealing with the gritty
+ * details of the Window
+ */
+class Display {
+	/**
+	 * Creates a Display object
+	 * @constructor
+	 */
+	constructor() {
+		this.active = false;
+		this.offset = new Position(0, 0);
+		this.width = 0;
+		this.height = 0;
+		this.clickable = [];
+	}
 
- /**
-  * Implimentation for the Window class responsible for placing Displays
-	*/
- class Placement {
+	/**
+	 * Returns if the given position is inside the Display
+	 * @param {Position} position - The position to check if it is inside the Display
+	 * @returns {Boolean} - Returns true if inside the display
+	 */
+	in(position) {
+		// Check if outside
+		if (position.x > this.width) return false;
+		if (position.y > this.height) return false;
+		if (position.x < this.offset.x) return false;
+		if (position.y < this.offset.y) return false;
+		// If not outside, must be inside
+		return true;
+	}
+
+	/**
+	 * Virtual function that visually creates and activates a display.
+	 * @param {Position} offset - The display being removed
+	 * @param {int} width - Width of the display
+	 * @param {int} height - Height of the display
+	 * @throws If Display.activate is not defined
+	 */
+	activate(offset, width, height) {
+		this.offset = offset;
+		this.width = width;
+		this.height = height;
+		this.active = true;
+	}
+
+	/**
+	 * Function that removes a display from the visual window.
+	 * @throws If Display.deactivate is not defined
+	 */
+	deactivate(display, allDisplays) {
+		this.active = false;
+	}
+
+	/**
+	 * Function that defines what to do when the Display is clicked and no
+	 * clickable objects are able to be clicked. Unless overriden, nothing it done.
+	 */
+	onRightClick() {
+		return;
+	}
+
+	/**
+	 * Function that defines what to do when the Display is clicked and no
+	 * clickable objects are able to be clicked. Unless overriden, nothing it done.
+	 */
+	onLeftClick() {
+		return;
+	}
+
+	/**
+	 * Function that defines what to do when the Display is scrolled and no
+	 * clickable objects are able to be scrolled. Unless overriden, nothing it done.
+	 */
+	onScroll() {
+		return;
+	}
+
+	/**
+	 * Function that defines what to do when the Display is dragged on and no
+	 * clickable objects are able to be dragged. Unless overriden, nothing it done.
+	 */
+	onDrag() {
+		return;
+	}
+}
+
+/**
+ * Implimentation for the Window class responsible for placing Displays
+ */
+class Placement {
  	/**
  	 * Creates a Placement object
  	 * @constructor
@@ -155,23 +240,32 @@ class Display {}
 	}
 
 	/**
-	 * Call onRightClick for all displays
+	 * Get the display or element in the display who is clicked on, then call the
+	 * proper function
 	 * @param {Position} position - The display to add
 	 * @param {Array[Display]} allDisplays - All existing displays
 	 * @param {String} functionName - The name of the function to call
 	 * @param {Array[]} args - Any additional arguments to apply to the function call
 	 */
 	_call(position, allDisplays, functionName, args) {
-		let done = false;
+		let captured = false;
 		// Loop through all displays
 		allDisplays.every((display, i) => {
-			// Return if finished
-			if (done) return;
 			// Skip if the display us not active
 			if (!display.active) return true;
 			// Check if the click is in the display
-			if (!display.in()) return true;
-			// The mouse is over the display and can be passed off to it!
+			if (!display.in(position)) return true;
+			// Get all the display's clickable objects and pass things off to them first!
+			display.clickable.every((element, i) => {
+				// Check if the click is in the element
+				if (!element.in(position)) return true;
+				// The click was on the element! Try and let it use it
+				if (args.length === 0) captured = element[functionName]();
+				else captured = element[functionName].apply(element, args);
+				// If the element used the click, stop
+				if (captured) return false;
+			});
+			// The click was not on any elements of the display, so pass it off to the display
 			if (args.length === 0) display[functionName]();
 			else display[functionName].apply(display, args);
 			return false;
@@ -185,8 +279,7 @@ class Display {}
 	 * @returns {Boolean}
 	 */
 	onRightClick(position, allDisplays) {
-		this._call(position, allDisplays, "onRightClick");
-		console.log(`Right click on ${this}`);
+		this._call(position, allDisplays, "onRightClick", []);
 		// Stop the context menu from appearing
 		return false;
 	}
@@ -198,8 +291,7 @@ class Display {}
 	 * @returns {Boolean}
 	 */
 	onLeftClick(position, allDisplays) {
-		this._call(position, allDisplays, "onLeftClick");
-		console.log(`Left click on ${this}`);
+		this._call(position, allDisplays, "onLeftClick", []);
 		// Stop the context menu from appearing
 		return false;
 	}
@@ -210,8 +302,7 @@ class Display {}
 	 * @param {Array[Display]} allDisplays - All existing displays
 	 */
 	onScroll(position, allDisplays) {
-		this._call(position, allDisplays, "onScroll");
-		console.log(`Scroll on ${this}`);
+		this._call(position, allDisplays, "onScroll", []);
 	}
 
 	/**
@@ -223,6 +314,5 @@ class Display {}
 	 */
 	onDrag(position, allDisplays, dx, dy) {
 		this._call(position, allDisplays, "onDrag", [dx, dy]);
-		console.log(`Drag on ${this}`);
 	}
 }

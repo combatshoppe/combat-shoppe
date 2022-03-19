@@ -4,7 +4,7 @@
  */
 
  /** Create a new AngularJS module */
- var uiModule = angular.module('uiModule', ['DataModule'])
+ var uiModule = angular.module('UIModule', ['DataModule'])
 
 /** Class representing a point. */
 class ElementHTML {
@@ -14,7 +14,6 @@ class ElementHTML {
 	 */
 	constructor() {
 		this.dom = null;
-		create(Position(0, 0));
 	}
 
 	/**
@@ -65,5 +64,41 @@ class ElementHTML {
 		if (position.y < this.this.dom.style.top) return false;
 		// If not outside, must be inside
 		return true;
+	}
+
+	/**
+	 * Function that defines what to do when the ElementHTML is clicked. Unless
+	 * overriden, nothing it done.
+	 * @returns {Boolean} - Returns true if the ElementHTML did something with the event
+	 */
+	onRightClick() {
+		return false;
+	}
+
+	/**
+	 * Function that defines what to do when the ElementHTML is clicked. Unless
+	 * overriden, nothing it done.
+	 * @returns {Boolean} - Returns true if the ElementHTML did something with the event
+	 */
+	onLeftClick() {
+		return false;
+	}
+
+	/**
+	 * Function that defines what to do when the ElementHTML is scrolled on. Unless
+	 * overriden, nothing it done.
+	 * @returns {Boolean} - Returns true if the ElementHTML did something with the event
+	 */
+	onScroll() {
+		return false;
+	}
+
+	/**
+	 * Function that defines what to do when the ElementHTML is clicked. Unless
+	 * overriden, nothing it done.
+	 * @returns {Boolean} - Returns true if the ElementHTML did something with the event
+	 */
+	onDrag() {
+		return false;
 	}
 }
