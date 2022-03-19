@@ -71,14 +71,26 @@ class ElementHTML {
 	 * @returns {Boolean} True if the element was deleted
 	 */
 	moveAndDelete(delta) {
-		let newPosition = this.move(delta);
+		let upperLeft = this.move(delta);
 		if (this.dom.parentNode == null) return false;
-		let upperLeft = new Position(newPosition.x, newPosition.y);
-
-
-		//
-		let lowerRight = new Position(newPosition.x, newPosition.y);
-
+		let upperLeft = new Position(newPosition.x + this.dom.style.width, newPosition.y);
+		// Check if the position is not inside the parent
+		if (!this.in(upperLeft, true)) {
+			// Position is outside parent, delete!
+			this.dom.remove();
+			return true;
+		}
+		// Adjust position to lower right to check the opposite corner
+		let lowerRight = new Position(newPosition.x - this.dom.style.width,
+		                              newPosition.y - this.dom.style.height);
+		// Check if the position is not inside the parent
+		if (!this.in(lowerRight, true)) {
+			// Position is outside parent, delete!
+			this.dom.remove();
+			return true;
+		}
+		// DOM is still inside parent
+		return false;
 	}
 
 	/**
@@ -86,14 +98,16 @@ class ElementHTML {
 	 * @param {Position} position - The position to check if it is inside the element
 	 * @returns {Boolean}
 	 */
-	in(position) {
+	in(position, useParent = false) {
+		// Set the DOM to use
+		let dom = (useParent) ? this.dom.parentNode : this.dom
 		// Error checking
-		if (this.dom == null) return;
+		if (dom == null) return false;
 		// Check if outside
-		if (position.x > this.dom.style.width) return false;
-		if (position.y > this.dom.style.height) return false;
-		if (position.x < this.dom.style.left) return false;
-		if (position.y < this.dom.style.top) return false;
+		if (position.x > dom.style.width + dom.style.left) return false;
+		if (position.y > dom.style.height + dom.style.top) return false;
+		if (position.x < dom.style.left) return false;
+		if (position.y < dom.style.top) return false;
 		// If not outside, must be inside
 		return true;
 	}
