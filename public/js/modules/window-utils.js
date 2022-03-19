@@ -13,6 +13,18 @@ var WindowUtilsModule = angular.module('WindowUtilsModule', ['DataModule', 'UIMo
  */
 class Window {
 	/**
+	 * Member variables
+	 * @member {DOM} dom - DOM linked to the class
+	 * @member {Dispaly[]} displays - List of all Displays
+	 * @member {Boolean} drag - If a drag action is currently occuring in the Window
+	 * @member {Placement} placement - The placement for the Window to use
+	 */
+	dom = null;
+	displays = [];
+	drag = false;
+	placement = null;
+
+	/**
 	 * Creates a visible window
 	 * @constructor
 	 * @param {Position} dom - DOM to attach to the window
@@ -20,8 +32,6 @@ class Window {
 	 */
 	constructor(dom, placement) {
 		// Init variables
-		this.drag = false;
-		this.displays = [];
 		this.dom = dom;
 		this.placement = placement;
 		// Disable default right click for the window
@@ -30,7 +40,7 @@ class Window {
 		this.placement.init(this.dom.clientWidth, this.dom.clientHeight);
 		// Add an onClick event to the DOM
 		this.dom.onclick = this.onClick;
-		this.dom.onscroll = this.onScroll;
+		this.dom.onwheel = this.onScroll;
 		this.dom.onmousemove = this.onMove;
 		// Save this to the DOM
 		this.dom.window = this;
@@ -88,7 +98,7 @@ class Window {
 		let displays = event.currentTarget.window.displays;
 		// Get the local position and call the proper method
 		let position = new Position(event.offsetX, event.offsetY);
-		placement.onScroll(position, displays);
+		placement.onScroll(position, displays, (event.deltaY > 0) ? 1 : -1);
 	}
 
 	/**
@@ -113,17 +123,20 @@ class Window {
  */
 class Display {
 	/**
-	 * Creates a Display object
-	 * @constructor
+	 * Member variables
+	 * @member {Boolean} active - Check for if the display is active
+	 * @member {ElementHTML[]} clickable - List of all clickable objects in the Display
+	 * @member {DOM} parent - The DOM associated with the Window class controlling the placement
+	 * @member {Position} offset - The placement of the Dispaly
+	 * @member {int} width - Width of the display
+	 * @member {int} height - Height of the display
 	 */
-	constructor() {
-		this.dom = null;
-		this.active = false;
-		this.offset = new Position(0, 0);
-		this.width = 0;
-		this.height = 0;
-		this.clickable = [];
-	}
+	active = false;
+	clickable = [];
+	parent = null;
+	offset = new Position(0, 0);
+	width = 0;
+	height = 0;
 
 	/**
 	 * Returns if the given position is inside the Display
@@ -132,10 +145,10 @@ class Display {
 	 */
 	in(position) {
 		// Check if outside
-		if (position.x > this.width + this.offset.x) return false;
-		if (position.y > this.height + this.offset.y) return false;
-		if (position.x < this.offset.x) return false;
-		if (position.y < this.offset.y) return false;
+		if (position.x > this.width) return false;
+		if (position.y > this.height) return false;
+		if (position.x < 0) return false;
+		if (position.y < 0) return false;
 		// If not outside, must be inside
 		return true;
 	}
@@ -166,7 +179,6 @@ class Display {
 		this.parent = parent;
 		this.width = width;
 		this.height = height;
-		console.log(`${width}`)
 		this._activate();
 		this.active = true;
 	}
@@ -183,22 +195,25 @@ class Display {
 	/**
 	 * Function that defines what to do when the Display is clicked and no
 	 * clickable objects are able to be clicked. Unless overriden, nothing it done.
+	 * @param {Position} position - The position of the click
 	 */
-	onRightClick() {
+	onRightClick(position) {
 		return;
 	}
 
 	/**
 	 * Function that defines what to do when the Display is clicked and no
 	 * clickable objects are able to be clicked. Unless overriden, nothing it done.
+	 * @param {Position} position - The position of the click
 	 */
-	onLeftClick() {
+	onLeftClick(position) {
 		return;
 	}
 
 	/**
 	 * Function that defines what to do when the Display is scrolled and no
 	 * clickable objects are able to be scrolled. Unless overriden, nothing it done.
+	 * @param {float} direction - The distance scrolled
 	 */
 	onScroll() {
 		return;
@@ -219,14 +234,13 @@ class Display {
  * Implimentation for the Window class responsible for placing Displays
  */
 class Placement {
- 	/**
- 	 * Creates a Placement object
- 	 * @constructor
- 	 */
- 	constructor() {
-		this.width = 0;
-		this.height = 0;
-	}
+	/**
+	 * Member variables
+	 * @member {int} width - Width of the display
+	 * @member {int} height - Height of the display
+	 */
+	width = 0;
+	height = 0;
 
 	/**
  	 * Inits the placement with its width and height
@@ -300,7 +314,7 @@ class Placement {
 	 * @returns {Boolean}
 	 */
 	onRightClick(position, allDisplays) {
-		this._call(position, allDisplays, "onRightClick", []);
+		this._call(position, allDisplays, "onRightClick", [position]);
 		// Stop the context menu from appearing
 		return false;
 	}
@@ -312,7 +326,7 @@ class Placement {
 	 * @returns {Boolean}
 	 */
 	onLeftClick(position, allDisplays) {
-		this._call(position, allDisplays, "onLeftClick", []);
+		this._call(position, allDisplays, "onLeftClick", [position]);
 		// Stop the context menu from appearing
 		return false;
 	}
@@ -321,9 +335,10 @@ class Placement {
 	 * Call onRightClick for all displays
 	 * @param {Position} position - Position of the mouse
 	 * @param {Array[Display]} allDisplays - All existing displays
+	 * @param {float} direction - The distance scrolled
 	 */
-	onScroll(position, allDisplays) {
-		this._call(position, allDisplays, "onScroll", []);
+	onScroll(position, allDisplays, direction) {
+		this._call(position, allDisplays, "onScroll", [direction]);
 	}
 
 	/**

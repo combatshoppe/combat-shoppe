@@ -10,9 +10,11 @@
 class ElementHTML {
 	/**
 	 * Member variables
+	 * @member {DOM} dom - DOM linked to the class
 	 * @member {string} element - The type of element to make when created
 	 */
-	 _elementType = 'div';
+	dom = null;
+	_elementType = 'div';
 
 	/**
 	 * Default constructor
@@ -24,7 +26,6 @@ class ElementHTML {
 	 */
 	constructor(offset, width, height, parent = null) {
 		// Create the DOM
-		console.log(`elementtype = ${this._elementType}`);
 		this.dom = document.createElement(this._elementType);
 		// Add the parent to the child
 		if (parent != null) parent.appendChild(this.dom);
@@ -32,14 +33,14 @@ class ElementHTML {
 		// ancestor element. Find details here:
 		// https://www.w3schools.com/cssref/pr_class_position.asp
 		// https://www.javascripttutorial.net/javascript-dom/javascript-style/
-		this.dom.style.position = 'static';
+		this.dom.style.position = 'absolute';
 		// Set the actual position and size
 		this.dom.style.left = offset.x.toString() + 'px';
 		this.dom.style.top = offset.y.toString() + 'px';
 		this.dom.style.width = width.toString() + 'px';
 		this.dom.style.height = height.toString() + 'px';
 		// Run any extra code inherited classes need to call
-		this._create();
+		this._create(offset, width, height);
 	}
 
 	/**
@@ -48,49 +49,42 @@ class ElementHTML {
 	_create() { }
 
 	/**
-	 * Moves the DOM by a certain amount
-	 * @param {Position} delta - The amount to move by
-	 * @returns {Position} The current position the DOM is at
+	 * A virtual function to add additional code to the constructor
 	 */
-	move(delta) {
-		// Error checking
-		if (this.dom == null) return;
-		// Calculate the new position
-		let newPosition = new Position(parseInt(this.dom.style.left) + delta.x,
-		                               parseInt(this.dom.style.top) + delta.y)
-		// Actually move the element
-		this.dom.style.left = newPosition.x.toString() + 'px';
-		this.dom.style.top = newPosition.y.toString() + 'px';
-		// Return the position
-		return newPosition;
+	delete() {
+		if (this.dom != null) this.dom.remove();
 	}
 
 	/**
-	 * Moves the DOM by a certain amount and deletes if out of bounds of parent
-	 * (0,0) to (width, height)
-	 * @param {Position} delta - The amount to move by
-	 * @returns {Boolean} True if the element was deleted
+	 * Moves the DOM by a certain amount
+	 * @param {float} dx - The movement in the x direction
+	 * @param {float} dy - The movement in the y direction
+	 * @returns {Position} The current position the DOM is at
+	 * @returns {int} 1 for North, 2 for East, 3 for South, 4 for West
 	 */
-	moveAndDelete(delta) {
-		let upperLeft = this.move(delta);
-		if (this.dom.parentNode == null) return false;
+	move(dx, dy) {
+		// Error checking
+		if (this.dom == null) return;
+		// Calculate the new position
+		let upperLeft = new Position(parseInt(this.dom.style.left) + dx,
+		                             parseInt(this.dom.style.top) + dy)
+		// Actually move the element
+		this.dom.style.left = upperLeft.x.toString() + 'px';
+		this.dom.style.top = upperLeft.y.toString() + 'px';
 		// Check if the position is not inside the parent
-		if (!this.in(upperLeft, true)) {
-			// Position is outside parent, delete!
-			this.dom.remove();
-			return true;
-		}
+		let parentRect = this.dom.parentNode.getBoundingClientRect();
+		upperLeft.x -= parentRect.left;
+		upperLeft.y -= parentRect.top;
+		if (upperLeft.x > parentRect.width) return 2;
+		if (upperLeft.y > parentRect.height) return 3;
 		// Adjust position to lower right to check the opposite corner
-		let lowerRight = new Position(newPosition.x - this.dom.style.width,
-		                              newPosition.y - this.dom.style.height);
+		let lowerRight = new Position(upperLeft.x + parseInt(this.dom.style.width),
+		                              upperLeft.y + parseInt(this.dom.style.height));
 		// Check if the position is not inside the parent
-		if (!this.in(lowerRight, true)) {
-			// Position is outside parent, delete!
-			this.dom.remove();
-			return true;
-		}
+		if (lowerRight.x < 0) return 4;
+		if (lowerRight.y < 0) return 1;
 		// DOM is still inside parent
-		return false;
+		return 0;
 	}
 
 	/**
@@ -154,23 +148,26 @@ class ElementHTML {
  */
 class GridLine extends ElementHTML {
 	/**
-	 * A virtual function to add additional code to the constructor
-	 */
-	_create() {
+ 	 * A virtual function to add additional code to the constructor
+ 	 * @param {Position} offset - The place to put the element relative to parent
+ 	 * @param {int} width - Width of the DOM
+ 	 * @param {int} height - Height of the DOM
+ 	 */
+	_create(offset, width, height) {
 		// Horizontal line
-		if (this.width > this.height) {
+		if (width > height) {
 			this.dom.style.borderTop = '2px';
 			this.dom.style.borderTopColor = 'black';
 			this.dom.style.borderTopStyle = 'solid';
-			this.dom.style.padding = '0px';
 		}
 		// Vertical line
 		else {
 			this.dom.style.borderLeft = '2px';
 			this.dom.style.borderLeftColor = 'black';
 			this.dom.style.borderLeftStyle = 'solid';
-			this.dom.style.padding = '0px';
 		}
+		this.dom.style.padding = '0px';
+		this.dom.style.visibility = 'visible'
 	}
 
 }
