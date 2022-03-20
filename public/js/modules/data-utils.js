@@ -21,3 +21,8 @@ class Position {
     this.y = y;
   }
 }
+
+/**
+ * Class representing a grid.
+ */
+class Grid {}
