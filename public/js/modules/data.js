@@ -4,7 +4,7 @@
  */
 
 /** Create a new AngularJS module */
-var DataModule = angular.module('DataModule', [])
+var DataModule = angular.module('DataModule', ['DataUtilsModule'])
 
 /** Create a counter var and lock for the DataSchema to have unique ids */
 DataModule.counter = 0;
@@ -45,3 +45,10 @@ class DataSchema {
 		});
 	}
 };
+
+/**
+ * Class used to hold Action data
+ */
+class ActionSchema {
+	
+}
