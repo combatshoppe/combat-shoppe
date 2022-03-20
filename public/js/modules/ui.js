@@ -46,11 +46,6 @@ class ElementHTML {
 	/**
 	 * A virtual function to add additional code to the constructor
 	 */
-	_create() { }
-
-	/**
-	 * A virtual function to add additional code to the constructor
-	 */
 	delete() {
 		if (this.dom != null) this.dom.remove();
 	}
@@ -107,6 +102,11 @@ class ElementHTML {
 	}
 
 	/**
+	 * A virtual function to add additional code to the constructor
+	 */
+	_create() { }
+
+	/**
 	 * Function that defines what to do when the ElementHTML is clicked. Unless
 	 * overriden, nothing it done.
 	 * @returns {Boolean} - Returns true if the ElementHTML did something with the event
@@ -156,13 +156,13 @@ class GridLine extends ElementHTML {
 	_create(offset, width, height) {
 		// Horizontal line
 		if (width > height) {
-			this.dom.style.borderTop = '2px';
+			this.dom.style.borderTop = height.toString() + 'px';
 			this.dom.style.borderTopColor = 'black';
 			this.dom.style.borderTopStyle = 'solid';
 		}
 		// Vertical line
 		else {
-			this.dom.style.borderLeft = '2px';
+			this.dom.style.borderLeft = width.toString() + 'px';
 			this.dom.style.borderLeftColor = 'black';
 			this.dom.style.borderLeftStyle = 'solid';
 		}

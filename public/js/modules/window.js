@@ -20,7 +20,7 @@
 	 * @member {GridLine[]} hLines - Array of grid lines
 	 * @member {GridLine[]} vLines - Array of grid lines
  	 */
-	 grid = [];
+	 grid = new Grid();
 	 gridSize = 100;
 	 gridX = 0;
 	 gridY = 0;
@@ -29,21 +29,30 @@
 	 vLines = [];
 
 	/**
+ 	 * Clear the grid.
+ 	 */
+ 	_deleteGrid() {
+ 		// Error check, then get global offset
+ 		if (this.parent == null) return;
+ 		// Clear the grid
+ 		this.vLines.forEach((line) => { line.delete(); });
+ 		this.vLines = [];
+ 		this.hLines.forEach((line) => { line.delete(); });
+ 		this.hLines = [];
+ 		// Reset some varibales
+ 		this.gridWidth = 0;
+ 		this.gridX = 0;
+ 		this.gridY = 0;
+ 	}
+
+	/**
 	 * Clear the grid and redraw it.
 	 */
 	_redrawGrid() {
-		// Error check, then get global offset
-		if (this.parent == null) return;
+		// Delete the current grid
+		this._deleteGrid();
+		// Get the bounds of the parent
 		let rect = this.parent.getBoundingClientRect();
-		// Clear the grid
-		this.vLines.forEach((line) => { line.delete(); });
-		this.vLines = [];
-		this.hLines.forEach((line) => { line.delete(); });
-		this.hLines = [];
-		// Reset some varibales
-		this.gridWidth = 0;
-		this.gridX = 0;
-		this.gridY = 0;
 		// Make the vertical grid lines
 		for (let x = 0; x < this.width; x += this.gridSize) {
 			this.gridX += 1;
@@ -69,7 +78,7 @@
  	 * Function that removes a display from the visual window.
  	 */
  	_deactivate() {
-
+		this._deleteGrid();
  	}
 
 	/**
