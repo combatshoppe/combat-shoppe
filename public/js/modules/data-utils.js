@@ -5,7 +5,7 @@
  */
 
 /** Create a new AngularJS module */
-var DataModule = angular.module('DataModule', [])
+var DataUtilsModule = angular.module('DataUtilsModule', [])
 
 /**
  * Class representing a point.

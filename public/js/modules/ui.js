@@ -4,7 +4,7 @@
  */
 
  /** Create a new AngularJS module */
- var uiModule = angular.module('UIModule', ['DataModule'])
+ var uiModule = angular.module('UIModule', ['DataUtilsModule'])
 
 /** Class representing a point. */
 class ElementHTML {
