@@ -10,7 +10,62 @@
 /**
  * Class representing a Tile
  */
-class Tile {}
+class Tile {
+	/**
+	 * Member variables
+	 * @member {int} difficulty - Movement cost through this tile is difficulty * 5
+	 * @member {TileObject[]} objects - List of objects in this tile
+	 * @member {int} _height - Maximum object height (used for cover calculations)
+	 */
+	difficulty = 1;
+	objects = [];
+	_height = 0;
+
+	/**
+	 * Get a position in the grid
+	 * @param {number} difficulty - Movement cost through this tile is difficulty * 5
+	 * @constructor
+	 */
+	constructor(difficulty) {
+		this.difficulty = difficulty;
+	}
+
+	/**
+	 * Get a position in the grid
+	 * @returns {number} - Maximum object height (used for cover calculations)
+	 */
+	getHeight() {
+		return _height;
+	}
+
+	/**
+	 * Get a position in the grid
+	 * @param {TileObject} object - What position of the grid to get
+	 * @returns {Tile} - Retuns a tile or undefined if nothing it at the position
+	 */
+	add(object) {
+		this.object.push(object);
+	}
+
+	/**
+	 * Get a position in the grid
+	 * @param {TileObject} object - What position of the grid to get
+	 * @returns {Boolena} - True if the object is deleted
+	 */
+	remove(object) {
+		let index = this.objects.indexOf(object);
+		if (index === -1) { return false; }
+		this.objects.splice(index, 1);
+		return true;
+	}
+
+	/**
+	 * Sets the maximum height of the Tile
+	 */
+	_setMaxHeight() {
+		objects.forEach((object) => { this._height = max(object.height, this._height); });
+	}
+}
 
 /**
  * Class representing a grid.
@@ -64,8 +119,7 @@ class Grid {
 			return true;
 		}
 		// Otherwise, remove the object from the Tile
-		_grid.get(poistion).remove(object);
-		return true
+		return _grid.get(poistion).remove(object);
 	}
 
 	/**
