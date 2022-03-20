@@ -4,6 +4,8 @@
  * import across the app.
  */
 
+/**
+
 /** Create a new AngularJS module */
 var DataUtilsModule = angular.module('DataUtilsModule', [])
 
@@ -62,6 +64,9 @@ class Dice {
 		this._diceSize = size;
 		this._diceCount = count;
 		this._modifier = modifier;
+		if (!isNaN(this._diceSize)) { this._diceSize = 0; }
+		if (!isNaN(this._diceCount)) { this._diceCount = 0; }
+		if (!isNaN(this._modifier)) { this._modifier = 0; }
 	}
 
 	/**
