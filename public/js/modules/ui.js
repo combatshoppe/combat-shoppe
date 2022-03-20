@@ -83,7 +83,7 @@ class ElementHTML {
 	}
 
 	/**
-	 * Returns if the given poistion is inside the element
+	 * Returns if the given position is inside the element
 	 * @param {Position} position - The position to check if it is inside the element
 	 * @returns {Boolean}
 	 */
@@ -171,3 +171,52 @@ class GridLine extends ElementHTML {
 	}
 
 }
+
+// define the tileobject model
+class TileObject extends ElementHTML{
+
+	row;
+	column;
+	height;
+
+	/**
+	 * Function that defines if there is sight through the object itself, defaults
+	 * to false if not overridden.
+	 * @returns {Boolean} - Returns true if there is sight
+	 */
+	 hasSight() {
+		return false;
+	 }
+
+	/**
+	 * Function that defines if this object can be moved through
+	 * @param {int} team - team of object
+	 * @returns {Boolean} - Returns true if its clear to go through
+	 */
+	 isClear(team) {
+		return false;
+	 }
+
+	/**
+	 * Virtual function to to add additional code to constuctor
+	 * @param {int} row - grid row of TileOjbect
+	 * @param {int} column - grid column of TileObject
+	 * @param {double} height - Height of TileObject
+	 */
+	 _create(row,column,height) {
+		this.row = row;
+		this.column = column;
+		this.height = height;
+		
+	 }
+
+	/**
+	 * Function if the TileObject rep has HP
+	 * @returns {Boolean} - Returns true if there is HP
+	 */
+	 hasHP() {
+		return false;
+	 }
+
+}
+
