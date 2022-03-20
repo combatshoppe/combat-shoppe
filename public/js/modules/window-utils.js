@@ -4,7 +4,7 @@
  */
 
 /** Create a new AngularJS module */
-var WindowUtilsModule = angular.module('WindowUtilsModule', ['DataModule', 'UIModule'])
+var WindowUtilsModule = angular.module('WindowUtilsModule', ['UIModule'])
 
 /** A bridge class whose implementation is held by the display and placement
  * classes. The window knows nothing about which displays are active
