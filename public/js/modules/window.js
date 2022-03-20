@@ -4,7 +4,7 @@
  */
 
  /** Create a new AngularJS module */
- var WindowModule = angular.module('WindowModule', ['WindowUtilsModule', 'UIModule'])
+ var WindowModule = angular.module('WindowModule', ['SimulatorUtils', 'WindowUtilsModule', 'UIModule'])
 
  /**
   * Subclass of the Placement that only holds one active window.
@@ -13,7 +13,6 @@
 	/**
  	 * Member variables
  	 * @member {Tile[][]} grid - 2D array representing the grid
- 	 * @member {int} gridSize - the size of each grid square in px
  	 * @member {int} gridX - the number of grid columns
  	 * @member {int} gridY - the number of grid rows
  	 * @member {Position} offset - the offset of the grid
@@ -21,9 +20,6 @@
 	 * @member {GridLine[]} vLines - Array of grid lines
  	 */
 	 grid = new Grid();
-	 gridSize = 100;
-	 gridX = 0;
-	 gridY = 0;
 	 offset = new Position(0, 0);
 	 hLines = [];
 	 vLines = [];
@@ -39,10 +35,6 @@
  		this.vLines = [];
  		this.hLines.forEach((line) => { line.delete(); });
  		this.hLines = [];
- 		// Reset some varibales
- 		this.gridWidth = 0;
- 		this.gridX = 0;
- 		this.gridY = 0;
  	}
 
 	/**
@@ -54,14 +46,12 @@
 		// Get the bounds of the parent
 		let rect = this.parent.getBoundingClientRect();
 		// Make the vertical grid lines
-		for (let x = 0; x < this.width; x += this.gridSize) {
-			this.gridX += 1;
+		for (let x = 0; x < this.width; x += this.grid.size) {
 			this.vLines.push(new GridLine(new Position(rect.left + x, rect.top),
 			                              2, this.height, this.parent));
 		}
 		// Make the horizontal grid lines
-		for (let y = 0; y < this.height; y += this.gridSize) {
-			this.gridY += 1;
+		for (let y = 0; y < this.height; y += this.grid.size) {
 			this.hLines.push(new GridLine(new Position(rect.left, rect.top + y),
 			                              this.width, 2, this.parent));
 		}
@@ -87,7 +77,7 @@
 	 * @param {Position} position - The position of the click
 	 */
 	onLeftClick(position) {
-		console.log(`${Math.floor((position.x + this.offset.x) / this.gridSize)}, ${Math.floor((position.y + this.offset.y) / this.gridSize)}`);
+		console.log(`${Math.floor((position.x + this.offset.x) / this.grid.size)}, ${Math.floor((position.y + this.offset.y) / this.grid.size)}`);
 	}
 
 	/**
@@ -97,10 +87,10 @@
 	 */
 	onScroll(direction) {
 		// Zoom
-		this.gridSize += direction * -5;
+		this.grid.size += direction * -5;
 		// Keep a max and minimum zoom
-		this.gridSize = Math.min(this.gridSize, 250);
-		this.gridSize = Math.max(this.gridSize, 50);
+		this.grid.size = Math.min(this.grid.size, 250);
+		this.grid.size = Math.max(this.grid.size, 50);
 		// Remake the grid
 		this._redrawGrid();
 	}
@@ -127,7 +117,7 @@
 				if (line.dom.style.visibility === 'visible' ||
 				    (dy < 0 && isOutOfBounds === 1) || (dy > 0 && isOutOfBounds === 3)) {
 					// Move the line to the other side for the grid
-					line.move(0, -this.gridSize * this.gridY * Math.abs(dy) / dy);
+					line.move(0, -this.grid.size * this.hLines.length * Math.abs(dy) / dy);
 					// Hide the line until it is in bounds again
 					line.dom.style.visibility = 'hidden';
 				}
@@ -149,7 +139,7 @@
 				if (line.dom.style.visibility === 'visible' ||
 				    (dx < 0 && isOutOfBounds === 4) || (dx > 0 && isOutOfBounds === 2)) {
 					// Move the line to the other side for the grid
-					line.move(-this.gridSize * this.gridX * Math.abs(dx) / dx, 0);
+					line.move(-this.grid.size * this.vLines.length * Math.abs(dx) / dx, 0);
 					// Hide the line until it is in bounds again
 					line.dom.style.visibility = 'hidden';
 				}
