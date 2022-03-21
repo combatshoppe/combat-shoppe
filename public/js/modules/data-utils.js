@@ -17,12 +17,12 @@ function createEnum(labels, values) {
 }
 
 /** Create all enum objects */
-// USAGE: "TargetType['Self']" returns value 0
+// USAGE: "TargetType.Self" returns value 0
 TargetType = createEnum(['Self'], [0])
 BehaviorType = createEnum(['Random', 'AttackStrongest', 'AttackWeakest'], [0, 1, 2])
 ActionType = createEnum(['Action', 'Bonus', 'Move', 'Free'], [0, 1, 2, 3])
 DamageType = createEnum(['Acid', 'Bludgeoning', 'Cold', 'Fire', 'Force', 'Lightning', 'Necrotic', 'Piercing', 'Poison', 'Psychic', 'Radiant', 'Slashing', 'Thunder'], [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
-RechargeType = createEnum(['ShortRest', 'LongRest', 'Dawn', 'Round', 'StartOfTurn', 'D6>4', 'D6>5'], [0, 1, 2, 3, 4, 5, 6])
+RechargeType = createEnum(['ShortRest', 'LongRest', 'Dawn', 'Round', 'StartOfTurn', 'D6G4', 'D6G5'], [0, 1, 2, 3, 4, 5, 6])
 
 /**
  * Class representing a point.
