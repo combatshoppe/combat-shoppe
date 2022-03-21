@@ -135,18 +135,19 @@ dt {
 
 .title {
     font-family: "Title";
-    font-size: 50px;
+    font-size: 45px;
     text-decoration: none;
     color: black
 }
 
 .header {
     position: relative;
+    border-radius: 10px;
     font-family: "Buttons";
-    font-size: 20px;
+    font-size: 25px;
     background-color: gray;
     color: white;
-    padding: 15px 32px;
+    padding: 10px;
     width: 200px;
     text-align: center;
     -webkit-transition-duration: 0.4s;
@@ -218,7 +219,7 @@ dt {
 .leftarrow {
     font-size: 16px;
     color: black;
-    padding: 10px 10px;
+    padding: 10px;
     position: fixed;
     bottom: 10px;
     right: 54%;
@@ -228,7 +229,7 @@ dt {
 .rightarrow {
     font-size: 16px;
     color: black;
-    padding: 10px 10px;
+    padding: 10px;
     position: fixed;
     bottom: 10px;
     left: 54%;
@@ -323,7 +324,7 @@ html,
 .navbar-custom {
     width: 100%;
     background: lightgray;
-    height: 85px;
+    height: 75px;
 }
 
 .ng-fill {
