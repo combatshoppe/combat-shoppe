@@ -51,8 +51,10 @@ class Window {
 	 * @param {Display} display - The display to add
 	 */
 	addDisplay(display) {
-		this.placement.activateDisplay(this.dom, display, this.displays);
+		// Add the display to the list
 		this.displays.push(display);
+		// Activat the display
+		this.placement.activateDisplay(this.dom, display, this.displays);
 	}
 
 	/**
@@ -236,11 +238,26 @@ class Display {
 class Placement {
 	/**
 	 * Member variables
-	 * @member {int} width - Width of the display
-	 * @member {int} height - Height of the display
+	 * @member {int} width - Width of the placement
+	 * @member {int} height - Height of the placement
+	 * @member {int} displayWidth - Height of the display
+	 * @member {int} displayHeight - Width of the display
 	 */
 	width = 0;
 	height = 0;
+	displayWidth = 0;
+	displayHeight = 0;
+
+	/**
+	 * Inits the ideal display width and height
+ 	 * @param {Position} width - Width of the window
+ 	 * @param {Placement} height - Height of the window
+	 * @constructor
+	 */
+	constructor(displayWidth = null, displayHeight = null) {
+		this.displayWidth = displayWidth;
+		this.displayHeight = displayHeight;
+	}
 
 	/**
  	 * Inits the placement with its width and height
@@ -250,6 +267,8 @@ class Placement {
  	init(width, height) {
 		this.width = width;
 		this.height = height;
+		if (this.displayWidth === null) this.displayWidth = this.width;
+		if (this.displayHeight === null) this.displayHeight = this.height;
 	}
 
 	/**
