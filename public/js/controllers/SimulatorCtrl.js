@@ -15,7 +15,7 @@ angular.module('SimulatorCtrl', ['WindowModule'])
 		mainWindow = document.querySelectorAll('[name="MainWindow"]')[0];
 		sideWindow = document.querySelectorAll('[name="SideWindow"]')[0];
 		mainWindow = new Window(mainWindow, new SinglePlacement());
-		sideWindow = new Window(sideWindow, new SinglePlacement());
+		sideWindow = new Window(sideWindow, new SortedListPlacement());
 		// Add the Dispalys to the Windows
 		mainWindow.addDisplay(new GridDisplay());
 	});

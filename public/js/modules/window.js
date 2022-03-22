@@ -158,6 +158,7 @@
 class SinglePlacement extends Placement {
 	/**
 	 * Function that activates a display in the window.
+	 * @param {Display} parent - The DOM parent the display is in
 	 * @param {Display} display - The display being added
 	 * @param {Array[Display]} allDisplays - All other existing displays
 	 */
@@ -167,7 +168,7 @@ class SinglePlacement extends Placement {
 			if (display.active) display.deactivate();
 		});
 		// Activate the new display
-		display.activate(new Position(0, 0), parent, this.width, this.height);
+		display.activate(new Position(0, 0), parent, this.displayWidth, this.displayHeight);
 	}
 
 	/**
@@ -180,7 +181,46 @@ class SinglePlacement extends Placement {
 		display.deactivate();
 		// Activate a display if we have another to activate
 		if (allDisplays.length !== 0) {
-			allDisplays[allDisplays.length - 1].activate(new Position(0, 0), this.width, this.height);
+			allDisplays[allDisplays.length - 1].activate(new Position(0, 0), this.displayWidth, this.displayHeight);
 		}
+	}
+}
+
+/**
+ * Subclass of the Placement that only holds a sorted list of placements.
+ */
+class SortedListPlacement extends Placement {
+	/**
+	 * Function that activates a display in the window.
+	 * @param {Display} parent - The DOM parent the display is in
+	 * @param {Display} display - The display being added
+	 * @param {Array[Display]} allDisplays - All other existing displays
+	 */
+	activateDisplay(parent, display, allDisplays) {
+		// Sort the current display list
+		allDisplays.sort(function(a, b) { return a[rank] < b; });
+		// Update the position of every display in list
+		let y = 0;
+		allDisplays.forEach((_display, i) => {
+			// If the display is not active, skip it
+			if (!_display.active) return;
+			// If the display is not in the calculated position, deactivate it and reactivate it
+			if (_display.offset.y === y) {
+				_display.deactivate();
+				_display.activate(new Position(0, y), parent, this.displayWidth, this.displayHeight);
+			}
+			// Increase the y position of the display
+			y += _display.height;
+		});
+	}
+
+	/**
+	 * Function that deactivates a display in the window.
+	 * @param {Display} display - The display being removed
+	 * @param {Array[Display]} allDisplays - All other existing displays
+	 */
+	deactivateDisplay(display, allDisplays) {
+		// Remove the display
+		display.deactivate();
 	}
 }
