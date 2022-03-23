@@ -15,9 +15,10 @@ angular.module('SimulatorCtrl', ['WindowModule'])
 		mainWindow = document.querySelectorAll('[name="MainWindow"]')[0];
 		sideWindow = document.querySelectorAll('[name="SideWindow"]')[0];
 		mainWindow = new Window(mainWindow, new SinglePlacement());
-		sideWindow = new Window(sideWindow, new SortedListPlacement());
+		sideWindow = new Window(sideWindow, new SortedListPlacement(null, 100));
 		// Add the Dispalys to the Windows
 		mainWindow.addDisplay(new GridDisplay());
+		sideWindow.addDisplay(new InitiativeDisplay().setImage("https://g.foolcdn.com/editorial/images/551757/young-man-looking-at-laptop-computer-with-expression-of-shock-investor-upset-surprised-frustrated-stock-market-crash.jpg").setInitiative(1));
 	});
 
 
