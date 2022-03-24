@@ -35,11 +35,10 @@ class Simulator {
 
 	/**
 	 * Run through the entire simulation until it ends
-	 *
-	 * gridDisplay is everything, even contains the Grid object
-	 * initiivate is an ordered list of Token objects
+	 * @param {GridDisplay} display - display of the grid
+	 * @param {Token[]} initiative - an ordered list of Token objects 
 	 */
-	run(gridDisplay, initiative) {
+	run(display, initiative) {
 		let turn_limit = 30;
 		for (let turn = 1; turn < turn_limit; turn++) {
 
@@ -51,7 +50,7 @@ class Simulator {
 			}
 
 			// Run one round on grid without updating displays
-			_forward(gridDisplay);
+			_forward(display.grid);
 
 		}
 
@@ -85,29 +84,27 @@ class Simulator {
 	/**
 	 * Run the simulation through one turn of combat without updating displays
 	 */
-	_forward(gridDisplay) {
+	_forward(grid, initiative) {
 		// throw 'Simulator._forward is not defined!';
 
-		var tokenOrder = gridDisplay.grid.order;
-
 		// Loop through ordered list of Tokens
-		for (let i = 0; i < tokenOrder.length; i++) {
+		for (let i = 0; i < initiative.length; i++) {
 			// Look at current Token on grid
-			var token = tokenOrder[i];
+			var token = initiative[i];
 			// Find Tile on grid where current Token is located
-			var currentTile = gridDisplay.grid.get(token.position);
+			var currentTile = grid.get(token.position);
 
 			// Loop through all objects on chosen Tile
 			currentTile.objects.foreach((tileObject) => {
 
 				// Calculate a path for each tileObject
-				var path = _pathfind(gridDisplay.grid, tileObject.position, tileObject.goal); // Need to access goal of tileObject
+				var path = _pathfind(grid, tileObject.position, tileObject.goal); // Need to access goal of tileObject
 
 				// Find how far the tileObject can travel
 				/* Need to implement this */
 
 				// Move each tileObject to the goal
-				gridDisplay.grid.move(tileObject.position, tileObject.goal); // need to update so it doesnt go directly to goal regardless of movement
+				grid.move(tileObject.position, tileObject.goal); // need to update so it doesnt go directly to goal regardless of movement
 
 			});
 
