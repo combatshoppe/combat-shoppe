@@ -137,3 +137,72 @@ class Grid {
 		return true;
 	}
 }
+
+
+/**
+ * define the token class
+ */
+class Token extends TokenObject{
+	/**
+	 * Member variables
+	 * @member {int} size - The width/height of the grid in px
+	 * @member {int} _grid - Map of Positions mapped to Tiles
+	 * @member {int} size - The width/height of the grid in px
+	 * @member {int} _grid - Map of Positions mapped to Tiles
+	 * @member {int} size - The width/height of the grid in px
+	 * @member {int} _grid - Map of Positions mapped to Tiles
+	 */
+
+	int hp = 0;
+	int team = 0;
+	Behavior behavior = null;
+	CreatureSchema stats = null;
+
+	hasCastSpell = false;
+
+	actions = [];
+	conditions = [];
+	
+
+	/**
+	 * Function that defines if the token has health
+	 * @returns {Boolean} - Returns true
+	 */
+	hasHP() {
+		return true;
+	}
+
+	/**
+	 * Function that opens up the TokenSettingDisplay
+	 */
+	onRightClick() {
+
+		// To do : implement this function
+	}
+
+	/**
+	 * Set the team of the Token
+	 * @param {int} team - What to set the team as
+	 */
+	setTeam(team) {
+		this.team = team;
+	}
+
+	/**
+	 * Set the stats of the Token
+	 * @param {CreatureSchema} stats - what the data associated with the Token is
+	 */
+	setStats(stats) {
+		this.hp = stats.hp;
+		this.stats = stats;
+
+		stats.actions.forEach((actionId) => {
+			let schema = globalData.find(actionId);
+			this.actions.push(new Action(schema));
+		});
+
+		if (stats.defaultBehavior === BehaviorType.Random) {
+			this.behavior = new RandomBehavior(this.actions);
+		}
+	}
+}
