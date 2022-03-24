@@ -35,8 +35,11 @@ class Simulator {
 
 	/**
 	 * Run through the entire simulation until it ends
+	 *
+	 * gridDisplay is everything, even contains the Grid object
+	 * initiivate is an ordered list of Token objects
 	 */
-	run() {
+	run(gridDisplay, initiative) {
 		let turn_limit = 30;
 		for (let turn = 1; turn < turn_limit; turn++) {
 
@@ -47,12 +50,13 @@ class Simulator {
 				break;
 			}
 
-			// Run one round on grid
-			_forward();
+			// Run one round on grid without updating displays
+			_forward(gridDisplay);
 
-			// Update displays and animations
-			UpdateDisplays();
 		}
+
+		// Update displays and animations after simulation is complete
+		UpdateDisplays();
 	}
 
 	/**
@@ -81,8 +85,33 @@ class Simulator {
 	/**
 	 * Run the simulation through one turn of combat without updating displays
 	 */
-	_forward() {
-		throw 'Simulator._forward is not defined!';
+	_forward(gridDisplay) {
+		// throw 'Simulator._forward is not defined!';
+
+		var tokenOrder = gridDisplay.grid.order;
+
+		// Loop through ordered list of Tokens
+		for (let i = 0; i < tokenOrder.length; i++) {
+			// Look at current Token on grid
+			var token = tokenOrder[i];
+			// Find Tile on grid where current Token is located
+			var currentTile = gridDisplay.grid.get(token.position);
+
+			// Loop through all objects on chosen Tile
+			currentTile.objects.foreach((tileObject) => {
+
+				// Calculate a path for each tileObject
+				var path = _pathfind(gridDisplay.grid, tileObject.position, tileObject.goal); // Need to access goal of tileObject
+
+				// Find how far the tileObject can travel
+				/* Need to implement this */
+
+				// Move each tileObject to the goal
+				gridDisplay.grid.move(tileObject.position, tileObject.goal); // need to update so it doesnt go directly to goal regardless of movement
+
+			});
+
+		}
 	}
 
 	/**
@@ -105,7 +134,7 @@ class Simulator {
 	 * @param {Position} goal - the destination location
 	 * @returns {Position[]}
 	 */
-	 _pathfind(start, goal) {
+	 _pathfind(grid, start, goal) {
 
 		// Init open and closed list
 		var openList = [];
@@ -144,24 +173,30 @@ class Simulator {
 			let x = currentNode.position.x;
 			let y = currentNode.position.y;
 
-			/* Check if new node will be within bounds and consider that neighbor if so
-
-			if (x < textmap.mapData.GetLength(0) - 1 && textmap.mapData[x + 1, y] == 0)
-                neighbors.Add(new Vector3Int(x + 1, y, 0));
-            if (x > 0 && textmap.mapData[x - 1, y] == 0)
-                neighbors.Add(new Vector3Int(x - 1, y, 0));
-            if (y < textmap.mapData.GetLength(1) - 1 && textmap.mapData[x, y + 1] == 0)
-                neighbors.Add(new Vector3Int(x, y + 1, 0));
-            if (y > 0 && textmap.mapData[x, y - 1] == 0)
-                neighbors.Add(new Vector3Int(x, y - 1, 0));
-            */
+			// Check if each adjacent tile is walkable
+            if (grid.get(x + 1, y).isPasable())
+                neighbors.Add(new Position(x + 1, y));
+            if (grid.get(x + 1, y + 1).isPasable())
+                neighbors.Add(new Position(x + 1, y + 1));
+            if (grid.get(x, y + 1).isPasable())
+                neighbors.Add(new Position(x, y + 1));
+            if (grid.get(x - 1, y + 1).isPasable())
+                neighbors.Add(new Position(x - 1, y + 1));
+            if (grid.get(x - 1, y).isPasable())
+                neighbors.Add(new Position(x - 1, y));
+            if (grid.get(x - 1, y - 1).isPasable())
+                neighbors.Add(new Position(x - 1, y - 1));
+            if (grid.get(x, y - 1).isPasable())
+                neighbors.Add(new Position(x, y - 1));
+            if (grid.get(x + 1, y - 1).isPasable())
+                neighbors.Add(new Position(x + 1, y - 1));
 
             // Loop through each neighbor
 			neighbors.foreach((neighbor) => {
 
 				// Child is in closedList
 				if (neighbor in closedList) {
-					continue;
+					return;
 				}
 
 				// Create f, g, and h vals
@@ -171,16 +206,16 @@ class Simulator {
 
 				// Child is is openList
 				var openListNeighbor = null;
-				openList.foreach ((node) => {
+				openList.every ((node) => {
 					if (node.position.x == neighbor.position.x & node.position.y == neighbor.position.y) {
 						openListNeighbor = node;
-						break;
+						return false;
 					}
 				});
 
 				if (neighbor.position in openList) {
 					if (neighbor.position.g > openListNeighbor.position.g) {
-						continue;
+						return;
 					}
 				}
 
@@ -238,3 +273,6 @@ class Node {
 		return Math.sqrt(sum);
 	}
 }
+
+sim = new Simulator(null, null);
+console.log(sim);
