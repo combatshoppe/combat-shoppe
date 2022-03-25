@@ -19,6 +19,7 @@ angular.module('SimulatorCtrl', ['WindowModule'])
 		// Add the Dispalys to the Windows
 		mainWindow.addDisplay(new GridDisplay());
 		sideWindow.addDisplay(new InitiativeDisplay().setImage("https://g.foolcdn.com/editorial/images/551757/young-man-looking-at-laptop-computer-with-expression-of-shock-investor-upset-surprised-frustrated-stock-market-crash.jpg").setInitiative(1));
+		sideWindow.addDisplay(new InitiativeDisplay().setImage("https://g.foolcdn.com/editorial/images/551757/young-man-looking-at-laptop-computer-with-expression-of-shock-investor-upset-surprised-frustrated-stock-market-crash.jpg").setInitiative(1));
 	});
 
 
