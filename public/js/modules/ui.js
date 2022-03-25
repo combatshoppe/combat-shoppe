@@ -180,10 +180,55 @@ class GridLine extends ElementHTML {
 }
 
 /**
+ * Subclass of the ElementHTML that represents an image.
+ */
+class Text extends ElementHTML {
+
+	/**
+	 * The DOM type to create
+	 */
+	elementType() {
+		return 'p';
+	}
+
+	/**
+	 * Function if the TileObject rep has HP
+	 * @member {String} src - The link to the image
+	 * @returns {Text}
+	 */
+	setText(text) {
+		this.dom.textContent = text;
+		return this;
+	}
+}
+
+/**
+ * Subclass of the ElementHTML that represents an image.
+ */
+class Image extends ElementHTML {
+
+	/**
+	 * The DOM type to create
+	 */
+	elementType() {
+		return 'img';
+	}
+
+	/**
+	 * Function if the TileObject rep has HP
+	 * @member {String} src - The link to the image
+	 * @returns {Image}
+	 */
+	setImage(src, ) {
+		this.dom.src = src;
+		return this;
+	}
+}
+
+/**
  * define the tileobject model
  */
-class TileObject extends ElementHTML{
-
+class TileObject extends Image {
 	row = 0;
 	column = 0;
 	height = 0;
@@ -227,25 +272,4 @@ class TileObject extends ElementHTML{
 	}
 }
 
-/**
- * Subclass of the ElementHTML that represents an image.
- */
-class Image extends ElementHTML {
 
-	/**
-	 * The DOM type to create
-	 */
-	elementType() {
-		return 'img';
-	}
-
-	/**
-	 * Function if the TileObject rep has HP
-	 * @member {String} src - The link to the image
-	 * @returns {Image}
-	 */
-	setImage(src, ) {
-		this.dom.src = src;
-		return this;
-	}
-}

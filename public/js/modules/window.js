@@ -163,6 +163,7 @@ class InitiativeDisplay extends Display {
  	 */
 	_rank = 0;
 	image = null;
+	text = null;
 	_src = "";
 
 	/**
@@ -189,10 +190,6 @@ class InitiativeDisplay extends Display {
 	 */
 	setImage(src) {
 		this._src = src;
-		console.log("Set")
-		console.log(this.offset)
-		
-		console.log(this.image);
 		return this;
 	}
 
@@ -200,20 +197,21 @@ class InitiativeDisplay extends Display {
  	 * Virtual function that visually creates and activates a display.
  	 */
  	_activate() {
-		console.log("Activate")
-		if (this.image === null) {
-			console.log(`TESTING ${this.offset.y}`)
-			this.image = new Image(this.offset, this.height, this.height, this.parent);
-			this.image.setImage(this._src);
+		if (this.image !== null) {
+			throw new Error(`InitiativeDisplay._deactivate() must be called before InitiativeDisplay._activate()!`);
 		}
-		console.log(this.image.dom)
+		this.image = new Image(this.offset, this.height, this.height, this.parent);
+		this.image.setImage(this._src);
+		this.text = new Text(this.offset, this.width, this.height, this.parent);
+		this.text.setText(this.getInitiative().toString());
  	}
 
  	/**
  	 * Function that removes a display from the visual window.
  	 */
  	_deactivate() {
-		this.image.delete();
+		if (this.image !== null) this.image.delete();
+		if (this.text !== null) this.text.delete();
 		this.image = null;
  	}
 
@@ -296,7 +294,8 @@ class SortedListPlacement extends Placement {
 		console.log(rect);
 		display.activate(new Position(rect.x, rect.y), parent, this.width, this.displayHeight);
 		// Sort the current display list
-		allDisplays.sort(function(a, b) { return a._rank < b._rank; });
+		allDisplays.sort(function(a, b) { console.log(`a._rank: ${a._rank}`); return a._rank < b._rank ? 1 : -1; });
+		console.log(allDisplays)
 		// Update the position of every display in list
 		let y = 0;
 		allDisplays.forEach((_display, i) => {
@@ -305,7 +304,6 @@ class SortedListPlacement extends Placement {
 			// If the display is not in the calculated position, deactivate it and reactivate it
 			let rect = _display.parent.getBoundingClientRect();
 			if (_display.offset.y !== rect.y + y) {
-				console.log(`this is ${y}`)
 				_display.deactivate();
 				_display.activate(new Position(rect.x, rect.y + y), parent, this.width, this.displayHeight);
 			}
