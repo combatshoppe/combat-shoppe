@@ -150,10 +150,15 @@ class Display {
 	 */
 	in(position) {
 		// Check if outside
-		if (position.x > this.width) return false;
-		if (position.y > this.height) return false;
-		if (position.x < 0) return false;
-		if (position.y < 0) return false;
+		let rect = this.parent.getBoundingClientRect();
+		let newPosition = new Position(position.x, position.y);
+		newPosition.x += rect.x - this.offset.x ;
+		newPosition.y += rect.y - this.offset.y;
+
+		if (newPosition.x > this.width) return false;
+		if (newPosition.y > this.height) return false;
+		if (newPosition.x < 0) return false;
+		if (newPosition.y < 0) return false;
 		// If not outside, must be inside
 		return true;
 	}
@@ -333,7 +338,6 @@ class Placement {
 			// The click was not on any elements of the display, so pass it off to the display
 			if (args.length === 0) display[functionName]();
 			else display[functionName].apply(display, args);
-			console.log(display)
 			return false;
 		});
 	}

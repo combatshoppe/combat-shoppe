@@ -259,7 +259,7 @@ class InitiativeDisplay extends Display {
 	 * @param {Position} position - The position of the click
 	 */
 	onLeftClick(position) {
-
+		console.log("CLICK")
 	}
 
 	/**
