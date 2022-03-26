@@ -137,9 +137,6 @@ class GridDisplay extends Display {
 		// Keep a max and minimum zoom
 		this.grid.size = Math.min(this.grid.size, 250);
 		this.grid.size = Math.max(this.grid.size, 50);
-		// Reset thje offset
-		//this.gridOffset.x = 0;
-		//this.gridOffset.y = 0;
 		// Remake the grid
 		this._redrawGrid();
 	}
