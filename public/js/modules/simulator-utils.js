@@ -157,12 +157,11 @@ class Token extends TileObject {
 	hp = 0;
 	team = 0;
 	behavior = null;
-	schema = null;
+	data = null;
 	hasCastSpell = false;
 	actions = [];
 	conditions = [];
 	stats = new Map();
-
 
 	/**
 	 * Function that defines if the token has health
@@ -173,10 +172,71 @@ class Token extends TileObject {
 	}
 
 	/**
+	 * Function to attack and deal damage to the token
+	 * @member {StatType} saveType -
+	 * @member {int} saveDc -
+	 * @member {Boolean} noDamageOnSucess -
+	 * @member {DamageType} primaryDamageType -
+	 * @member {int} primaryDamage -
+	 * @member {DamageType} secondaryDamageType -
+	 * @member {int} secondaryDamage -
+	 * @returns {Boolean} - Returns true if damage was taken (not accounting for immunities)
+	 */
+	attackToSave(saveType, saveDc, saveOrSuck, primaryDamageType, primaryDamage,
+	             secondaryDamageType = 0, secondaryDamage = 0) {
+		let roll = this.roll(saveType);
+		if (roll >= saveDc && noDamageOnSucess) return false;
+		if (roll >= saveDc) {
+			primaryDamage = Math.floor(primaryDamage / 2);
+			secondaryDamage = Math.floor(secondaryDamage / 2);
+		}
+		this._dealDamage(primaryDamageType, primaryDamage);
+		this._dealDamage(secondaryDamageType, secondaryDamage);
+		return true;
+	}
+
+	/**
+	 * Function to attack and deal damage to the token
+	 * @member {int} toHit -
+	 * @member {DamageType} primaryDamageType -
+	 * @member {int} primaryDamage -
+	 * @member {DamageType} secondaryDamageType -
+	 * @member {int} secondaryDamage -
+	 * @returns {Boolean} - Returns true if the target was hit
+	 */
+	attackToHit(toHit, primaryDamageType, primaryDamage, secondaryDamageType = null, secondaryDamage = 0) {
+		if (this.data.ac > toHit) return false;
+		this._dealDamage(primaryDamageType, primaryDamage);
+		this._dealDamage(secondaryDamageType, secondaryDamage);
+		return true;
+	}
+
+	/**
+	 * Heals the token by a certain amount
+	 * @member {int} amount -
+	 */
+	heal(amount) {
+		this.hp = Math.min(this.data.hp, this.hp + amount);
+	}
+
+	/**
+	 * Deals damage to the token
+	 * @member {DamageType} type -
+	 * @member {int} amount -
+	 */
+	_dealDamage(type, amount) {
+		if (type === null || amount == 0) return;
+		if (this.data.dmgImmunities.find(type) !== undefined) return;
+		if (this.data.dmgResistances.find(type) !== undefined) {
+			amount = Math.floor(amount / 2);
+		}
+		this.hp = Math.max(0, this.hp - amount);
+	}
+
+	/**
 	 * Function that opens up the TokenSettingDisplay
 	 */
 	onRightClick() {
-
 		// To do : implement this function
 	}
 
@@ -194,7 +254,8 @@ class Token extends TileObject {
 	 */
 	setSchema(schema) {
 		this.hp = stats.hp;
-		this.schema = schema;
+		this.data = schema;
+
 
 		schema.actions.forEach((actionId) => {
 			let actionSchema = globalData.find(actionId);
