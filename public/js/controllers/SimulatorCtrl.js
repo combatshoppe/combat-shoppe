@@ -28,18 +28,6 @@ angular.module('SimulatorCtrl', ['WindowModule'])
 		globalMainWindow.addDisplay(globalGrid);
 		// Add the 'Add' button to the globalSideWindow
 		globalSideWindow.addDisplay(new AddTokenDisplay());
-		// Add tokens to the grid
-		let token;
-		token = globalGrid.addToken(0, 0, STOCK_SCHEMA);
-		globalSideWindow.addDisplay(new InitiativeDisplay().linkToken(token));
-		token = globalGrid.addToken(0, 0, STOCK_SCHEMA);
-		globalSideWindow.addDisplay(new InitiativeDisplay().linkToken(token));
-		token = globalGrid.addToken(0, 0, STOCK_SCHEMA);
-		globalSideWindow.addDisplay(new InitiativeDisplay().linkToken(token));
-		token = globalGrid.addToken(0, 0, STOCK_SCHEMA);
-		globalSideWindow.addDisplay(new InitiativeDisplay().linkToken(token));
-		token = globalGrid.addToken(0, 0, STOCK_SCHEMA);
-		globalSideWindow.addDisplay(new InitiativeDisplay().linkToken(token));
 	});
 
 

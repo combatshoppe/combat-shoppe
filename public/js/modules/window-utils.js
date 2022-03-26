@@ -154,7 +154,6 @@ class Display {
 		let newPosition = new Position(position.x, position.y);
 		newPosition.x += rect.x - this.offset.x ;
 		newPosition.y += rect.y - this.offset.y;
-
 		if (newPosition.x > this.width) return false;
 		if (newPosition.y > this.height) return false;
 		if (newPosition.x < 0) return false;
