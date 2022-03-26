@@ -198,6 +198,8 @@ class Text extends ElementHTML {
 	 */
 	setText(text) {
 		this.dom.textContent = text;
+		this.dom.onselectstart = function() { return false; };
+		this.dom.style.cursor = 'default';
 		return this;
 	}
 }
@@ -271,5 +273,3 @@ class TileObject extends Image {
 		return false;
 	}
 }
-
-
