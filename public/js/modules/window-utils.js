@@ -81,10 +81,11 @@ class Window {
 			event.currentTarget.window.drag = false;
 			return false;
 		}
+		let rect = event.currentTarget.window.dom.getBoundingClientRect();
 		let placement = event.currentTarget.window.placement;
 		let displays = event.currentTarget.window.displays;
 		// Get the local position
-		let position = new Position(event.offsetX, event.offsetY);
+		let position = new Position(event.x - rect.x, event.y - rect.y);
 		// Left click
 		if (event.button === 0) return placement.onLeftClick(position, displays);
 		// Right click
@@ -96,10 +97,11 @@ class Window {
 	 * @param {MouseEvent} event - Occurs when mouse interacts with the window
 	 */
 	onScroll(event) {
+		let rect = event.currentTarget.window.dom.getBoundingClientRect();
 		let placement = event.currentTarget.window.placement;
 		let displays = event.currentTarget.window.displays;
 		// Get the local position and call the proper method
-		let position = new Position(event.offsetX, event.offsetY);
+		let position = new Position(event.x - rect.x, event.y - rect.y);
 		placement.onScroll(position, displays, (event.deltaY > 0) ? 1 : -1);
 	}
 
@@ -108,13 +110,14 @@ class Window {
 	 * @param {MouseEvent} event - Occurs when mouse interacts with the window
 	 */
 	onMove(event) {
+		let rect = event.currentTarget.window.dom.getBoundingClientRect();
 		let placement = event.currentTarget.window.placement;
 		let displays = event.currentTarget.window.displays;
 		// Make sure this is a drag event
 		if (event.buttons === 0 || event.button !== 0) return;
 		event.currentTarget.window.drag = true;
 		// Get the local position and call the proper method
-		let position = new Position(event.offsetX, event.offsetY);
+		let position = new Position(event.x - rect.x, event.y - rect.y);
 		placement.onDrag(position, displays, event.movementX, event.movementY);
 	}
 }
@@ -330,6 +333,7 @@ class Placement {
 			// The click was not on any elements of the display, so pass it off to the display
 			if (args.length === 0) display[functionName]();
 			else display[functionName].apply(display, args);
+			console.log(display)
 			return false;
 		});
 	}

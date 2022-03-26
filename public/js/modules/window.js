@@ -250,6 +250,7 @@ class InitiativeDisplay extends Display {
 		if (this.image !== null) this.image.delete();
 		if (this.text !== null) this.text.delete();
 		this.image = null;
+		this.text = null;
  	}
 
 	/**
@@ -278,6 +279,45 @@ class InitiativeDisplay extends Display {
 	 */
 	onDrag(dx, dy) {
 
+	}
+}
+
+/**
+ * Subclass of the Placement that only holds one active window.
+ */
+class AddTokenDisplay extends Display {
+	/**
+ 	 * Member variables
+ 	 * @member {Position} offset - the offset of the grid
+ 	 * @member {Image} image - the offset of the grid
+ 	 */
+	_rank = -4503599627370495;
+	_src = 'https://cdn.onlinewebfonts.com/svg/img_45824.png';
+	image = null;
+
+	/**
+ 	 * Virtual function that visually creates and activates a display.
+ 	 */
+ 	_activate() {
+		this.image = new Image(this.offset, this.height, this.height, this.parent);
+		this.image.setImage(this._src);
+ 	}
+
+ 	/**
+ 	 * Function that removes a display from the visual window.
+ 	 */
+ 	_deactivate() {
+		if (this.image !== null) this.image.delete();
+		this.image = null;
+ 	}
+
+	/**
+	 * Function that defines what to do when the Display is clicked and no
+	 * clickable objects are able to be clicked. Unless overriden, nothing it done.
+	 * @param {Position} position - The position of the click
+	 */
+	onLeftClick(position) {
+		console.log("ADD")
 	}
 }
 

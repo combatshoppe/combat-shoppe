@@ -5,8 +5,11 @@
 
 /** Declare some global variables just so they don't go out of scope */
 var globalMainWindow, globalSideWindow, globalGrid;
-var STOCK_IMAGE = 'https://i.pinimg.com/originals/7c/c7/aa/7cc7aa6b6fd0d30b2ab78eabcd44c94e.png'
+
+// Remove these later
+var STOCK_IMAGE = 'https://i.pinimg.com/originals/7c/c7/aa/7cc7aa6b6fd0d30b2ab78eabcd44c94e.png';
 var STOCK_SCHEMA = new CreatureSchema({name: 'Dwarven Warrior', dex: 12, src: STOCK_IMAGE});
+var PLUS_IMAGE = 'https://cdn.onlinewebfonts.com/svg/img_45824.png';
 
 console.log(STOCK_SCHEMA)
 
@@ -23,6 +26,8 @@ angular.module('SimulatorCtrl', ['WindowModule'])
 		// Make the grid
 		globalGrid = new GridDisplay();
 		globalMainWindow.addDisplay(globalGrid);
+		// Add the 'Add' button to the globalSideWindow
+		globalSideWindow.addDisplay(new AddTokenDisplay());
 		// Add tokens to the grid
 		let token;
 		token = globalGrid.addToken(0, 0, STOCK_SCHEMA);
