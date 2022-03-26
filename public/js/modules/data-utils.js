@@ -76,7 +76,7 @@ class Dice {
      * @param {number} modifier - The y value.
      * @constructor
      */
-    constructor(size, count = 1, modifier = 0) {
+    constructor(count, size, modifier = 0) {
         this._diceSize = size;
         this._diceCount = count;
         this._modifier = modifier;

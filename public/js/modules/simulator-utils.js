@@ -256,12 +256,22 @@ class Token extends TileObject {
 		this.hp = stats.hp;
 		this.data = schema;
 
+		// Load all of the dice for rolling
+		this.stats.set(StatType.Strength, new Dice(1, 20, Math.floor(schema.str / 2) - 1));
+		this.stats.set(StatType.Dexterity, new Dice(1, 20, Math.floor(schema.dex / 2) - 1));
+		this.stats.set(StatType.Charisma, new Dice(1, 20, Math.floor(schema.cha / 2) - 1));
+		this.stats.set(StatType.Intelligence, new Dice(1, 20, Math.floor(schema.int / 2) - 1));
+		this.stats.set(StatType.Wisdom, new Dice(1, 20, Math.floor(schema.wis / 2) - 1));
+		this.stats.set(StatType.Constitution, new Dice(1, 20, Math.floor(schema.con / 2) - 1));
+		this.stats.set(StatType.Initiative, new Dice(1, 20, Math.floor(schema.dex / 2) - 1));
 
+		// Load all of the actions
 		schema.actions.forEach((actionId) => {
 			let actionSchema = globalData.find(actionId);
 			this.actions.push(new Action(actionSchema));
 		});
 
+		// Load the behavior
 		if (schema.defaultBehavior === BehaviorType.Random) {
 			this.behavior = new RandomBehavior(this.actions);
 		}
