@@ -5,7 +5,7 @@
  */
 
  /** Create a new AngularJS module */
- var SimulatorUtils = angular.module('SimulatorUtils', [])
+ var SimulatorUtils = angular.module('SimulatorUtils', ['UiModule'])
 
 /**
  * Class representing a Tile
@@ -243,27 +243,30 @@ class Token extends TileObject {
 	/**
 	 * Set the team of the Token
 	 * @param {int} team - What to set the team as
+	 * @returns {Token}
 	 */
 	setTeam(team) {
 		this.team = team;
+		return this;
 	}
 
 	/**
 	 * Set the stats of the Token
 	 * @param {CreatureSchema} schema - what the data associated with the Token is
+	 * @returns {Token}
 	 */
 	setSchema(schema) {
-		this.hp = stats.hp;
+		this.hp = schema.hp;
 		this.data = schema;
 
 		// Load all of the dice for rolling
-		this.stats.set(StatType.Strength, new Dice(1, 20, Math.floor(schema.str / 2) - 1));
-		this.stats.set(StatType.Dexterity, new Dice(1, 20, Math.floor(schema.dex / 2) - 1));
-		this.stats.set(StatType.Charisma, new Dice(1, 20, Math.floor(schema.cha / 2) - 1));
-		this.stats.set(StatType.Intelligence, new Dice(1, 20, Math.floor(schema.int / 2) - 1));
-		this.stats.set(StatType.Wisdom, new Dice(1, 20, Math.floor(schema.wis / 2) - 1));
-		this.stats.set(StatType.Constitution, new Dice(1, 20, Math.floor(schema.con / 2) - 1));
-		this.stats.set(StatType.Initiative, new Dice(1, 20, Math.floor(schema.dex / 2) - 1));
+		this.stats.set(StatType.Strength, new Dice(1, 20, Math.floor(schema.str / 2) - 5));
+		this.stats.set(StatType.Dexterity, new Dice(1, 20, Math.floor(schema.dex / 2) - 5));
+		this.stats.set(StatType.Charisma, new Dice(1, 20, Math.floor(schema.cha / 2) - 5));
+		this.stats.set(StatType.Intelligence, new Dice(1, 20, Math.floor(schema.int / 2) - 5));
+		this.stats.set(StatType.Wisdom, new Dice(1, 20, Math.floor(schema.wis / 2) - 5));
+		this.stats.set(StatType.Constitution, new Dice(1, 20, Math.floor(schema.con / 2) - 5));
+		this.stats.set(StatType.Initiative, new Dice(1, 20, Math.floor(schema.dex / 2) - 5));
 
 		// Load all of the actions
 		schema.actions.forEach((actionId) => {
@@ -275,6 +278,7 @@ class Token extends TileObject {
 		if (schema.defaultBehavior === BehaviorType.Random) {
 			this.behavior = new RandomBehavior(this.actions);
 		}
+		return this;
 	}
 
 	/**

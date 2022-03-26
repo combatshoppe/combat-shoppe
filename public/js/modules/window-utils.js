@@ -175,8 +175,12 @@ class Display {
 	 * @param {Position} parent - Parent DOM to attach to the display
 	 * @param {int} width - Width of the display
 	 * @param {int} height - Height of the display
+	 * @throws - If Display._active === true
 	 */
 	activate(offset, parent, width, height) {
+		if (this._active === true) {
+			throw new Error(`Cannot call Display.activate() when the Display is active!`);
+		}
 		this.offset = offset;
 		this.parent = parent;
 		this.width = width;
@@ -187,8 +191,12 @@ class Display {
 
 	/**
 	 * Function that removes a display from the visual window.
+	 * @throws - If Display._active === false
 	 */
 	deactivate() {
+		if (this._active === false) {
+			throw new Error(`Cannot call Display.deactivate() when the Display is not active!`);
+		}
 		this._deactivate();
 		this.active = false;
 		this.parent = null;
@@ -257,7 +265,6 @@ class Placement {
 	constructor(displayWidth = null, displayHeight = null) {
 		this.displayWidth = displayWidth;
 		this.displayHeight = displayHeight;
-		console.log(`dh ${displayWidth}`)
 	}
 
 	/**

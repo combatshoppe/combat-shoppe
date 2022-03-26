@@ -165,7 +165,6 @@ class InitiativeDisplay extends Display {
 	token = null;
 	image = null;
 	text = null;
-	_src = "";
 
 	/**
  	 * Gets the initiative of the displat
@@ -175,22 +174,13 @@ class InitiativeDisplay extends Display {
 	}
 
 	/**
-	 * Gets the initiative of the display
-	 * @member {number} initiative - the new intiiative
+	 * Initializes a token into the display and rolls its initiative
+	 * @member {Token} token - the token to link
 	 * @returns {InitiativeDisplay}
 	 */
-	setInitiative(initiative) {
-		this._rank = initiative;
-		return this;
-	}
-
-	/**
-	 * Gets the initiative of the display
-	 * @member {String} src - the file of the token
-	 * @returns {InitiativeDisplay}
-	 */
-	setImage(src) {
-		this._src = src;
+	linkToken(token) {
+		this._rank = token.roll(StatType.Initiative);
+		this.token = token;
 		return this;
 	}
 
@@ -198,11 +188,8 @@ class InitiativeDisplay extends Display {
  	 * Virtual function that visually creates and activates a display.
  	 */
  	_activate() {
-		if (this.image !== null) {
-			throw new Error(`InitiativeDisplay._deactivate() must be called before InitiativeDisplay._activate()!`);
-		}
 		this.image = new Image(this.offset, this.height, this.height, this.parent);
-		this.image.setImage(this._src);
+		this.image.setImage(this.token.data.src);
 		this.text = new Text(this.offset, this.width, this.height, this.parent);
 		this.text.setText(this.getInitiative().toString());
  	}
@@ -292,11 +279,9 @@ class SortedListPlacement extends Placement {
 	activateDisplay(parent, display, allDisplays) {
 		// Preload the display at the default position
 		let rect = parent.getBoundingClientRect();
-		console.log(rect);
 		display.activate(new Position(rect.x, rect.y), parent, this.width, this.displayHeight);
 		// Sort the current display list
-		allDisplays.sort(function(a, b) { console.log(`a._rank: ${a._rank}`); return a._rank < b._rank ? 1 : -1; });
-		console.log(allDisplays)
+		allDisplays.sort(function(a, b) { return a._rank < b._rank ? 1 : -1; });
 		// Update the position of every display in list
 		let y = 0;
 		allDisplays.forEach((_display, i) => {

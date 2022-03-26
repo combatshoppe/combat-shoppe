@@ -1,1 +1,6 @@
-angular.module('combatShoppeApp', ['ngRoute', 'appRoutes', 'MainCtrl', 'SimulatorCtrl', 'HomebrewCtrl']);
+let modules = ['ngRoute', 'appRoutes', 'MainCtrl', 'SimulatorCtrl',
+               'HomebrewCtrl', 'DataUtilsModule', 'DataModule', 'UiModule',
+						   'SimulatorUtils', 'SimulatorModule', 'WindowUtilsModule',
+						   'WindowModule']
+
+angular.module('combatShoppeApp', modules);
