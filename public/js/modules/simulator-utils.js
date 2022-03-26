@@ -142,27 +142,27 @@ class Grid {
 /**
  * define the token class
  */
-class Token extends TokenObject{
+class Token extends TileObject {
 	/**
 	 * Member variables
-	 * @member {int} size - The width/height of the grid in px
-	 * @member {int} _grid - Map of Positions mapped to Tiles
-	 * @member {int} size - The width/height of the grid in px
-	 * @member {int} _grid - Map of Positions mapped to Tiles
-	 * @member {int} size - The width/height of the grid in px
-	 * @member {int} _grid - Map of Positions mapped to Tiles
+	 * @member {int} hp - The width/height of the grid in px
+	 * @member {int} team - Map of Positions mapped to Tiles
+	 * @member {Behavior} behavior - The width/height of the grid in px
+	 * @member {CreatureSchema} _grid - Map of Positions mapped to Tiles
+	 * @member {Boolean} size - The width/height of the grid in px
+	 * @member {int} actions - Map of Positions mapped to Tiles
+	 * @member {int} conditions - Map of Positions mapped to Tiles
+	 * @member {Map<StatType:Dice>} stats - Map of Positions mapped to Tiles
 	 */
-
-	int hp = 0;
-	int team = 0;
-	Behavior behavior = null;
-	CreatureSchema stats = null;
-
+	hp = 0;
+	team = 0;
+	behavior = null;
+	schema = null;
 	hasCastSpell = false;
-
 	actions = [];
 	conditions = [];
-	
+	stats = new Map();
+
 
 	/**
 	 * Function that defines if the token has health
@@ -190,19 +190,30 @@ class Token extends TokenObject{
 
 	/**
 	 * Set the stats of the Token
-	 * @param {CreatureSchema} stats - what the data associated with the Token is
+	 * @param {CreatureSchema} schema - what the data associated with the Token is
 	 */
-	setStats(stats) {
+	setSchema(schema) {
 		this.hp = stats.hp;
-		this.stats = stats;
+		this.schema = schema;
 
-		stats.actions.forEach((actionId) => {
-			let schema = globalData.find(actionId);
-			this.actions.push(new Action(schema));
+		schema.actions.forEach((actionId) => {
+			let actionSchema = globalData.find(actionId);
+			this.actions.push(new Action(actionSchema));
 		});
 
-		if (stats.defaultBehavior === BehaviorType.Random) {
+		if (schema.defaultBehavior === BehaviorType.Random) {
 			this.behavior = new RandomBehavior(this.actions);
 		}
+	}
+
+	/**
+	 * Rolls initative for the Token
+	 * @param {StatType} type - What to roll
+	 * @returns {int} - the resulting roll or 0 if not defined
+	 */
+	roll(type) {
+		let dice = this.stats.get(type);
+		if (dice === undefined) return 0;
+		return dice.roll();
 	}
 }

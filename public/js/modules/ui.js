@@ -221,7 +221,7 @@ class Image extends ElementHTML {
 	 * @member {String} src - The link to the image
 	 * @returns {Image}
 	 */
-	setImage(src, ) {
+	setImage(src) {
 		this.dom.src = src;
 		return this;
 	}

@@ -162,6 +162,7 @@ class InitiativeDisplay extends Display {
  	 * @member {Image} image - the offset of the grid
  	 */
 	_rank = 0;
+	token = null;
 	image = null;
 	text = null;
 	_src = "";

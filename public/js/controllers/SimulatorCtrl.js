@@ -18,7 +18,7 @@ angular.module('SimulatorCtrl', ['WindowModule'])
 		sideWindow = new Window(sideWindow, new SortedListPlacement(null, 100));
 		// Add the Dispalys to the Windows
 		mainWindow.addDisplay(new GridDisplay());
-		sideWindow.addDisplay(new InitiativeDisplay().setImage(STOCK_IMAGE).setInitiative(10));
+		sideWindow.addDisplay(new InitiativeDisplay().setToken(STOCK_IMAGE).setInitiative(10));
 		sideWindow.addDisplay(new InitiativeDisplay().setImage(STOCK_IMAGE).setInitiative(1));
 		sideWindow.addDisplay(new InitiativeDisplay().setImage(STOCK_IMAGE).setInitiative(5));
 		sideWindow.addDisplay(new InitiativeDisplay().setImage(STOCK_IMAGE).setInitiative(6));
