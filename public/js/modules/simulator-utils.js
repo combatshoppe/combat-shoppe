@@ -5,7 +5,7 @@
  */
 
  /** Create a new AngularJS module */
- var SimulatorUtils = angular.module('SimulatorUtils', [])
+ var SimulatorUtils = angular.module('SimulatorUtils', ['UiModule'])
 
 /**
  * Class representing a Tile
@@ -142,27 +142,26 @@ class Grid {
 /**
  * define the token class
  */
-class Token extends TokenObject{
+class Token extends TileObject {
 	/**
 	 * Member variables
-	 * @member {int} size - The width/height of the grid in px
-	 * @member {int} _grid - Map of Positions mapped to Tiles
-	 * @member {int} size - The width/height of the grid in px
-	 * @member {int} _grid - Map of Positions mapped to Tiles
-	 * @member {int} size - The width/height of the grid in px
-	 * @member {int} _grid - Map of Positions mapped to Tiles
+	 * @member {int} hp - The width/height of the grid in px
+	 * @member {int} team - Map of Positions mapped to Tiles
+	 * @member {Behavior} behavior - The width/height of the grid in px
+	 * @member {CreatureSchema} _grid - Map of Positions mapped to Tiles
+	 * @member {Boolean} size - The width/height of the grid in px
+	 * @member {int} actions - Map of Positions mapped to Tiles
+	 * @member {int} conditions - Map of Positions mapped to Tiles
+	 * @member {Map<StatType:Dice>} stats - Map of Positions mapped to Tiles
 	 */
-
-	int hp = 0;
-	int team = 0;
-	Behavior behavior = null;
-	CreatureSchema stats = null;
-
+	hp = 0;
+	team = 0;
+	behavior = null;
+	data = null;
 	hasCastSpell = false;
-
 	actions = [];
 	conditions = [];
-	
+	stats = new Map();
 
 	/**
 	 * Function that defines if the token has health
@@ -173,36 +172,123 @@ class Token extends TokenObject{
 	}
 
 	/**
+	 * Function to attack and deal damage to the token
+	 * @member {StatType} saveType -
+	 * @member {int} saveDc -
+	 * @member {Boolean} noDamageOnSucess -
+	 * @member {DamageType} primaryDamageType -
+	 * @member {int} primaryDamage -
+	 * @member {DamageType} secondaryDamageType -
+	 * @member {int} secondaryDamage -
+	 * @returns {Boolean} - Returns true if damage was taken (not accounting for immunities)
+	 */
+	attackToSave(saveType, saveDc, saveOrSuck, primaryDamageType, primaryDamage,
+	             secondaryDamageType = 0, secondaryDamage = 0) {
+		let roll = this.roll(saveType);
+		if (roll >= saveDc && noDamageOnSucess) return false;
+		if (roll >= saveDc) {
+			primaryDamage = Math.floor(primaryDamage / 2);
+			secondaryDamage = Math.floor(secondaryDamage / 2);
+		}
+		this._dealDamage(primaryDamageType, primaryDamage);
+		this._dealDamage(secondaryDamageType, secondaryDamage);
+		return true;
+	}
+
+	/**
+	 * Function to attack and deal damage to the token
+	 * @member {int} toHit -
+	 * @member {DamageType} primaryDamageType -
+	 * @member {int} primaryDamage -
+	 * @member {DamageType} secondaryDamageType -
+	 * @member {int} secondaryDamage -
+	 * @returns {Boolean} - Returns true if the target was hit
+	 */
+	attackToHit(toHit, primaryDamageType, primaryDamage, secondaryDamageType = null, secondaryDamage = 0) {
+		if (this.data.ac > toHit) return false;
+		this._dealDamage(primaryDamageType, primaryDamage);
+		this._dealDamage(secondaryDamageType, secondaryDamage);
+		return true;
+	}
+
+	/**
+	 * Heals the token by a certain amount
+	 * @member {int} amount -
+	 */
+	heal(amount) {
+		this.hp = Math.min(this.data.hp, this.hp + amount);
+	}
+
+	/**
+	 * Deals damage to the token
+	 * @member {DamageType} type -
+	 * @member {int} amount -
+	 */
+	_dealDamage(type, amount) {
+		if (type === null || amount == 0) return;
+		if (this.data.dmgImmunities.find(type) !== undefined) return;
+		if (this.data.dmgResistances.find(type) !== undefined) {
+			amount = Math.floor(amount / 2);
+		}
+		this.hp = Math.max(0, this.hp - amount);
+	}
+
+	/**
 	 * Function that opens up the TokenSettingDisplay
 	 */
 	onRightClick() {
-
 		// To do : implement this function
 	}
 
 	/**
 	 * Set the team of the Token
 	 * @param {int} team - What to set the team as
+	 * @returns {Token}
 	 */
 	setTeam(team) {
 		this.team = team;
+		return this;
 	}
 
 	/**
 	 * Set the stats of the Token
-	 * @param {CreatureSchema} stats - what the data associated with the Token is
+	 * @param {CreatureSchema} schema - what the data associated with the Token is
+	 * @returns {Token}
 	 */
-	setStats(stats) {
-		this.hp = stats.hp;
-		this.stats = stats;
+	setSchema(schema) {
+		this.hp = schema.hp;
+		this.data = schema;
 
-		stats.actions.forEach((actionId) => {
-			let schema = globalData.find(actionId);
-			this.actions.push(new Action(schema));
+		// Load all of the dice for rolling
+		this.stats.set(StatType.Strength, new Dice(1, 20, Math.floor(schema.str / 2) - 5));
+		this.stats.set(StatType.Dexterity, new Dice(1, 20, Math.floor(schema.dex / 2) - 5));
+		this.stats.set(StatType.Charisma, new Dice(1, 20, Math.floor(schema.cha / 2) - 5));
+		this.stats.set(StatType.Intelligence, new Dice(1, 20, Math.floor(schema.int / 2) - 5));
+		this.stats.set(StatType.Wisdom, new Dice(1, 20, Math.floor(schema.wis / 2) - 5));
+		this.stats.set(StatType.Constitution, new Dice(1, 20, Math.floor(schema.con / 2) - 5));
+		this.stats.set(StatType.Initiative, new Dice(1, 20, Math.floor(schema.dex / 2) - 5));
+
+		// Load all of the actions
+		schema.actions.forEach((actionId) => {
+			let actionSchema = globalData.find(actionId);
+			this.actions.push(new Action(actionSchema));
 		});
 
-		if (stats.defaultBehavior === BehaviorType.Random) {
+		// Load the behavior
+		if (schema.defaultBehavior === BehaviorType.Random) {
 			this.behavior = new RandomBehavior(this.actions);
 		}
+		return this;
+	}
+
+	/**
+	 * Rolls initative for the Token
+	 * @param {StatType} type - What to roll
+	 * @returns {int} - the resulting roll or 0 if not defined
+	 */
+	roll(type) {
+		let dice = this.stats.get(type);
+		if (dice === undefined) return 0;
+		return dice.roll();
 	}
 }

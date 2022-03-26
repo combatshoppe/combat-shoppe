@@ -20,13 +20,19 @@ class ElementHTML {
 	 * @param {int} width - Width of the DOM
 	 * @param {int} height - Height of the DOM
 	 * @param {DOM} parent - The DOM of the parent
+	 * @throws - If an ElementHTML is made before the doc is loaded
 	 * @constructor
 	 */
 	constructor(offset, width, height, parent = null) {
+		// Check if document is loaded
+		if (document.body === null) {
+			throw "Error: Cannot create ElementHTML before document has loaded!";
+			return;
+		}
 		// Create the DOM
 		this.dom = document.createElement(this.elementType());
 		// Add the parent to the child
-		if (parent != null) parent.appendChild(this.dom);
+		if (parent !== null) parent.appendChild(this.dom);
 		else document.body.appendChild(this.dom);
 		// The element is positioned relative to its first positioned (not static)
 		// ancestor element. Find details here:
@@ -38,7 +44,6 @@ class ElementHTML {
 		this.dom.style.top = offset.y.toString() + 'px';
 		this.dom.style.width = width.toString() + 'px';
 		this.dom.style.height = height.toString() + 'px';
-		console.log(width.toString())
 		// Run any extra code inherited classes need to call
 		this._create(offset, width, height);
 	}
@@ -221,7 +226,7 @@ class Image extends ElementHTML {
 	 * @member {String} src - The link to the image
 	 * @returns {Image}
 	 */
-	setImage(src, ) {
+	setImage(src) {
 		this.dom.src = src;
 		return this;
 	}

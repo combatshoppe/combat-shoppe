@@ -23,6 +23,7 @@ BehaviorType = createEnum(['Random', 'AttackStrongest', 'AttackWeakest'], [0, 1,
 ActionType = createEnum(['Action', 'Bonus', 'Move', 'Free'], [0, 1, 2, 3])
 DamageType = createEnum(['Acid', 'Bludgeoning', 'Cold', 'Fire', 'Force', 'Lightning', 'Necrotic', 'Piercing', 'Poison', 'Psychic', 'Radiant', 'Slashing', 'Thunder'], [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
 RechargeType = createEnum(['ShortRest', 'LongRest', 'Dawn', 'Round', 'StartOfTurn', 'D6G4', 'D6G5'], [0, 1, 2, 3, 4, 5, 6])
+StatType = createEnum(['Initiative', 'Init', 'Strength', 'Str', 'Dexterity', 'Dex', 'Charisma', 'Cha', 'Intelligence', 'Int', 'Wisdom', 'Wis', 'Constitution', 'Con'], [0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6])
 
 /**
  * Class representing a point.
@@ -75,13 +76,13 @@ class Dice {
      * @param {number} modifier - The y value.
      * @constructor
      */
-    constructor(size, count = 1, modifier = 0) {
+    constructor(count, size, modifier = 0) {
         this._diceSize = size;
         this._diceCount = count;
         this._modifier = modifier;
-        if (!isNaN(this._diceSize)) { this._diceSize = 0; }
-        if (!isNaN(this._diceCount)) { this._diceCount = 0; }
-        if (!isNaN(this._modifier)) { this._modifier = 0; }
+        if (isNaN(this._diceSize)) { this._diceSize = 0; }
+        if (isNaN(this._diceCount)) { this._diceCount = 0; }
+        if (isNaN(this._modifier)) { this._modifier = 0; }
     }
 
     /**
