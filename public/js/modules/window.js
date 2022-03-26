@@ -12,17 +12,53 @@ var WindowModule = angular.module('WindowModule', ['SimulatorUtils', 'WindowUtil
 class GridDisplay extends Display {
 	/**
  	 * Member variables
- 	 * @member {Tile[][]} grid - 2D array representing the grid
- 	 * @member {int} gridX - the number of grid columns
- 	 * @member {int} gridY - the number of grid rows
+ 	 * @member {Grid} grid - the number of grid rows
  	 * @member {Position} offset - the offset of the grid
 	 * @member {GridLine[]} hLines - Array of grid lines
 	 * @member {GridLine[]} vLines - Array of grid lines
+	 * @member {TileObject[]} objects - Array of all TileObjects
  	 */
 	 grid = new Grid();
 	 offset = new Position(0, 0);
 	 hLines = [];
 	 vLines = [];
+	 objects = [];
+
+	/**
+	 * Adds a token to the grid at the nearest unoccupied spot to row, col with a given schema
+	 * @param {int} row - The position of the click
+	 * @param {int} column - The position of the click
+	 * @returns {Token} - the token created
+	 */
+	addToken(column, row, schema) {
+		// Find the nearest spot to col, row that is empty
+		let done = false;
+		let a = 0;
+		while (!done) {
+			for (let x = a; x >= -a; --x) {
+				for (let y = a; y >= -a; --y) {
+					if (this.grid.get(new Position(x, y)) === undefined) {
+						column = x;
+						row = y;
+						done = true;
+					}
+				}
+				if (done) break;
+			}
+			a += 1;
+		}
+		// Get the offset of the parent plust row/col
+		let rect = this.parent.getBoundingClientRect();
+		let offset = new Position(rect.x + (row * this.grid.size), rect.y + (column * this.grid.size));
+		// Make the token
+		let token = new Token(offset, this.grid.size, this.grid.size, this.parent);
+		token.setSchema(STOCK_SCHEMA);
+		token.setPosition(column, row);
+		// Save and rteturn the token
+		this.grid.add(new Position(column, row), token);
+		this.objects.push(token);
+		return token;
+	}
 
 	/**
  	 * Clear the grid.
@@ -30,6 +66,10 @@ class GridDisplay extends Display {
  	_deleteGrid() {
  		// Error check, then get global offset
  		if (this.parent == null) return;
+		// Remove the objects
+		this.objects.forEach((object, i) => {
+			object.delete();
+		});
  		// Clear the grid
  		this.vLines.forEach((line) => { line.delete(); });
  		this.vLines = [];
@@ -45,6 +85,11 @@ class GridDisplay extends Display {
 		this._deleteGrid();
 		// Get the bounds of the parent
 		let rect = this.parent.getBoundingClientRect();
+		// Make the objects
+		this.objects.forEach((object, i) => {
+			let offset = new Position(rect.x + (object.row * this.grid.size), rect.y + (object.column * this.grid.size));
+			object.make(offset, this.grid.size, this.grid.size, this.parent);
+		});
 		// Make the vertical grid lines
 		for (let x = 0; x < this.width; x += this.grid.size) {
 			this.vLines.push(new GridLine(new Position(rect.left + x, rect.top),
@@ -106,6 +151,10 @@ class GridDisplay extends Display {
 		// Adjust the offset
 		this.offset.x -= dx;
 		this.offset.y -= dy;
+		// Loop thru all of the TileObjects
+		this.objects.forEach((object, i) => {
+			object.move(dx, dy);
+		});
 		// Loop through all horizontal lines
 		this.hLines.forEach((line, i) => {
 			// Move the line and see if it is out of bounds

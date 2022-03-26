@@ -24,6 +24,34 @@ class ElementHTML {
 	 * @constructor
 	 */
 	constructor(offset, width, height, parent = null) {
+		// Make the object
+		this.make(offset, width, height, parent)
+
+	}
+
+	/**
+	 * The DOM type to create
+	 */
+	elementType() {
+		return 'div';
+	}
+
+	/**
+	 * Removes the object from the HTML code
+	 */
+	delete() {
+		if (this.dom != null) this.dom.remove();
+	}
+
+	/**
+	 * Adds the object to the HTML code
+	 * @param {Position} offset - The place to put the element relative to parent
+	 * @param {int} width - Width of the DOM
+	 * @param {int} height - Height of the DOM
+	 * @param {DOM} parent - The DOM of the parent
+	 * @throws - If an ElementHTML is made before the doc is loaded
+	 */
+	make(offset, width, height, parent = null) {
 		// Check if document is loaded
 		if (document.body === null) {
 			throw "Error: Cannot create ElementHTML before document has loaded!";
@@ -46,20 +74,6 @@ class ElementHTML {
 		this.dom.style.height = height.toString() + 'px';
 		// Run any extra code inherited classes need to call
 		this._create(offset, width, height);
-	}
-
-	/**
-	 * The DOM type to create
-	 */
-	elementType() {
-		return 'div';
-	}
-
-	/**
-	 * A virtual function to add additional code to the constructor
-	 */
-	delete() {
-		if (this.dom != null) this.dom.remove();
 	}
 
 	/**
@@ -213,6 +227,12 @@ class Text extends ElementHTML {
  * Subclass of the ElementHTML that represents an image.
  */
 class Image extends ElementHTML {
+	/**
+	 * Member variables
+	 * @member {String} src - DOM linked to the class
+	 */
+	src = '';
+
 
 	/**
 	 * The DOM type to create
@@ -227,8 +247,16 @@ class Image extends ElementHTML {
 	 * @returns {Image}
 	 */
 	setImage(src) {
+		this.src = src;
 		this.dom.src = src;
 		return this;
+	}
+
+	/**
+	 * Add additional code to the constructor and make calls
+	 */
+	_create() {
+		this.dom.src = this.src;
 	}
 }
 
@@ -259,22 +287,20 @@ class TileObject extends Image {
 	}
 
 	/**
-	 * Virtual function to to add additional code to constuctor
-	 * @param {int} row - grid row of TileOjbect
-	 * @param {int} column - grid column of TileObject
-	 * @param {double} height - Height of TileObject
-	 */
-	_create(row, column, height) {
-		this.row = row;
-		this.column = column;
-		this.height = height;
-	}
-
-	/**
 	 * Function if the TileObject rep has HP
 	 * @returns {Boolean} - Returns true if there is HP
 	 */
 	hasHP() {
 		return false;
+	}
+
+	/**
+	 * Function that sets the pos of a TileObject
+	 * @param {int} row - grid row of TileOjbect
+	 * @param {int} column - grid column of TileObject
+	 */
+	setPosition(row, column) {
+		this.row = row;
+		this.column = column;
 	}
 }

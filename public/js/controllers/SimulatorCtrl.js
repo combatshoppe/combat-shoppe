@@ -4,7 +4,7 @@
  */
 
 /** Declare some global variables just so they don't go out of scope */
-var mainWindow, sideWindow;
+var globalMainWindow, globalSideWindow, globalGrid;
 var STOCK_IMAGE = 'https://i.pinimg.com/originals/7c/c7/aa/7cc7aa6b6fd0d30b2ab78eabcd44c94e.png'
 var STOCK_SCHEMA = new CreatureSchema({name: 'Dwarven Warrior', dex: 12, src: STOCK_IMAGE});
 
@@ -16,20 +16,25 @@ angular.module('SimulatorCtrl', ['WindowModule'])
 	.controller('SimulatorController', function($scope, $window) {
 		$scope.tagline = 'Welcome to Simulator section!';
 		// Grab the DOM elements and create Windows with them
-		mainWindow = document.querySelectorAll('[name="MainWindow"]')[0];
-		sideWindow = document.querySelectorAll('[name="SideWindow"]')[0];
-		mainWindow = new Window(mainWindow, new SinglePlacement());
-		sideWindow = new Window(sideWindow, new SortedListPlacement(null, 100));
-
-		var dummyTokenA = new Token({x: 0, y: 0}, 0, 0).setSchema(STOCK_SCHEMA);
-		var dummyTokenB = new Token({x: 0, y: 0}, 0, 0).setSchema(STOCK_SCHEMA);
-		var dummyTokenC = new Token({x: 0, y: 0}, 0, 0).setSchema(STOCK_SCHEMA);
-
-		// Add the Dispalys to the Windows
-		mainWindow.addDisplay(new GridDisplay());
-		sideWindow.addDisplay(new InitiativeDisplay().linkToken(dummyTokenA));
-		sideWindow.addDisplay(new InitiativeDisplay().linkToken(dummyTokenB));
-		sideWindow.addDisplay(new InitiativeDisplay().linkToken(dummyTokenC));
+		globalMainWindow = document.querySelectorAll('[name="MainWindow"]')[0];
+		globalSideWindow = document.querySelectorAll('[name="SideWindow"]')[0];
+		globalMainWindow = new Window(globalMainWindow, new SinglePlacement());
+		globalSideWindow = new Window(globalSideWindow, new SortedListPlacement(null, 100));
+		// Make the grid
+		globalGrid = new GridDisplay();
+		globalMainWindow.addDisplay(globalGrid);
+		// Add tokens to the grid
+		let token;
+		token = globalGrid.addToken(0, 0, STOCK_SCHEMA);
+		globalSideWindow.addDisplay(new InitiativeDisplay().linkToken(token));
+		token = globalGrid.addToken(0, 0, STOCK_SCHEMA);
+		globalSideWindow.addDisplay(new InitiativeDisplay().linkToken(token));
+		token = globalGrid.addToken(0, 0, STOCK_SCHEMA);
+		globalSideWindow.addDisplay(new InitiativeDisplay().linkToken(token));
+		token = globalGrid.addToken(0, 0, STOCK_SCHEMA);
+		globalSideWindow.addDisplay(new InitiativeDisplay().linkToken(token));
+		token = globalGrid.addToken(0, 0, STOCK_SCHEMA);
+		globalSideWindow.addDisplay(new InitiativeDisplay().linkToken(token));
 	});
 
 
