@@ -36,6 +36,7 @@ class DataSchema {
 			this[key] = object[key];
 		});
 		// Set the id
+		// TODO: Use UUID here instead, counter is not unique!
 		this.id = DataModule.counter++;
 		// Lastly, make sure no variable in this is set to null
 		Object.keys(this).forEach((key) => {

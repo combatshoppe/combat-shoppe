@@ -60,7 +60,7 @@ class Dice {
      * @returns {Dice} - The dice created
      */
     static parse(dice) {
-        dice = dice.split("r");
+        dice = dice.replace(" ", "").split("r");
         let diceCount = parseInt(dice[0]);
         dice = dice[1].split("+");
         let diceSize = parseInt(dice[0]);

@@ -4,7 +4,7 @@
  */
 
 /** Create a new AngularJS module */
-var WindowUtilsModule = angular.module('WindowUtilsModule', ['UIModule'])
+var WindowUtilsModule = angular.module('WindowUtilsModule', ['UiModule'])
 
 /** A bridge class whose implementation is held by the display and placement
  * classes. The window knows nothing about which displays are active
@@ -250,13 +250,14 @@ class Placement {
 
 	/**
 	 * Inits the ideal display width and height
- 	 * @param {Position} width - Width of the window
- 	 * @param {Placement} height - Height of the window
+ 	 * @param {Position} displayWidth - Width of the window
+ 	 * @param {Placement} displayHeight - Height of the window
 	 * @constructor
 	 */
 	constructor(displayWidth = null, displayHeight = null) {
 		this.displayWidth = displayWidth;
 		this.displayHeight = displayHeight;
+		console.log(`dh ${displayWidth}`)
 	}
 
 	/**
@@ -267,8 +268,8 @@ class Placement {
  	init(width, height) {
 		this.width = width;
 		this.height = height;
-		if (this.displayWidth === null) this.displayWidth = this.width;
-		if (this.displayHeight === null) this.displayHeight = this.height;
+		if (this.displayWidth == null) this.displayWidth = this.width;
+		if (this.displayHeight == null) this.displayHeight = this.height;
 	}
 
 	/**

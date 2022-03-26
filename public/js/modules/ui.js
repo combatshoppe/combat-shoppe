@@ -4,17 +4,15 @@
  */
 
  /** Create a new AngularJS module */
- var uiModule = angular.module('UIModule', ['DataUtilsModule'])
+ var UiModule = angular.module('UiModule', ['DataUtilsModule'])
 
-/** Class representing a point. */
+/** Class representing an element. */
 class ElementHTML {
 	/**
 	 * Member variables
 	 * @member {DOM} dom - DOM linked to the class
-	 * @member {string} element - The type of element to make when created
 	 */
 	dom = null;
-	_elementType = 'div';
 
 	/**
 	 * Default constructor
@@ -26,9 +24,10 @@ class ElementHTML {
 	 */
 	constructor(offset, width, height, parent = null) {
 		// Create the DOM
-		this.dom = document.createElement(this._elementType);
+		this.dom = document.createElement(this.elementType());
 		// Add the parent to the child
 		if (parent != null) parent.appendChild(this.dom);
+		else document.body.appendChild(this.dom);
 		// The element is positioned relative to its first positioned (not static)
 		// ancestor element. Find details here:
 		// https://www.w3schools.com/cssref/pr_class_position.asp
@@ -39,8 +38,16 @@ class ElementHTML {
 		this.dom.style.top = offset.y.toString() + 'px';
 		this.dom.style.width = width.toString() + 'px';
 		this.dom.style.height = height.toString() + 'px';
+		console.log(width.toString())
 		// Run any extra code inherited classes need to call
 		this._create(offset, width, height);
+	}
+
+	/**
+	 * The DOM type to create
+	 */
+	elementType() {
+		return 'div';
 	}
 
 	/**
@@ -173,10 +180,57 @@ class GridLine extends ElementHTML {
 }
 
 /**
+ * Subclass of the ElementHTML that represents an image.
+ */
+class Text extends ElementHTML {
+
+	/**
+	 * The DOM type to create
+	 */
+	elementType() {
+		return 'p';
+	}
+
+	/**
+	 * Function if the TileObject rep has HP
+	 * @member {String} src - The link to the image
+	 * @returns {Text}
+	 */
+	setText(text) {
+		this.dom.textContent = text;
+		this.dom.onselectstart = function() { return false; };
+		this.dom.style.cursor = 'default';
+		return this;
+	}
+}
+
+/**
+ * Subclass of the ElementHTML that represents an image.
+ */
+class Image extends ElementHTML {
+
+	/**
+	 * The DOM type to create
+	 */
+	elementType() {
+		return 'img';
+	}
+
+	/**
+	 * Function if the TileObject rep has HP
+	 * @member {String} src - The link to the image
+	 * @returns {Image}
+	 */
+	setImage(src, ) {
+		this.dom.src = src;
+		return this;
+	}
+}
+
+/**
  * define the tileobject model
  */
-class TileObject extends ElementHTML{
-
+class TileObject extends Image {
 	row = 0;
 	column = 0;
 	height = 0;
