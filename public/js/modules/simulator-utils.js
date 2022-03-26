@@ -87,8 +87,6 @@ class Grid {
 	get(position) {
 		// Convert the position to a basic object
 		position = position.toString();
-		console.log(this._grid)
-		console.log(position)
 		// Get the poistion
 		return this._grid.get(position);
 	}
