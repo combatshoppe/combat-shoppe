@@ -39,6 +39,14 @@ class Position {
         this.x = x;
         this.y = y;
     }
+
+		/**
+     * Returns a basic object that can be used as a key
+     * @returns {Object}
+     */
+		toString() {
+			return this.x.toString() + ',' + this.y.toString();
+		}
 }
 
 /**

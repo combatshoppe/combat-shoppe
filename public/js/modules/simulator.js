@@ -7,7 +7,7 @@
  var WindowModule = angular.module('SimulatorModule', ['DataModule'])
 
 /** To do: explain the class here ---------------------------------------------
- * 
+ *
  */
 class Simulator {
 	/**
@@ -36,7 +36,7 @@ class Simulator {
 	/**
 	 * Run through the entire simulation until it ends
 	 * @param {GridDisplay} display - display of the grid
-	 * @param {Token[]} initiative - an ordered list of Token objects 
+	 * @param {Token[]} initiative - an ordered list of Token objects
 	 */
 	run(display, initiative) {
 		let turn_limit = 30;
@@ -163,7 +163,7 @@ class Simulator {
 
 				}
 				return finalPath;
-			} 
+			}
 
 			// Generate children
 			let neighbors = [];
@@ -239,7 +239,7 @@ class Simulator {
 }
 
 /**
- * 
+ *
  */
 class Node {
 	/**
