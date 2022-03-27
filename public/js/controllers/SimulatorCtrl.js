@@ -45,7 +45,6 @@ angular.module('SimulatorCtrl', ['WindowModule'])
 
 		// Things to note:
 		// Token object doesn't seem to keep row and col vals correctly, particularly col val is an issue
-		// Gird.get() returning undefined not good
 
 
 

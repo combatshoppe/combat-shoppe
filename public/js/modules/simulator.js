@@ -6,8 +6,8 @@
  /** Create a new AngularJS module */
  var WindowModule = angular.module('SimulatorModule', ['DataModule'])
 
-/** To do: explain the class here ---------------------------------------------
- *
+/**
+ * The main class behind the Simulation. It handles pathfinding, running rounds of combat, and updating the displays.
  */
 class Simulator {
 	/**
@@ -50,7 +50,6 @@ class Simulator {
 			}
 
 			// Run one round on grid without updating displays
-			console.log("grid: ", typeof(display.grid));
 			_forward(display.grid, initiative);
 
 		}
@@ -64,7 +63,6 @@ class Simulator {
 	 */
 	stepForward() {
 		throw 'Simulator.stepForward is not defined!';
-
 
 		// Loop through all spaces for TileObjects and run their actions
 		// 		or develop deltas system and run through all of those
@@ -148,8 +146,6 @@ class Simulator {
 		// Loop until destination is found or out of nodes to search
 		while (openList.length > 0) {
 
-			// console.log(currentNode.position);
-
 			// Find best adjacent node and make it new current node
 			currentNode = Simulator._findSmallestFNode(openList);
 			// Remove the new current node from the openList
@@ -159,16 +155,14 @@ class Simulator {
 			// Found the goal
 			if (currentNode.position.equals(goal)) {
 
-				console.log("PATH FOUND!!!");
-
-
 				// Backtrack to get path
 				while (currentNode != null) {
+
 					// Add current node position to the list of path positions
 					finalPath.push(currentNode.position);
 
 					// Travel backwards to parent node of current node
-					currentNode = currentNode.parentNode;
+					currentNode = currentNode.parent;
 
 				}
 				return finalPath;
@@ -206,10 +200,6 @@ class Simulator {
 				neighbor.h = Node.distance(neighbor, goal);
 				neighbor.f = neighbor.g + neighbor.h;
 
-				// console.log(neighbor.g);
-				// console.log(neighbor.h);
-				// console.log(neighbor.f);
-
 				let weight = 1;
 
 				// If neighbor is is openList
@@ -232,57 +222,15 @@ class Simulator {
 						// neighbor.parent = currentNode;
 						if (currentNode.g + weight <= neighbor.g) {
 
-
-							// Move neighbor from closed list to open list
-							// let index = closedList.indexOf(neighbor);
-							// closedList.splice(index, 1);
-							
-							// openList.push(neighbor);
-
-
 							closedNode = node;
 							return;	
 						}
 					}
-				});
-
-				
-
-				
+				});			
 
 				// If not in open and closed lists, add node to open list
-				// if (inClosedList === false && openListNeighbor === null) {
-				let newNode = new Node(new Position(neighbor.x, neighbor.y), neighbor.g, neighbor.h);
-				newNode.parent = currentNode;
+				let newNode = new Node(new Position(neighbor.x, neighbor.y), neighbor.g, neighbor.h, currentNode);
 				openList.push(newNode);
-
-				// }
-
-				
-
-				
-
-				// Neighbor is in closed list and current g value is lower
-				// if (currentNode.g + weight < closedNode.g)
-				// {
-				// 	closedNode.g = currentNode.g;
-				// 	closedNode.parent = currentNode;
-
-				// 	// closedList[FindIndex(closedNode, closedList)] = closedNode;
-
-				// }
-				// // Neighbor is in open list and current g value is lower
-				// // console.log(currentNode.g);
-				// // console.log(openNode.g);
-				// else if (currentNode.g + weight < openNode.g)
-				// {
-				// 	openNode.g = currentNode.g;
-				// 	openNode.parent = currentNode;
-
-				// 	// openList[FindIndex(openNode, openList)] = openNode;
-				// }
-
-
 			});
 		}
 	}
@@ -306,7 +254,11 @@ class Simulator {
 
 
 	/**
-	 * 
+	 * Finds a Tile on a given grid and checks to see if the space is passable while pathfinding.
+	 * @param {Grid} grid - the grid containing the Tile data
+	 * @param {int} x - the x value of the Tile being checked
+	 * @param {int} y - the y value of the Tile being checked
+	 * @returns {Boolean}
 	 */
 	static isPassable(grid, x, y) {
 	 	let tile = grid.get(x, y);
@@ -330,7 +282,7 @@ class Simulator {
 }
 
 /**
- *
+ * A helper which holds a Position and several heuristics for pathfinding purposes.
  */
 class Node {
 	/**
@@ -340,13 +292,13 @@ class Node {
 	 * @param {Number} g - distance between current node and start
 	 * @param {Number} h - estimated distance to goal
 	 */
-	constructor(position, g, h) {
+	constructor(position, g, h, parent = null) {
 	 	// Init variables
 	 	this.position = position;
 	 	this.g = g;
 		this.h = h;
 		this.f = g + h;
-		this.parent = null; // new Position(-1, -1);
+		this.parent = parent; // new Position(-1, -1);
 	}
 
 	/**
