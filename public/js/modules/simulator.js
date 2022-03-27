@@ -308,8 +308,8 @@ class Node {
 	 * @returns {Number}
 	 */
 	static distance(start, goal) {
-		let xDiff = start.x - goal.x;
-		let yDiff = start.y - goal.y;
+		let xDiff = Math.abs(start.x - goal.x);
+		let yDiff = Math.abs(start.y - goal.y);
 		let sum = Math.pow(xDiff, 2) + Math.pow(yDiff, 2);
 		return Math.sqrt(sum);
 	}

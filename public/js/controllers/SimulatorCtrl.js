@@ -33,16 +33,20 @@ angular.module('SimulatorCtrl', ['WindowModule'])
 
 		/* TESTING THE PATHFINDING HERE */
 
-		// Things to note:
-		// Token object doesn't seem to keep row and col vals correctly, particularly col val is an issue
-		// token1 = globalGrid.addToken(1, 1, STOCK_SCHEMA);
-		// token2 = globalGrid.addToken(5, 5, STOCK_SCHEMA);
+		// These tokens don't seem to be holding onto the positions correctly
+		// token1 = globalGrid.addToken(1, 5, STOCK_SCHEMA);
+		// token2 = globalGrid.addToken(7, 8, STOCK_SCHEMA);
 
+		// Substituting null for deltas since those aren't implemented yet
 		sim = new Simulator(globalGrid, null);
 		console.log(sim);
 
-		let positions = sim._pathfind(sim.currentDisplay.grid, new Position(0, 0), new Position(5, 10));
-		console.log("POSITIONS");
+		// This is commented out for when the tokens hold the row and column values
+		// let positions = sim._pathfind(sim.currentDisplay.grid, new Position(token1.row, token1.column), new Position(token2.row, token2.column));
+
+		let x1 = 1, y1 = 5, x2 = 7, y2 = 8;
+		let positions = sim._pathfind(sim.currentDisplay.grid, new Position(x1, y1), new Position(x2, y2));
+		console.log("Path from (", x1, ",", y1, ") to (", x2, ",", y2, ")");
 		positions.forEach((position) => {console.log(position)});
 
 	});
