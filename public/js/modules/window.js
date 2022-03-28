@@ -126,8 +126,8 @@ class GridDisplay extends Display {
 	 */
 	onLeftClick(position) {
 		let clampPosition = new Position(0, 0);
-		clampPosition.x = Math.floor((position.x + this.offset.x) / this.grid.size);
-		clampPosition.y = Math.floor((position.y + this.offset.y) / this.grid.size);
+		clampPosition.x = Math.floor((position.x + this.gridOffset.x) / this.grid.size);
+		clampPosition.y = Math.floor((position.y + this.gridOffset.y) / this.grid.size);
 		let tile = this.grid.get(clampPosition);
 		// Click on empyt space
 		if (tile === undefined || tile.objects.length === 0) {
@@ -136,7 +136,6 @@ class GridDisplay extends Display {
 		}
 		// Click on filled space
 		this.selectedObject = tile.objects[0];
-		console.log(this.selectedObject)
 	}
 
 	/**
@@ -218,7 +217,7 @@ class GridDisplay extends Display {
 		if (this.selectedObject === null) return;
 		console.log(key)
 		if (key === 'ArrowUp') {
-
+			console.log('up')
 		}
 		if (key === 'ArrowDown') {
 
