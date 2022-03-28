@@ -13,14 +13,14 @@ class GridDisplay extends Display {
 	/**
  	 * Member variables
  	 * @member {Grid} grid - the number of grid rows
- 	 * @member {Position} offset - the offset of the grid
+ 	 * @member {Position} gridOffset - the offset of the grid
 	 * @member {GridLine[]} hLines - Array of grid lines
 	 * @member {GridLine[]} vLines - Array of grid lines
 	 * @member {TileObject[]} objects - Array of all TileObjects
 	 * @member {TileObject} selectedObject - Array of all TileObjects
  	 */
 	 grid = new Grid();
-	 offset = new Position(0, 0);
+	 gridOffset = new Position(0, 0);
 	 hLines = [];
 	 vLines = [];
 	 objects = [];
@@ -50,8 +50,9 @@ class GridDisplay extends Display {
 			a += 1;
 		}
 		// Get the offset of the parent plust row/col
-		let rect = this.parent.getBoundingClientRect();
-		let offset = new Position(rect.x + (row * this.grid.size), rect.y + (column * this.grid.size));
+		let offset = new Position(row * this.grid.size, column * this.grid.size);
+		offset.x += this.offset.x - this.gridOffset.x
+		offset.y += this.offset.y - this.gridOffset.y
 		// Make the token
 		let token = new Token(offset, this.grid.size, this.grid.size, this.parent);
 		token.setSchema(STOCK_SCHEMA);
@@ -85,22 +86,22 @@ class GridDisplay extends Display {
 	_redrawGrid() {
 		// Delete the current grid
 		this._deleteGrid();
-		// Get the bounds of the parent
-		let rect = this.parent.getBoundingClientRect();
 		// Make the objects
 		this.objects.forEach((object, i) => {
-			let offset = new Position(rect.x + (object.row * this.grid.size), rect.y + (object.column * this.grid.size));
+			let offset = new Position(object.column * this.grid.size, object.row * this.grid.size);
+			offset.x += -this.gridOffset.x + this.offset.x;
+			offset.y += -this.gridOffset.y + this.offset.y;
 			object.make(offset, this.grid.size, this.grid.size, this.parent);
 		});
 		// Make the vertical grid lines
-		for (let x = 0; x < this.width; x += this.grid.size) {
-			this.vLines.push(new GridLine(new Position(rect.left + x, rect.top),
-			                              2, this.height, this.parent));
+		for (let x = -(this.gridOffset.x % this.grid.size); x < this.width; x += this.grid.size) {
+			let offset = new Position(x + this.offset.x, this.offset.y);
+			this.vLines.push(new GridLine(offset, 2, this.height, this.parent));
 		}
 		// Make the horizontal grid lines
-		for (let y = 0; y < this.height; y += this.grid.size) {
-			this.hLines.push(new GridLine(new Position(rect.left, rect.top + y),
-			                              this.width, 2, this.parent));
+		for (let y = -(this.gridOffset.y % this.grid.size); y < this.height; y += this.grid.size) {
+			let offset = new Position(this.offset.x, y + this.offset.y);
+			this.hLines.push(new GridLine(offset, this.width, 2, this.parent));
 		}
 	}
 
@@ -162,8 +163,8 @@ class GridDisplay extends Display {
 	onDrag(dx, dy) {
 		let isOutOfBounds = 0, x = 0, y = 0;
 		// Adjust the offset
-		this.offset.x -= dx;
-		this.offset.y -= dy;
+		this.gridOffset.x -= dx;
+		this.gridOffset.y -= dy;
 		// Loop thru all of the TileObjects
 		this.objects.forEach((object, i) => {
 			object.move(dx, dy);
@@ -280,6 +281,7 @@ class InitiativeDisplay extends Display {
 		if (this.image !== null) this.image.delete();
 		if (this.text !== null) this.text.delete();
 		this.image = null;
+		this.text = null;
  	}
 
 	/**
@@ -288,7 +290,7 @@ class InitiativeDisplay extends Display {
 	 * @param {Position} position - The position of the click
 	 */
 	onLeftClick(position) {
-
+		console.log("CLICK")
 	}
 
 	/**
@@ -314,6 +316,46 @@ class InitiativeDisplay extends Display {
 /**
  * Subclass of the Placement that only holds one active window.
  */
+class AddTokenDisplay extends Display {
+	/**
+ 	 * Member variables
+ 	 * @member {Position} offset - the offset of the grid
+ 	 * @member {Image} image - the offset of the grid
+ 	 */
+	_rank = -4503599627370495;
+	_src = 'https://cdn.onlinewebfonts.com/svg/img_45824.png';
+	image = null;
+
+	/**
+ 	 * Virtual function that visually creates and activates a display.
+ 	 */
+ 	_activate() {
+		this.image = new Image(this.offset, this.height, this.height, this.parent);
+		this.image.setImage(this._src);
+ 	}
+
+ 	/**
+ 	 * Function that removes a display from the visual window.
+ 	 */
+ 	_deactivate() {
+		if (this.image !== null) this.image.delete();
+		this.image = null;
+ 	}
+
+	/**
+	 * Function that defines what to do when the Display is clicked and no
+	 * clickable objects are able to be clicked. Unless overriden, nothing it done.
+	 * @param {Position} position - The position of the click
+	 */
+	onLeftClick(position) {
+		let token = globalGrid.addToken(0, 0, STOCK_SCHEMA);
+		globalSideWindow.addDisplay(new InitiativeDisplay().linkToken(token));
+	}
+}
+
+/**
+ * Subclass of the Placement that only holds one active window.
+ */
 class SinglePlacement extends Placement {
 	/**
 	 * Function that activates a display in the window.
@@ -327,7 +369,8 @@ class SinglePlacement extends Placement {
 			if (display.active) display.deactivate();
 		});
 		// Activate the new display
-		display.activate(new Position(0, 0), parent, this.displayWidth, this.displayHeight);
+		let rect = parent.getBoundingClientRect();
+		display.activate(new Position(rect.x, rect.y), parent, this.displayWidth, this.displayHeight);
 	}
 
 	/**

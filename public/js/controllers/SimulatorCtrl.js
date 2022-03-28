@@ -5,8 +5,11 @@
 
 /** Declare some global variables just so they don't go out of scope */
 var globalMainWindow, globalSideWindow, globalGrid;
-var STOCK_IMAGE = 'https://i.pinimg.com/originals/7c/c7/aa/7cc7aa6b6fd0d30b2ab78eabcd44c94e.png'
+
+// Remove these later
+var STOCK_IMAGE = 'https://i.pinimg.com/originals/7c/c7/aa/7cc7aa6b6fd0d30b2ab78eabcd44c94e.png';
 var STOCK_SCHEMA = new CreatureSchema({name: 'Dwarven Warrior', dex: 12, src: STOCK_IMAGE});
+var PLUS_IMAGE = 'https://cdn.onlinewebfonts.com/svg/img_45824.png';
 
 console.log(STOCK_SCHEMA)
 
@@ -25,18 +28,29 @@ angular.module('SimulatorCtrl', ['WindowModule'])
 		// Make the grid
 		globalGrid = new GridDisplay();
 		globalMainWindow.addDisplay(globalGrid);
-		// Add tokens to the grid
-		let token;
-		token = globalGrid.addToken(0, 0, STOCK_SCHEMA);
-		globalSideWindow.addDisplay(new InitiativeDisplay().linkToken(token));
-		token = globalGrid.addToken(0, 0, STOCK_SCHEMA);
-		globalSideWindow.addDisplay(new InitiativeDisplay().linkToken(token));
-		token = globalGrid.addToken(0, 0, STOCK_SCHEMA);
-		globalSideWindow.addDisplay(new InitiativeDisplay().linkToken(token));
-		token = globalGrid.addToken(0, 0, STOCK_SCHEMA);
-		globalSideWindow.addDisplay(new InitiativeDisplay().linkToken(token));
-		token = globalGrid.addToken(0, 0, STOCK_SCHEMA);
-		globalSideWindow.addDisplay(new InitiativeDisplay().linkToken(token));
+		// Add the 'Add' button to the globalSideWindow
+		globalSideWindow.addDisplay(new AddTokenDisplay());
+
+
+
+		/* TESTING THE PATHFINDING HERE */
+
+		// These tokens don't seem to be holding onto the positions correctly
+		// token1 = globalGrid.addToken(1, 5, STOCK_SCHEMA);
+		// token2 = globalGrid.addToken(7, 8, STOCK_SCHEMA);
+
+		// Substituting null for deltas since those aren't implemented yet
+		sim = new Simulator(globalGrid, null);
+		console.log(sim);
+
+		// This is commented out for when the tokens hold the row and column values
+		// let positions = sim._pathfind(sim.currentDisplay.grid, new Position(token1.row, token1.column), new Position(token2.row, token2.column));
+
+		let x1 = 1, y1 = 5, x2 = 7, y2 = 8;
+		let positions = sim._pathfind(sim.currentDisplay.grid, new Position(x1, y1), new Position(x2, y2));
+		console.log("Path from (", x1, ",", y1, ") to (", x2, ",", y2, ")");
+		positions.forEach((position) => {console.log(position)});
+
 	});
 
 function onKeyPress(event) {

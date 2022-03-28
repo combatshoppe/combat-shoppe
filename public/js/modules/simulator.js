@@ -6,20 +6,20 @@
  /** Create a new AngularJS module */
  var WindowModule = angular.module('SimulatorModule', ['DataModule'])
 
-/** To do: explain the class here ---------------------------------------------
- *
+/**
+ * The main class behind the Simulation. It handles pathfinding, running rounds of combat, and updating the displays.
  */
 class Simulator {
 	/**
 	 * Creates a simulation for the grid
 	 * @constructor
-	 * @param {Tile[][]} initial_grid - 2-dimensional matrix of Tile spaces
+	 * @param {GridDisplay} initialDisplay - 2-dimensional matrix of Tile spaces
 	 * @param {Delta[][]} deltas - a log of turn deltas, sorted in 1 dimension, where delta[0] corresponds to turn 1
 	 */
-	 constructor(initial_grid, deltas) {
+	 constructor(initialDisplay, deltas) {
 	 	// Init variables
-	 	this.initial_grid = initial_grid; // This should be a copy, currently pass by ref
-	 	this.current_grid = initial_grid;
+	 	this.initialDisplay = initialDisplay; // This should be a copy, currently pass by ref
+	 	this.currentDisplay = initialDisplay;
 	 	this.deltas = deltas;
 	 }
 
@@ -27,7 +27,7 @@ class Simulator {
 	 * Resets the simulation back to its starting state
 	 */
 	reset() {
-		this.current_grid = this.initial_grid;
+		this.currentDisplay = this.initialDisplay;
 
 		// may need to add more so everything is reset correctly
 		// for example: might need an int to keep track of current turn
@@ -39,8 +39,8 @@ class Simulator {
 	 * @param {Token[]} initiative - an ordered list of Token objects
 	 */
 	run(display, initiative) {
-		let turn_limit = 30;
-		for (let turn = 1; turn < turn_limit; turn++) {
+		let turnLimit = 30;
+		for (let turn = 1; turn < turnLimit; turn++) {
 
 			// Check for stalling edge case, currently just have turn limit
 
@@ -50,7 +50,7 @@ class Simulator {
 			}
 
 			// Run one round on grid without updating displays
-			_forward(display.grid);
+			_forward(display.grid, initiative);
 
 		}
 
@@ -63,7 +63,6 @@ class Simulator {
 	 */
 	stepForward() {
 		throw 'Simulator.stepForward is not defined!';
-
 
 		// Loop through all spaces for TileObjects and run their actions
 		// 		or develop deltas system and run through all of those
@@ -134,112 +133,156 @@ class Simulator {
 	 _pathfind(grid, start, goal) {
 
 		// Init open and closed list
-		var openList = [];
-		var closedList = [];
-		var finalPath = [];
+		let openList = [];
+		let closedList = [];
+		let finalPath = [];
 
 		// Add starting node
-		let dist = start.distanceTo(goal);
-		var startNode = new Node(start, 0, dist); // might need to leave f val as 0
-		var currentNode = startNode;
+		let dist = Node.distance(start, goal);
+		let startNode = new Node(start, 0, dist); // might need to leave f val as 0
+		let currentNode = startNode;
+		openList.push(currentNode);
 
 		// Loop until destination is found or out of nodes to search
 		while (openList.length > 0) {
+
 			// Find best adjacent node and make it new current node
-			currentNode = _findSmallestFNode(currentNode);
-			openList.remove(currentNode);
-			closedList.append(currentNode);
+			currentNode = Simulator._findSmallestFNode(openList);
+			// Remove the new current node from the openList
+			let index = openList.indexOf(currentNode);
+			openList.splice(index, 1);
 
 			// Found the goal
-			if (currentNode.position == goal) {
-				// Backtrack to get path
+			if (currentNode.position.equals(goal)) {
 
-				while (currentNode != startNode) {
+				// Backtrack to get path
+				while (currentNode != null) {
 
 					// Add current node position to the list of path positions
-					finalPath.append(currentNode.position);
+					finalPath.push(currentNode.position);
+
 					// Travel backwards to parent node of current node
-					currentNode = currentNode.parentNode;
+					currentNode = currentNode.parent;
 
 				}
 				return finalPath;
 			}
 
 			// Generate children
-			let neighbors = [];
 			let x = currentNode.position.x;
 			let y = currentNode.position.y;
+			
+			let neighbors = []
 
 			// Check if each adjacent tile is walkable
-            if (grid.get(x + 1, y).isPasable())
-                neighbors.Add(new Position(x + 1, y));
-            if (grid.get(x + 1, y + 1).isPasable())
-                neighbors.Add(new Position(x + 1, y + 1));
-            if (grid.get(x, y + 1).isPasable())
-                neighbors.Add(new Position(x, y + 1));
-            if (grid.get(x - 1, y + 1).isPasable())
-                neighbors.Add(new Position(x - 1, y + 1));
-            if (grid.get(x - 1, y).isPasable())
-                neighbors.Add(new Position(x - 1, y));
-            if (grid.get(x - 1, y - 1).isPasable())
-                neighbors.Add(new Position(x - 1, y - 1));
-            if (grid.get(x, y - 1).isPasable())
-                neighbors.Add(new Position(x, y - 1));
-            if (grid.get(x + 1, y - 1).isPasable())
-                neighbors.Add(new Position(x + 1, y - 1));
+		 	if (Simulator.isPassable(grid, x+1, y))
+		 		neighbors.push(new Position(x+1, y));
+		 	if (Simulator.isPassable(grid, x+1, y+1))
+		 		neighbors.push(new Position(x+1, y+1));
+		 	if (Simulator.isPassable(grid, x, y+1))
+		 		neighbors.push(new Position(x, y+1));
+		 	if (Simulator.isPassable(grid, x-1, y+1))
+		 		neighbors.push(new Position(x-1, y+1));
+		 	if (Simulator.isPassable(grid, x-1, y))
+		 		neighbors.push(new Position(x-1, y));
+		 	if (Simulator.isPassable(grid, x-1, y-1))
+		 		neighbors.push(new Position(x-1, y-1));
+		 	if (Simulator.isPassable(grid, x, y-1))
+		 		neighbors.push(new Position(x, y-1));
+		 	if (Simulator.isPassable(grid, x+1, y-1))
+		 		neighbors.push(new Position(x+1, y-1));
 
-            // Loop through each neighbor
-			neighbors.foreach((neighbor) => {
-
-				// Child is in closedList
-				if (neighbor in closedList) {
-					return;
-				}
+			// Loop through each neighbor position
+			neighbors.forEach((neighbor) => {
 
 				// Create f, g, and h vals
-				neighbor.g = currentNode.g + neighbor.distanceTo(currentNode);
-				neighbor.h = neighbor.distanceTo(goal);
+				neighbor.g = currentNode.g + Node.distance(currentNode.position, neighbor);
+				neighbor.h = Node.distance(neighbor, goal);
 				neighbor.f = neighbor.g + neighbor.h;
 
-				// Child is is openList
-				var openListNeighbor = null;
-				openList.every ((node) => {
-					if (node.position.x == neighbor.position.x & node.position.y == neighbor.position.y) {
-						openListNeighbor = node;
-						return false;
+				let weight = 1;
+
+				// If neighbor is is openList
+				let openNode = null;
+				openList.forEach((node) => {
+					if (neighbor.equals(node.position)) {
+						// neighbor.parent = currentNode;
+						if (currentNode.g + weight <= neighbor.g) {
+							
+							openNode = node;
+							return;	
+						}
 					}
 				});
 
-				if (neighbor.position in openList) {
-					if (neighbor.position.g > openListNeighbor.position.g) {
-						return;
+				// If neighbor is in closedList
+				let closedNode = false;
+				closedList.forEach((node) => {
+					if (neighbor.equals(node.position)) {
+						// neighbor.parent = currentNode;
+						if (currentNode.g + weight <= neighbor.g) {
+
+							closedNode = node;
+							return;	
+						}
 					}
-				}
+				});			
 
-				// Add child to openList
-				openList.append(neighbor);
-
+				// If not in open and closed lists, add node to open list
+				let newNode = new Node(new Position(neighbor.x, neighbor.y), neighbor.g, neighbor.h, currentNode);
+				openList.push(newNode);
 			});
 		}
-	 }
+	}
 
-	 /**
-	 * Finds the Node adjacent to a given Node that is closest to the goal
-	 * @param {Node} node - the Node object being checked
+	/**
+	 * Finds the Node with the smallest f value from a list of Nodes
+	 * @param {Node[]} list - the list of Nodes being checked
 	 * @returns {Node}
 	 */
-	 _findSmallestFNode(node) {
-		throw 'Simulator._findNearestTile is not defined!';
-		// let smallest_f = 9999;
-		// for (let i = 0; i < ) {
+	static _findSmallestFNode(list) {
+		let minF = 99999;
+		let tempNode = null;
+		list.forEach((node) => {
+			if (node.f < minF) {
+				minF = node.f;
+				tempNode = node;
+			}
+		});
+		return tempNode;
+	}
 
-		// }
-	 }
+
+	/**
+	 * Finds a Tile on a given grid and checks to see if the space is passable while pathfinding.
+	 * @param {Grid} grid - the grid containing the Tile data
+	 * @param {int} x - the x value of the Tile being checked
+	 * @param {int} y - the y value of the Tile being checked
+	 * @returns {Boolean}
+	 */
+	static isPassable(grid, x, y) {
+	 	let tile = grid.get(x, y);
+
+	 	// Return true if Tile contains nothing
+	 	if (typeof(tile) === "undefined")
+	 		return true;
+
+	 	// Loop through all objects on Tile
+	 	tile.foreach((tileObject) => {
+	 		// Return false if the object is not passable
+	 		if (typeof(tileObject) === "Wall") {
+				return false;								// May need to update this to handle more cases
+	 		}
+	 	});
+
+	 	// Return true if all objects on Tile are passable
+	 	return true;
+	}
 
 }
 
 /**
- *
+ * A helper which holds a Position and several heuristics for pathfinding purposes.
  */
 class Node {
 	/**
@@ -249,27 +292,25 @@ class Node {
 	 * @param {Number} g - distance between current node and start
 	 * @param {Number} h - estimated distance to goal
 	 */
-	 constructor(position, g, h) {
+	constructor(position, g, h, parent = null) {
 	 	// Init variables
 	 	this.position = position;
 	 	this.g = g;
-        this.h = h;
-        this.f = g + h;
-        this.parent = null; // new Position(-1, -1);
-	 }
+		this.h = h;
+		this.f = g + h;
+		this.parent = parent; // new Position(-1, -1);
+	}
 
-	 /**
-	 * Calculates the distance from current Node to another Node
-	 * @param {Node} destination - the Node to calculate distance to
+	/**
+	 * Calculates the distance from between two Positions
+	 * @param {Position} start - the Position to calculate distance from
+	 * @param {Position} goal - the Position to calculate distance to
 	 * @returns {Number}
 	 */
-	distanceTo(destination) {
-		let x_diff = destination.position.x - this.position.x;
-		let y_diff = destination.position.y - this.position.y;
-		let sum = Math.pow(x_diff, 2) + Math.pow(y_diff, 2);
+	static distance(start, goal) {
+		let xDiff = Math.abs(start.x - goal.x);
+		let yDiff = Math.abs(start.y - goal.y);
+		let sum = Math.pow(xDiff, 2) + Math.pow(yDiff, 2);
 		return Math.sqrt(sum);
 	}
 }
-
-sim = new Simulator(null, null);
-console.log(sim);

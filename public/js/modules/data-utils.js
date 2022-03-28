@@ -40,13 +40,22 @@ class Position {
         this.y = y;
     }
 
-		/**
+	/**
      * Returns a basic object that can be used as a key
      * @returns {Object}
      */
-		toString() {
-			return this.x.toString() + ',' + this.y.toString();
-		}
+	toString() {
+		return this.x.toString() + ',' + this.y.toString();
+	}
+
+    /**
+     * Returns a true if the given Position is in the same location
+     * @param {Position} position - The Positon object being checked.
+     * @returns {Boolean}
+     */
+    equals(position) {
+        return this.x === position.x && this.y === position.y;
+    }
 }
 
 /**
