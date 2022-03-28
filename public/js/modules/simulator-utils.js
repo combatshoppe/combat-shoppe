@@ -5,7 +5,7 @@
  */
 
  /** Create a new AngularJS module */
- var SimulatorUtils = angular.module('SimulatorUtils', [])
+ var SimulatorUtils = angular.module('SimulatorUtils', ['UiModule'])
 
 /**
  * Class representing a Tile
@@ -44,7 +44,7 @@ class Tile {
 	 * @returns {Tile} - Retuns a tile or undefined if nothing it at the position
 	 */
 	add(object) {
-		this.object.push(object);
+		this.objects.push(object);
 	}
 
 	/**
@@ -85,7 +85,10 @@ class Grid {
 	 * @returns {Tile} - Retuns a tile or undefined if nothing it at the position
 	 */
 	get(position) {
-		return _grid.get(position);
+		// Convert the position to a basic object
+		position = position.toString();
+		// Get the poistion
+		return this._grid.get(position);
 	}
 
 	/**
@@ -94,10 +97,12 @@ class Grid {
 	 * @param {TileObject} object - Object to add
 	 */
 	add(position, object) {
+		// Convert the position to a indexable string
+		position = position.toString();
 		// Make sure there is a tile at the position
-		if (!_grid.has(position)) { _grid.add(new Tile()); }
+		if (!this._grid.has(position)) { this._grid.set(position, new Tile()); }
 		// Get the tile
-		let tile = _grid.get(position);
+		let tile = this._grid.get(position);
 		// Add the object to the Tile
 		tile.add(object);
 	}
@@ -109,17 +114,19 @@ class Grid {
 	 * @return {Boolean} - True if the object was removed sucessflly
 	 */
 	remove(position, object = null) {
+		// Convert the position to a basic object
+		position = position.toString();
 		// Stop if there is no tile
-		if (!_grid.has(position)) { return false; }
+		if (!this._grid.has(position)) { return false; }
 		// Get the tile
-		let tile = _grid.get(position);
+		let tile = this._grid.get(position);
 		// Remove the tile if object is null
 		if (object === null) {
-			_grid.delete(position);
+			this._grid.delete(position);
 			return true;
 		}
 		// Otherwise, remove the object from the Tile
-		return _grid.get(poistion).remove(object);
+		return this._grid.get(position).remove(object);
 	}
 
 	/**
@@ -130,10 +137,171 @@ class Grid {
 	 * @return {Boolean} - True if the object was moved sucessflly
 	 */
 	move(object, to, from) {
+		// Convert the positions to a basic object
+		to = to.toString();
+		from = from.toString();
 		// Remove the object
 		if (!this.remove(from, object)) { return false; }
 		// Add the object
 		this.add(to, object);
 		return true;
+	}
+}
+
+/**
+ * define the token class
+ */
+class Token extends TileObject {
+	/**
+	 * Member variables
+	 * @member {int} hp - The width/height of the grid in px
+	 * @member {int} team - Map of Positions mapped to Tiles
+	 * @member {Behavior} behavior - The width/height of the grid in px
+	 * @member {CreatureSchema} _grid - Map of Positions mapped to Tiles
+	 * @member {Boolean} size - The width/height of the grid in px
+	 * @member {int} actions - Map of Positions mapped to Tiles
+	 * @member {int} conditions - Map of Positions mapped to Tiles
+	 * @member {Map<StatType:Dice>} stats - Map of Positions mapped to Tiles
+	 */
+	hp = 0;
+	team = 0;
+	behavior = null;
+	data = null;
+	hasCastSpell = false;
+	actions = [];
+	conditions = [];
+	stats = new Map();
+
+	/**
+	 * Function that defines if the token has health
+	 * @returns {Boolean} - Returns true
+	 */
+	hasHP() {
+		return true;
+	}
+
+	/**
+	 * Function to attack and deal damage to the token
+	 * @member {StatType} saveType -
+	 * @member {int} saveDc -
+	 * @member {Boolean} noDamageOnSucess -
+	 * @member {DamageType} primaryDamageType -
+	 * @member {int} primaryDamage -
+	 * @member {DamageType} secondaryDamageType -
+	 * @member {int} secondaryDamage -
+	 * @returns {Boolean} - Returns true if damage was taken (not accounting for immunities)
+	 */
+	attackToSave(saveType, saveDc, saveOrSuck, primaryDamageType, primaryDamage,
+	             secondaryDamageType = 0, secondaryDamage = 0) {
+		let roll = this.roll(saveType);
+		if (roll >= saveDc && noDamageOnSucess) return false;
+		if (roll >= saveDc) {
+			primaryDamage = Math.floor(primaryDamage / 2);
+			secondaryDamage = Math.floor(secondaryDamage / 2);
+		}
+		this._dealDamage(primaryDamageType, primaryDamage);
+		this._dealDamage(secondaryDamageType, secondaryDamage);
+		return true;
+	}
+
+	/**
+	 * Function to attack and deal damage to the token
+	 * @member {int} toHit -
+	 * @member {DamageType} primaryDamageType -
+	 * @member {int} primaryDamage -
+	 * @member {DamageType} secondaryDamageType -
+	 * @member {int} secondaryDamage -
+	 * @returns {Boolean} - Returns true if the target was hit
+	 */
+	attackToHit(toHit, primaryDamageType, primaryDamage, secondaryDamageType = null, secondaryDamage = 0) {
+		if (this.data.ac > toHit) return false;
+		this._dealDamage(primaryDamageType, primaryDamage);
+		this._dealDamage(secondaryDamageType, secondaryDamage);
+		return true;
+	}
+
+	/**
+	 * Heals the token by a certain amount
+	 * @member {int} amount -
+	 */
+	heal(amount) {
+		this.hp = Math.min(this.data.hp, this.hp + amount);
+	}
+
+	/**
+	 * Deals damage to the token
+	 * @member {DamageType} type -
+	 * @member {int} amount -
+	 */
+	_dealDamage(type, amount) {
+		if (type === null || amount == 0) return;
+		if (this.data.dmgImmunities.find(type) !== undefined) return;
+		if (this.data.dmgResistances.find(type) !== undefined) {
+			amount = Math.floor(amount / 2);
+		}
+		this.hp = Math.max(0, this.hp - amount);
+	}
+
+	/**
+	 * Function that opens up the TokenSettingDisplay
+	 */
+	onRightClick() {
+		// To do : implement this function
+	}
+
+	/**
+	 * Set the team of the Token
+	 * @param {int} team - What to set the team as
+	 * @returns {Token}
+	 */
+	setTeam(team) {
+		this.team = team;
+		return this;
+	}
+
+	/**
+	 * Set the stats of the Token
+	 * @param {CreatureSchema} schema - what the data associated with the Token is
+	 * @returns {Token}
+	 */
+	setSchema(schema) {
+		this.hp = schema.hp;
+		this.data = schema;
+
+		// Load all of the dice for rolling
+		this.stats.set(StatType.Strength, new Dice(1, 20, Math.floor(schema.str / 2) - 5));
+		this.stats.set(StatType.Dexterity, new Dice(1, 20, Math.floor(schema.dex / 2) - 5));
+		this.stats.set(StatType.Charisma, new Dice(1, 20, Math.floor(schema.cha / 2) - 5));
+		this.stats.set(StatType.Intelligence, new Dice(1, 20, Math.floor(schema.int / 2) - 5));
+		this.stats.set(StatType.Wisdom, new Dice(1, 20, Math.floor(schema.wis / 2) - 5));
+		this.stats.set(StatType.Constitution, new Dice(1, 20, Math.floor(schema.con / 2) - 5));
+		this.stats.set(StatType.Initiative, new Dice(1, 20, Math.floor(schema.dex / 2) - 5));
+
+		// Load all of the actions
+		schema.actions.forEach((actionId) => {
+			let actionSchema = globalData.find(actionId);
+			this.actions.push(new Action(actionSchema));
+		});
+
+		// Load the behavior
+		if (schema.defaultBehavior === BehaviorType.Random) {
+			this.behavior = new RandomBehavior(this.actions);
+		}
+
+		// Load the image
+		this.setImage(schema.src);
+
+		return this;
+	}
+
+	/**
+	 * Rolls initative for the Token
+	 * @param {StatType} type - What to roll
+	 * @returns {int} - the resulting roll or 0 if not defined
+	 */
+	roll(type) {
+		let dice = this.stats.get(type);
+		if (dice === undefined) return 0;
+		return dice.roll();
 	}
 }

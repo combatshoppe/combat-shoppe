@@ -17,11 +17,13 @@ class DataSchema {
 	 * Member variables
 	 * @member {String} name - Required
 	 * @member {String} description - Optional
-	 * @member {int} id - Not set by the constructor, and is overriden if attempted to set
+	 * @member {String} src - Optional
+	 * @member {int} _id - Not set by the constructor, and is overriden if attempted to set
 	 */
 	name = null;
 	description = '';
-	id = null;
+	src = '';
+	_id = null;
 
 	/**
 	 * Get a position in the grid
@@ -36,7 +38,8 @@ class DataSchema {
 			this[key] = object[key];
 		});
 		// Set the id
-		this.id = DataModule.counter++;
+		// TODO: Use UUID here instead, counter is not unique!
+		this._id = DataModule.counter++;
 		// Lastly, make sure no variable in this is set to null
 		Object.keys(this).forEach((key) => {
 			if (this[key] === null || this[key] == undefined) {
@@ -80,6 +83,27 @@ class ActionSchema extends DataSchema {
 	target = 0;
 	range = 1;
 	type = 0;
+
+	/**
+	 * Create the ActionSchema from an object
+	 * @param {Object} object - Object which to copy variables from
+	 * @throws If this.key is not defined when it is NOT an optional variable
+	 * @constructor
+	 */
+	 constructor(object) { super(); this.make(object); }
+}
+
+/**
+ * Class used to hold Action data
+ */
+class CreatureSchema extends DataSchema {
+	int = 10;
+	cha = 10;
+	con = 10;
+	dex = 10;
+	wis = 10;
+	str = 10;
+	actions = [];
 
 	/**
 	 * Create the ActionSchema from an object
