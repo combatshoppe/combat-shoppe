@@ -17,6 +17,7 @@ class DataSchema {
 	 * Member variables
 	 * @member {String} name - Required
 	 * @member {String} description - Optional
+	 * @member {String} src -TOBE ADDED
 	 * @member {int} id - Not set by the constructor, and is overriden if attempted to set
 	 */
 	name = null;
@@ -69,6 +70,7 @@ class ActionSchema extends DataSchema {
 	 * @member {TargetType} target - Optional
 	 * @member {int} range - Optional
 	 * @member {ActionType} type - Optional
+	 * @member {int} toHitBonus - Optional
 	 */
 	damageRadius = 0;
 	primaryDice = '1d6+0';
@@ -81,6 +83,7 @@ class ActionSchema extends DataSchema {
 	target = 0;
 	range = 1;
 	type = 0;
+	toHitBonus = 0;
 
 	/**
 	 * Create the ActionSchema from an object
@@ -135,7 +138,7 @@ class CreatureSchema extends DataSchema {
 	}
 
 }
-
+/*
 let a = new CreatureSchema({name: 'donnie', int : 13});
 let b = new CreatureSchema(a);
 
@@ -148,5 +151,6 @@ let re = new RegExp("[-+][0-9]*");
 let str = '"(+17)"';
 
 console.log(str.match(re)[0]);
+*/
 //https://regex101.com/
 //[A-z ]*\.
