@@ -44,6 +44,7 @@ class Window {
 		this.dom.onmousemove = this.onMove;
 		// Save this to the DOM
 		this.dom.window = this;
+		this.dom.onkeydown = this.onKeyPress;
 	}
 
 	/**
@@ -116,6 +117,15 @@ class Window {
 		// Get the local position and call the proper method
 		let position = new Position(event.offsetX, event.offsetY);
 		placement.onDrag(position, displays, event.movementX, event.movementY);
+	}
+
+	/**
+	 * Handler for a keypress event
+	 * @param {KeyboardEvent} event - Occurs when mouse interacts with the window
+	 */
+	onKeyPress(event) {
+		// Get the local position and call the proper method
+		this.placement.onKeyPress(event.key, this.displays);
 	}
 }
 
@@ -236,6 +246,15 @@ class Display {
 	 * @param {float} dy - The movement in the y direction
 	 */
 	onDrag(dx, dy) {
+		return;
+	}
+
+	/**
+	 * Function that defines what happens when a key is pressed. Unless overriden,
+	 * nothing it done.
+	 * @param {String} key - The movement in the x direction
+	 */
+	onKeyPress(key) {
 		return;
 	}
 }
@@ -377,5 +396,18 @@ class Placement {
 	 */
 	onDrag(position, allDisplays, dx, dy) {
 		this._call(position, allDisplays, "onDrag", [dx, dy]);
+	}
+
+	/**
+	 * Call onRightClick for all displays
+	 * @param {Position} position - Position of the mouse
+	 * @param {Array[Display]} allDisplays - All existing displays
+	 * @param {float} direction - The distance scrolled
+	 */
+	onKeyPress(key, allDisplays) {
+		// Loop through all displays
+		allDisplays.every((display, i) => {
+			display.onKeyPress(key);
+		});
 	}
 }
