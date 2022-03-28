@@ -112,6 +112,10 @@ class Dice {
         }
         return sum + this._modifier;
     }
+		
+		average(){
+				return this._diceCount*((this._diceSize+1)/2)+this._modifier;
+		}
 
     /**
      * Returns the text description of the dice
