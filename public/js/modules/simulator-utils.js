@@ -148,7 +148,6 @@ class Grid {
 	}
 }
 
-
 /**
  * define the token class
  */
