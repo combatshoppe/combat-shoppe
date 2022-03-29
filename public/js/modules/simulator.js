@@ -107,7 +107,7 @@ class Simulator {
 				let currentPosition = new Position(token.row, token.column);
 				let moveTo = new Position(token.row, token.column);
 
-				done = token.behavior.do(moveTo, initiative);
+				done = token.behavior.do(moveTo, initiative, token);
 
 				if (moveTo.x !== token.row && moveTo.y !== token.column) {
 
