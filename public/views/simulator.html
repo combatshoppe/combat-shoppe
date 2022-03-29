@@ -20,16 +20,26 @@
             <div class="col mainwin" name="MainWindow"> </div>
             <div class="col sidewin" name="SideWindow"> </div>
         </div>
-        <div class="row botrow bg-blue">
+        <div class="row botrow bg-gray">
+            <div class="row text-center align-items-center justify-content-center">
+                <div class="col">
+                    <a class="sim-button" onclick=" Edit() ">Edit</a>
+                </div>
+                <div class="col">
+                    <a class="sim-button" onclick="LeftArrow() ">&lt--</a>
+                </div>
+                <div class="col">
+                    <a class="sim-button" onclick="RightArrow() ">--&gt</a>
+                </div>
+                <div class="col">
+                    <a class="sim-button" onclick="DubLeftArrow() ">&lt&lt--</a>
+                </div>
+                <div class="col">
+                    <a class="sim-button" onclick="DubRightArrow() ">--&gt&gt</a>
+                </div>
+            </div>
         </div>
     </div>
-
-    <a class="edit button" onclick="Edit()">Edit</a>
-    <a class="leftarrow button" onclick="LeftArrow()">&lt--</a>
-    <a class="rightarrow button" onclick="RightArrow()">--&gt</a>
-    <a class="leftarrow button" onclick="DubLeftArrow()" style="right: 59%;">&lt&lt--</a>
-    <a class="rightarrow button" onclick="DubRightArrow()" style="left: 59%;">--&gt&gt</a>
-
 </body>
 
 </html>
