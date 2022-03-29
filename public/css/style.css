@@ -267,6 +267,36 @@ dt {
     background-color: orange;
 }
 
+.sim-button {
+    padding: 10px;
+    font-size: 15px;
+    text-align: center;
+    text-decoration: none;
+    font-family: "Buttons";
+    cursor: pointer;
+    outline: none;
+    color: #fff;
+    background-color: red;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 5px #999;
+}
+
+.sim-button:hover {
+    background-color: lightcoral
+}
+
+.sim-button:active {
+    background-color: darkred;
+    box-shadow: 0 3px #666;
+    transform: translateY(4px);
+}
+
+.play {
+    font-size: 20px;
+    padding: 15px;
+}
+
 
 /* Forms
 -----------------------------------------------------------------------------*/
@@ -301,13 +331,13 @@ td {
 }
 
 .mainwin {
-	margin: 0px;
-	padding: 0px;
-	background-color: purple;
-	width: calc(100% - 230px);
-	min-width: calc(100% - 230px);
-	height: 100%;
-	min-height: 100%;
+    margin: 0px;
+    padding: 0px;
+    background-color: purple;
+    width: calc(100% - 230px);
+    min-width: calc(100% - 230px);
+    height: 100%;
+    min-height: 100%;
 }
 
 .toprow {

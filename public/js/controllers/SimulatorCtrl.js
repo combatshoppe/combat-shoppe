@@ -55,22 +55,30 @@ function Edit() {
 }
 
 function onKeyPress(event) {
-	globalMainWindow.onKeyPress(event)
-	globalSideWindow.onKeyPress(event)
+    globalMainWindow.onKeyPress(event)
+    globalSideWindow.onKeyPress(event)
 }
 
-function LeftArrow() {
-	console.log("LeftArrow");
+function Reset() {
+    console.log("Reset");
 }
 
-function RightArrow() {
-	console.log("RightArrow");
+function Back() {
+    console.log("Back");
 }
 
-function DubLeftArrow() {
-	console.log("DubLeftArrow");
+function Play() {
+    console.log("Play");
 }
 
-function DubRightArrow() {
-	console.log("DubRightArrow");
+function Forward() {
+    console.log("Forward");
+}
+
+function Settings() {
+    console.log("Settings");
+}
+
+function Import() {
+    console.log("Import");
 }
