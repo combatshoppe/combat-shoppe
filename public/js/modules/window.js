@@ -32,17 +32,18 @@ class GridDisplay extends Display {
 	 * @param {int} column - The position of the click
 	 * @returns {Token} - the token created
 	 */
-	addToken(column, row, schema) {
+	addToken(row, column, schema) {
 		// Find the nearest spot to col, row that is empty
 		let done = false;
 		let a = 0;
 		while (!done) {
 			for (let x = a; x >= -a; --x) {
 				for (let y = a; y >= -a; --y) {
-					if (this.grid.get(new Position(x, y)) === undefined) {
-						column = x;
-						row = y;
+					if (this.grid.get(new Position(row + x, column + y)) === undefined) {
+						row += x;
+						column += y;
 						done = true;
+						break;
 					}
 				}
 				if (done) break;
@@ -56,9 +57,9 @@ class GridDisplay extends Display {
 		// Make the token
 		let token = new Token(offset, this.grid.size, this.grid.size, this.parent);
 		token.setSchema(STOCK_SCHEMA);
-		token.setPosition(column, row);
+		token.setPosition(row, column);
 		// Save and rteturn the token
-		this.grid.add(new Position(column, row), token);
+		this.grid.add(new Position(row, column), token);
 		this.objects.push(token);
 		return token;
 	}
@@ -88,18 +89,20 @@ class GridDisplay extends Display {
 		this._deleteGrid();
 		// Make the objects
 		this.objects.forEach((object, i) => {
-			let offset = new Position(object.column * this.grid.size, object.row * this.grid.size);
+			let offset = new Position(object.row * this.grid.size, object.column * this.grid.size);
 			offset.x += -this.gridOffset.x + this.offset.x;
 			offset.y += -this.gridOffset.y + this.offset.y;
 			object.make(offset, this.grid.size, this.grid.size, this.parent);
 		});
 		// Make the vertical grid lines
-		for (let x = -(this.gridOffset.x % this.grid.size); x < this.width; x += this.grid.size) {
+		let x = -(this.gridOffset.x % this.grid.size)
+		for (x -= this.grid.size; x < this.width; x += this.grid.size) {
 			let offset = new Position(x + this.offset.x, this.offset.y);
 			this.vLines.push(new GridLine(offset, 2, this.height, this.parent));
 		}
 		// Make the horizontal grid lines
-		for (let y = -(this.gridOffset.y % this.grid.size); y < this.height; y += this.grid.size) {
+		let y = -(this.gridOffset.y % this.grid.size)
+		for (y -= this.grid.size; y < this.height; y += this.grid.size) {
 			let offset = new Position(this.offset.x, y + this.offset.y);
 			this.hLines.push(new GridLine(offset, this.width, 2, this.parent));
 		}
@@ -166,7 +169,16 @@ class GridDisplay extends Display {
 		this.gridOffset.y -= dy;
 		// Loop thru all of the TileObjects
 		this.objects.forEach((object, i) => {
-			object.move(dx, dy);
+			// Move the line and see if it is out of bounds
+			isOutOfBounds = object.move(dx, dy);
+			// If the object is visible and just moved out of bounds, hide it
+			if (isOutOfBounds) {
+				object.dom.style.visibility = 'hidden';
+				// Reset the flag variable
+				isOutOfBounds = 0;
+			}
+			// Line is not out of bounds, make sure it can be seen
+			else object.dom.style.visibility = 'visible';
 		});
 		// Loop through all horizontal lines
 		this.hLines.forEach((line, i) => {
@@ -177,7 +189,8 @@ class GridDisplay extends Display {
 			// OR if the line is moving down and out of bounds down, move it to the other side
 			if (isOutOfBounds) {
 				if (line.dom.style.visibility === 'visible' ||
-				    (dy < 0 && isOutOfBounds === 1) || (dy > 0 && isOutOfBounds === 3)) {
+				    (dy < 0 && isOutOfBounds === 1) ||
+						(dy > 0 && isOutOfBounds === 3)) {
 					// Move the line to the other side for the grid
 					line.move(0, -this.grid.size * this.hLines.length * Math.abs(dy) / dy);
 					// Hide the line until it is in bounds again
@@ -199,7 +212,8 @@ class GridDisplay extends Display {
 				// OR if the line is moving left and out of bounds left, move it to the other side
 				// OR if the line is moving right and out of bounds right, move it to the other side
 				if (line.dom.style.visibility === 'visible' ||
-				    (dx < 0 && isOutOfBounds === 4) || (dx > 0 && isOutOfBounds === 2)) {
+				    (dx < 0 && isOutOfBounds === 4) ||
+						(dx > 0 && isOutOfBounds === 2)) {
 					// Move the line to the other side for the grid
 					line.move(-this.grid.size * this.vLines.length * Math.abs(dx) / dx, 0);
 					// Hide the line until it is in bounds again
@@ -214,20 +228,31 @@ class GridDisplay extends Display {
 	}
 
 	onKeyPress(key) {
-		if (this.selectedObject === null) return;
 		console.log(key)
-		if (key === 'ArrowUp') {
-			console.log('up')
+		if (this.selectedObject === null) return;
+		let from = new Position(this.selectedObject.row, this.selectedObject.column);
+		let to = new Position(this.selectedObject.row, this.selectedObject.column);
+		if (key === 'w') {
+			to.y -= 1;
+			this.grid.move(this.selectedObject, to, from);
+			this._redrawGrid();
 		}
-		if (key === 'ArrowDown') {
+		if (key === 's') {
+			to.y += 1;
+			this.grid.move(this.selectedObject, to, from);
+			this._redrawGrid();
+		}
+		if (key === 'a') {
+			to.x -= 1;
+			this.grid.move(this.selectedObject, to, from);
+			this._redrawGrid();
+		}
+		if (key === 'd') {
+			to.x += 1;
+			this.grid.move(this.selectedObject, to, from);
+			this._redrawGrid();
+		}
 
-		}
-		if (key === 'ArrowLeft') {
-
-		}
-		if (key === 'ArrowRight') {
-
-		}
 	}
 }
 
@@ -349,6 +374,14 @@ class AddTokenDisplay extends Display {
 	onLeftClick(position) {
 		let token = globalGrid.addToken(0, 0, STOCK_SCHEMA);
 		globalSideWindow.addDisplay(new InitiativeDisplay().linkToken(token));
+	}
+
+	onKeyPress(key) {
+		console.log(`${key} ==`)
+		if (key === 'CapsLock') {
+			let token = globalGrid.addToken(0, 0, STOCK_SCHEMA);
+			globalSideWindow.addDisplay(new InitiativeDisplay().linkToken(token));
+		}
 	}
 }
 

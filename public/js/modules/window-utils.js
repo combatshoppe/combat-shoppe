@@ -413,7 +413,7 @@ class Placement {
 	 */
 	onKeyPress(key, allDisplays) {
 		// Loop through all displays
-		allDisplays.every((display, i) => {
+		allDisplays.forEach((display, i) => {
 			display.onKeyPress(key);
 		});
 	}
