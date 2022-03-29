@@ -59,7 +59,6 @@ function Edit() {
 function onKeyPress(event) {
 	globalMainWindow.onKeyPress(event)
 	globalSideWindow.onKeyPress(event)
-}
 
 	console.log(initiative)
 	sim._forward(initiative);
