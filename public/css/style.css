@@ -53,6 +53,7 @@ body {
     background: url(/images/background.jpg) repeat;
     color: #000000;
     text-align: center;
+		overflow: hidden;
 }
 
 #wrapper {
