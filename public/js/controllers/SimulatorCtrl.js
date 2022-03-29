@@ -49,22 +49,14 @@ function Edit() {
 			initiative.push(display.token);
 		}
 	});
-
-	initiative[0].row = 0;
-	initiative[0].column = 0;
-	initiative[1].row = 3;
-	initiative[1].column = 3;
+	sim._forward(initiative);
+	sim.updateDisplay();
+	console.log(initiative);
 }
 
 function onKeyPress(event) {
 	globalMainWindow.onKeyPress(event)
 	globalSideWindow.onKeyPress(event)
-
-	console.log(initiative)
-	sim._forward(initiative);
-
-	console.log(initiative);
-	sim.updateDisplay();
 }
 
 function LeftArrow() {

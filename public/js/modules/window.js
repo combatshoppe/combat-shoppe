@@ -32,17 +32,18 @@ class GridDisplay extends Display {
 	 * @param {int} column - The position of the click
 	 * @returns {Token} - the token created
 	 */
-	addToken(column, row, schema) {
+	addToken(row, column, schema) {
 		// Find the nearest spot to col, row that is empty
 		let done = false;
 		let a = 0;
 		while (!done) {
 			for (let x = a; x >= -a; --x) {
 				for (let y = a; y >= -a; --y) {
-					if (this.grid.get(new Position(x, y)) === undefined) {
-						column += x;
-						row += y;
+					if (this.grid.get(new Position(row + x, column + y)) === undefined) {
+						row += x;
+						column += y;
 						done = true;
+						break;
 					}
 				}
 				if (done) break;
@@ -55,13 +56,10 @@ class GridDisplay extends Display {
 		offset.y += this.offset.y - this.gridOffset.y
 		// Make the token
 		let token = new Token(offset, this.grid.size, this.grid.size, this.parent);
-
-		// To Do: token.row is undefined for some reason
-
 		token.setSchema(STOCK_SCHEMA);
-		token.setPosition(column, row);
+		token.setPosition(row, column);
 		// Save and rteturn the token
-		this.grid.add(new Position(column, row), token);
+		this.grid.add(new Position(row, column), token);
 		this.objects.push(token);
 		return token;
 	}
@@ -230,35 +228,31 @@ class GridDisplay extends Display {
 	}
 
 	onKeyPress(key) {
+		console.log(key)
 		if (this.selectedObject === null) return;
 		let from = new Position(this.selectedObject.row, this.selectedObject.column);
 		let to = new Position(this.selectedObject.row, this.selectedObject.column);
-		console.log(key)
 		if (key === 'w') {
 			to.y -= 1;
-			console.log("TEST");
-			console.log(to);
-			//this.selectedObject.move(0, -1 * this.grid.size);
 			this.grid.move(this.selectedObject, to, from);
+			this._redrawGrid();
 		}
 		if (key === 's') {
 			to.y += 1;
-			//this.selectedObject.move(0, 1);
 			this.grid.move(this.selectedObject, to, from);
+			this._redrawGrid();
 		}
 		if (key === 'a') {
 			to.x -= 1;
-			//this.selectedObject.move(-1, 0);
 			this.grid.move(this.selectedObject, to, from);
+			this._redrawGrid();
 		}
 		if (key === 'd') {
 			to.x += 1;
-			//this.selectedObject.move(1, 0);
 			this.grid.move(this.selectedObject, to, from);
+			this._redrawGrid();
 		}
-		console.log(this.selectedObject.row)
-		console.log(this.selectedObject.column)
-		this._redrawGrid();
+
 	}
 }
 
@@ -380,6 +374,14 @@ class AddTokenDisplay extends Display {
 	onLeftClick(position) {
 		let token = globalGrid.addToken(0, 0, STOCK_SCHEMA);
 		globalSideWindow.addDisplay(new InitiativeDisplay().linkToken(token));
+	}
+
+	onKeyPress(key) {
+		console.log(`${key} ==`)
+		if (key === 'CapsLock') {
+			let token = globalGrid.addToken(0, 0, STOCK_SCHEMA);
+			globalSideWindow.addDisplay(new InitiativeDisplay().linkToken(token));
+		}
 	}
 }
 
