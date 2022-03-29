@@ -38,8 +38,8 @@ class GridDisplay extends Display {
 			for (let x = a; x >= -a; --x) {
 				for (let y = a; y >= -a; --y) {
 					if (this.grid.get(new Position(x, y)) === undefined) {
-						column = x;
-						row = y;
+						column += x;
+						row += y;
 						done = true;
 					}
 				}
@@ -53,6 +53,9 @@ class GridDisplay extends Display {
 		offset.y += this.offset.y - this.gridOffset.y
 		// Make the token
 		let token = new Token(offset, this.grid.size, this.grid.size, this.parent);
+
+		// To Do: token.row is undefined for some reason
+
 		token.setSchema(STOCK_SCHEMA);
 		token.setPosition(column, row);
 		// Save and rteturn the token

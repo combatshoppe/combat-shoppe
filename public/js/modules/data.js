@@ -104,6 +104,7 @@ class CreatureSchema extends DataSchema {
 	wis = 10;
 	str = 10;
 	actions = [];
+	defaultBehavior = 0;
 
 	/**
 	 * Create the ActionSchema from an object
