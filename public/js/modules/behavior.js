@@ -1,3 +1,11 @@
+/**
+ * behavior.js
+ * A file for all behaviors.
+ */
+
+/** Create a new AngularJS module */
+var DataUtilsModule = angular.module('BehaviorModule', [])
+
 class Behavior {
     actions = [];
     target = null;
@@ -112,5 +120,4 @@ class RandomBehavior extends Behavior {
         return possibleChoices[Math.floor(Math.random*possibleChoices.length)];
     }
 }
-
 

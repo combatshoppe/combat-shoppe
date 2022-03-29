@@ -103,6 +103,9 @@ class Grid {
 		if (!this._grid.has(position)) { this._grid.set(position, new Tile()); }
 		// Get the tile
 		let tile = this._grid.get(position);
+		// Update the tile
+		object.row = position.x;
+		object.column = position.y;
 		// Add the object to the Tile
 		tile.add(object);
 	}
@@ -142,6 +145,9 @@ class Grid {
 		from = from.toString();
 		// Remove the object
 		if (!this.remove(from, object)) { return false; }
+		// Update the tile
+		object.row = to.x;
+		object.column = to.y;
 		// Add the object
 		this.add(to, object);
 		return true;
@@ -285,7 +291,7 @@ class Token extends TileObject {
 
 		// Load the behavior
 		if (schema.defaultBehavior === BehaviorType.Random) {
-			this.behavior = new RandomBehavior(this.actions);
+			this.behavior = new RandomBehavior(this.actions, this);
 		}
 
 		// Load the image

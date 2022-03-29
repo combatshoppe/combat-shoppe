@@ -18,8 +18,8 @@ class Simulator {
 	 */
 	 constructor(initialDisplay, deltas) {
 	 	// Init variables
-	 	this.initialDisplay = initialDisplay; // This should be a copy, currently pass by ref
-	 	this.currentDisplay = initialDisplay;
+	 	this.copyGrid = initialDisplay.grid; // This should be a copy, currently pass by ref
+	 	this.display = initialDisplay;
 	 	this.deltas = deltas;
 	 }
 
@@ -31,6 +31,14 @@ class Simulator {
 
 		// may need to add more so everything is reset correctly
 		// for example: might need an int to keep track of current turn
+	}
+
+	/*
+	 * 	
+	 */
+	updateDisplay() {
+		this.display.grid = this.copyGrid;
+		this.display._redrawGrid();
 	}
 
 	/**
@@ -50,24 +58,24 @@ class Simulator {
 			}
 
 			// Run one round on grid without updating displays
-			_forward(display.grid, initiative);
+			this._forward(initiative);
 
 		}
 
 		// Update displays and animations after simulation is complete
-		UpdateDisplays();
+		this.updateDisplay();
 	}
 
 	/**
 	 * Run the simulation through one turn of combat and update displays
 	 */
-	stepForward() {
+	stepForward(gridDisplay, initiative) {
 		throw 'Simulator.stepForward is not defined!';
 
 		// Loop through all spaces for TileObjects and run their actions
 		// 		or develop deltas system and run through all of those
 		_forward();
-		UpdateDisplays();
+		this.updateDisplay();
 
 	}
 
@@ -77,36 +85,43 @@ class Simulator {
 	stepBackward() {
 		throw 'Simulator.stepBackward is not defined!';
 		_backward();
-		UpdateDisplays();
+		this.updateDisplay();
 	}
 
 	/**
 	 * Run the simulation through one turn of combat without updating displays
 	 */
-	_forward(grid, initiative) {
+	_forward(initiative) {
 		// throw 'Simulator._forward is not defined!';
 
 		// Loop through ordered list of Tokens
 		for (let i = 0; i < initiative.length; i++) {
+
 			// Look at current Token on grid
-			var token = initiative[i];
-			// Find Tile on grid where current Token is located
-			var currentTile = grid.get(token.position);
+			let token = initiative[i];
 
-			// Loop through all objects on chosen Tile
-			currentTile.objects.foreach((tileObject) => {
+			// token.start();
 
-				// Calculate a path for each tileObject
-				var path = _pathfind(grid, tileObject.position, tileObject.goal); // Need to access goal of tileObject
+			let done = false;
+			while (!done) {
+				let currentPosition = new Position(token.row, token.column);
+				let moveTo = new Position(token.row, token.column);
 
-				// Find how far the tileObject can travel
-				/* Need to implement this */
+				done = token.behavior.do(moveTo, initiative);
 
-				// Move each tileObject to the goal
-				grid.move(tileObject.position, tileObject.goal); // need to update so it doesnt go directly to goal regardless of movement
+				if (moveTo.x !== token.row && moveTo.y !== token.column) {
 
-			});
 
+					let positions = this._pathfind(this.copyGrid, currentPosition, moveTo);
+				
+
+					console.log(token);
+					console.log(moveTo);
+					console.log(currentPosition);
+
+					this.copyGrid.move(token, moveTo, currentPosition);
+				}
+			}
 		}
 	}
 
@@ -165,7 +180,7 @@ class Simulator {
 					currentNode = currentNode.parent;
 
 				}
-				return finalPath;
+				return finalPath.reverse();
 			}
 
 			// Generate children
