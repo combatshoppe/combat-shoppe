@@ -332,7 +332,8 @@ td {
 .mainwin {
     margin: 0px;
     padding: 0px;
-    background-color: purple;
+    /* background-color: purple; */
+    background: url("../images/grass.jpg");
     width: calc(100% - 220px);
     min-width: calc(100% - 220px);
     height: 100%;
