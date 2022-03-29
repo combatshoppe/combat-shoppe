@@ -168,7 +168,16 @@ class GridDisplay extends Display {
 		this.gridOffset.y -= dy;
 		// Loop thru all of the TileObjects
 		this.objects.forEach((object, i) => {
-			object.move(dx, dy);
+			// Move the line and see if it is out of bounds
+			isOutOfBounds = object.move(dx, dy);
+			// If the object is visible and just moved out of bounds, hide it
+			if (isOutOfBounds) {
+				object.dom.style.visibility = 'hidden';
+				// Reset the flag variable
+				isOutOfBounds = 0;
+			}
+			// Line is not out of bounds, make sure it can be seen
+			else object.dom.style.visibility = 'visible';
 		});
 		// Loop through all horizontal lines
 		this.hLines.forEach((line, i) => {
