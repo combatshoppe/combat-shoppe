@@ -45,7 +45,7 @@ class Behavior {
             //console.log(chosenAction);
             //let chosenAction = this.actions[0];
             //console.log(chosenAction);
-            this.chooseTarget(possibleChoices).attackToHit(chosenAction.toHitBonus, chosenAction.primaryDamage, chosenAction.primary.roll(), chosenAction.secondaryDamage, chosenAction.secondary.roll())
+            //this.chooseTarget(possibleChoices).attackToHit(chosenAction.toHitBonus, chosenAction.primaryDamage, chosenAction.primary.roll(), chosenAction.secondaryDamage, chosenAction.secondary.roll())
             this._action -= 1;
             return true;
         }

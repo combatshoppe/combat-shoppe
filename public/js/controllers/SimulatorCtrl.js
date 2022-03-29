@@ -50,22 +50,21 @@ function Edit() {
 		}
 	});
 
-	initiative[0].row = 0;
-	initiative[0].column = 0;
-	initiative[1].row = 3;
-	initiative[1].column = 3;
-}
-
-function onKeyPress(event) {
-	globalMainWindow.onKeyPress(event)
-	globalSideWindow.onKeyPress(event)
-}
+	initiative[0].row = 5;
+	initiative[0].column = 2;
+	initiative[1].row = 1;
+	initiative[1].column = 1;
 
 	console.log(initiative)
 	sim._forward(initiative);
 
 	console.log(initiative);
 	sim.updateDisplay();
+}
+
+function onKeyPress(event) {
+	globalMainWindow.onKeyPress(event)
+	globalSideWindow.onKeyPress(event)
 }
 
 function LeftArrow() {
