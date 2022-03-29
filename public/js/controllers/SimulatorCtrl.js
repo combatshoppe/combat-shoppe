@@ -18,6 +18,8 @@ angular.module('SimulatorCtrl', ['WindowModule'])
 	/** On page load */
 	.controller('SimulatorController', function($scope, $window) {
 		$scope.tagline = 'Welcome to Simulator section!';
+		// Attach the keydown event
+		document.onkeydown = onKeyPress;
 		// Grab the DOM elements and create Windows with them
 		globalMainWindow = document.querySelectorAll('[name="MainWindow"]')[0];
 		globalSideWindow = document.querySelectorAll('[name="SideWindow"]')[0];
@@ -52,6 +54,12 @@ function Edit() {
 	initiative[0].column = 0;
 	initiative[1].row = 3;
 	initiative[1].column = 3;
+}
+
+function onKeyPress(event) {
+	globalMainWindow.onKeyPress(event)
+	globalSideWindow.onKeyPress(event)
+}
 
 	console.log(initiative)
 	sim._forward(initiative);

@@ -17,12 +17,14 @@ class GridDisplay extends Display {
 	 * @member {GridLine[]} hLines - Array of grid lines
 	 * @member {GridLine[]} vLines - Array of grid lines
 	 * @member {TileObject[]} objects - Array of all TileObjects
+	 * @member {TileObject} selectedObject - Array of all TileObjects
  	 */
 	 grid = new Grid();
 	 gridOffset = new Position(0, 0);
 	 hLines = [];
 	 vLines = [];
 	 objects = [];
+	 selectedObject = null;
 
 	/**
 	 * Adds a token to the grid at the nearest unoccupied spot to row, col with a given schema
@@ -126,7 +128,17 @@ class GridDisplay extends Display {
 	 * @param {Position} position - The position of the click
 	 */
 	onLeftClick(position) {
-		console.log(`${Math.floor((position.x + this.gridOffset.x) / this.grid.size)}, ${Math.floor((position.y + this.gridOffset.y) / this.grid.size)}`);
+		let clampPosition = new Position(0, 0);
+		clampPosition.x = Math.floor((position.x + this.gridOffset.x) / this.grid.size);
+		clampPosition.y = Math.floor((position.y + this.gridOffset.y) / this.grid.size);
+		let tile = this.grid.get(clampPosition);
+		// Click on empyt space
+		if (tile === undefined || tile.objects.length === 0) {
+			this.selectedObject = null;
+			return;
+		}
+		// Click on filled space
+		this.selectedObject = tile.objects[0];
 	}
 
 	/**
@@ -202,6 +214,23 @@ class GridDisplay extends Display {
 			// Line is not out of bounds, make sure it can be seen
 			else line.dom.style.visibility = 'visible';
 		});
+	}
+
+	onKeyPress(key) {
+		if (this.selectedObject === null) return;
+		console.log(key)
+		if (key === 'ArrowUp') {
+			console.log('up')
+		}
+		if (key === 'ArrowDown') {
+
+		}
+		if (key === 'ArrowLeft') {
+
+		}
+		if (key === 'ArrowRight') {
+
+		}
 	}
 }
 
