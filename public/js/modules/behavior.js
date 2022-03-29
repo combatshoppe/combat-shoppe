@@ -22,7 +22,6 @@ class Behavior {
 
     do(targetPosistion, possibleTargets, token2=null){//tokenTarget
         //Get new target
-        console.log(possibleTargets);
         //Loop through all ranked Posistions and compare if they are 
         //distance of attack range
         if(token2 != null)
@@ -34,18 +33,21 @@ class Behavior {
         let possibleChoices = [];
         //let trgt = possibleTargets[0];
         for (let i = 0; i < possibleTargets.length; i++){
-            let trgt = possibleTargets[i];
-            console.log(trgt);
+            let trgt = possibleTargets[i];;
+
             if (this.inRange2(trgt.row,this.thisToken.row-1,this.thisToken.row+1) && this.inRange2(trgt.column,this.thisToken.column-1,this.thisToken.column+1)){
                 possibleChoices.push(trgt);
             }
         }
         if(possibleChoices.length > 0){
-            //let chosenAction = this.mostDamagingAction(this.actions);
+            let chosenAction = this.mostDamagingAction(this.actions);
             //console.log(chosenAction);
             //let chosenAction = this.actions[0];
-            //console.log(chosenAction);
-            //this.chooseTarget(possibleChoices).attackToHit(chosenAction.toHitBonus, chosenAction.primaryDamage, chosenAction.primary.roll(), chosenAction.secondaryDamage, chosenAction.secondary.roll())
+            // console.log(this.chooseTarget(possibleChoices));
+
+            // this.chooseTarget(possibleChoices).attackToHit(chosenAction.stats.toHitBonus, chosenAction.stats.primaryDamage, chosenAction.primary.roll(), chosenAction.stats.secondaryDamage, chosenAction.secondary.roll())
+            possibleChoices[0].attackToHit(chosenAction.stats.toHitBonus, chosenAction.stats.primaryDamage, chosenAction.primary.roll(), chosenAction.stats.secondaryDamage, chosenAction.secondary.roll())
+
             this._action -= 1;
             return true;
         }
@@ -53,25 +55,27 @@ class Behavior {
             return false;
         }
         possibleChoices = []
-        for (trgt in possibleTargets){
-            
+        possibleTargets.forEach((trgt) => {
             if(trgt != null && trgt.hp > 0){
                 
             }
-            range = this.token._movement/5;
+            let range = this.thisToken._movement/5;
             if (this.inRange2(trgt.row,this.thisToken.row-range,this.thisToken.row+range) && this.inRange2(trgt.column,this.thisToken.column-range,this.thisToken.column+range)){
                 possibleChoices.push(trgt);
             }
-            if(possibleChoices.length == 0){
-                for(trgt in possibleTargets){
-                    possibleChoices.push(trgt);
-                }
-            }
+        });
+
+        if(possibleChoices.length == 0){
+            possibleTargets.forEach((trgt) => {
+                possibleChoices.push(trgt);
+            });
         }
-        let tokenTarget = chooseTarget(possibleChoices);
+
+
+        let tokenTarget = this.chooseTarget(possibleChoices);
         targetPosistion.x = tokenTarget.row;
         targetPosistion.y = tokenTarget.column;
-        spentMovement = this._movement;
+        this.spentMovement = this._movement;
         return true;
         
     } //Virtual function!!!!!!!!!
@@ -86,20 +90,20 @@ class Behavior {
         //How tf do you get the actions, asume actions has the actual combat actions
         if (actions.length == 0)
             return null;
-        mostDamage = actions[0];
-        damageOfMost = 0;
-        for(a in actions){
-            newChallengerDamage = a.primary.average() + a.secondary.average();
-            if(newChallenger > damageOfMost){
-                damageOfMost = newChallengerDamage;
+        let mostDamage = actions[0];
+        this.damageOfMost = 0;
+        actions.forEach((a) => {
+            let newChallengerDamage = a.primary.average() + a.secondary.average();
+            if(newChallengerDamage > this.damageOfMost){
+                this.damageOfMost = newChallengerDamage;
                 mostDamage = a;
             }
-        }
+        });
         return mostDamage;
     }
 
     inRange2(num, low, high){
-        return (num >= low && num <= high);
+        return (num >= low && num <= high);             // CHECK RANGE NEEDS TO BE FIXED
     }
     
     start(){
@@ -129,7 +133,10 @@ class Behavior {
 
 class RandomBehavior extends Behavior {
     chooseTarget(possibleChoices){
-        return possibleChoices[Math.floor(Math.random*possibleChoices.length)];
+        console.log(Math.floor(Math.random*possibleChoices.length));
+        console.log(possibleChoices);
+        return possibleChoices[1];                          //  THIS NEEDS TO BE FIXED TOO AT SOME POINT
+        // return possibleChoices[Math.floor(Math.random*possibleChoices.length)];
     }
 }
 

@@ -32,7 +32,7 @@ class GridDisplay extends Display {
 	 * @param {int} column - The position of the click
 	 * @returns {Token} - the token created
 	 */
-	addToken(column, row, schema) {
+	addToken(row, column, schema) {
 		// Find the nearest spot to col, row that is empty
 		let done = false;
 		let a = 0;
@@ -40,8 +40,8 @@ class GridDisplay extends Display {
 			for (let x = a; x >= -a; --x) {
 				for (let y = a; y >= -a; --y) {
 					if (this.grid.get(new Position(x, y)) === undefined) {
-						column += x;
-						row += y;
+						row += x;
+						column += y;
 						done = true;
 					}
 				}
@@ -56,12 +56,10 @@ class GridDisplay extends Display {
 		// Make the token
 		let token = new Token(offset, this.grid.size, this.grid.size, this.parent);
 
-		// To Do: token.row is undefined for some reason
-
 		token.setSchema(STOCK_SCHEMA);
-		token.setPosition(column, row);
-		// Save and rteturn the token
-		this.grid.add(new Position(column, row), token);
+		token.setPosition(row, column);
+		// Save and return the token
+		this.grid.add(new Position(row, column), token);
 		this.objects.push(token);
 		return token;
 	}

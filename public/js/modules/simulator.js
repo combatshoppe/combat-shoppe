@@ -100,10 +100,9 @@ class Simulator {
 			// Look at current Token on grid
 			let token = initiative[i];
 
-			// token.start();
-
 			let done = false;
 			while (!done) {
+
 				let currentPosition = new Position(token.row, token.column);
 				let moveTo = new Position(token.row, token.column);
 
@@ -111,13 +110,7 @@ class Simulator {
 
 				if (moveTo.x !== token.row && moveTo.y !== token.column) {
 
-
 					let positions = this._pathfind(this.copyGrid, currentPosition, moveTo);
-				
-
-					console.log(token);
-					console.log(moveTo);
-					console.log(currentPosition);
 
 					this.copyGrid.move(token, moveTo, currentPosition);
 				}
@@ -180,7 +173,10 @@ class Simulator {
 					currentNode = currentNode.parent;
 
 				}
-				return finalPath.reverse();
+				finalPath = finalPath.reverse();
+				finalPath.pop();
+				console.log(finalPath);
+				return finalPath;
 			}
 
 			// Generate children

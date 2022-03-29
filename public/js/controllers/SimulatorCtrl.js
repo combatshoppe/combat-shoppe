@@ -8,7 +8,13 @@ var globalMainWindow, globalSideWindow, globalGrid;
 
 // Remove these later
 var STOCK_IMAGE = 'https://i.pinimg.com/originals/7c/c7/aa/7cc7aa6b6fd0d30b2ab78eabcd44c94e.png';
-var STOCK_SCHEMA = new CreatureSchema({name: 'Dwarven Warrior', dex: 12, src: STOCK_IMAGE, defaultBehavior: BehaviorType.Random});
+
+
+var ACTION_SCHEMA = new ActionSchema({name: 'Test Axe'});
+var testAction = new Action(ACTION_SCHEMA);
+var testActionList = [testAction];
+
+var STOCK_SCHEMA = new CreatureSchema({name: 'Dwarven Warrior', dex: 12, src: STOCK_IMAGE, defaultBehavior: BehaviorType.Random, actions: testActionList});
 var PLUS_IMAGE = 'https://cdn.onlinewebfonts.com/svg/img_45824.png';
 
 console.log(STOCK_SCHEMA)
@@ -50,15 +56,14 @@ function Edit() {
 		}
 	});
 
-	initiative[0].row = 5;
-	initiative[0].column = 2;
-	initiative[1].row = 1;
-	initiative[1].column = 1;
+	// initiative[0].row = 0;
+	// initiative[0].column = 0;
+	// initiative[1].row = 1;
+	// initiative[1].column = 1;
 
 	console.log(initiative)
 	sim._forward(initiative);
-
-	console.log(initiative);
+	// console.log(initiative);
 	sim.updateDisplay();
 }
 

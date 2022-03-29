@@ -98,11 +98,11 @@ class Grid {
 	 */
 	add(position, object) {
 		// Convert the position to a indexable string
-		position = position.toString();
+		let positionString = position.toString();
 		// Make sure there is a tile at the position
-		if (!this._grid.has(position)) { this._grid.set(position, new Tile()); }
+		if (!this._grid.has(positionString)) { this._grid.set(positionString, new Tile()); }
 		// Get the tile
-		let tile = this._grid.get(position);
+		let tile = this._grid.get(positionString);
 		// Update the tile
 		object.row = position.x;
 		object.column = position.y;
@@ -223,6 +223,7 @@ class Token extends TileObject {
 		if (this.data.ac > toHit) return false;
 		this._dealDamage(primaryDamageType, primaryDamage);
 		this._dealDamage(secondaryDamageType, secondaryDamage);
+		console.log("attack!");
 		return true;
 	}
 
@@ -241,8 +242,8 @@ class Token extends TileObject {
 	 */
 	_dealDamage(type, amount) {
 		if (type === null || amount == 0) return;
-		if (this.data.dmgImmunities.find(type) !== undefined) return;
-		if (this.data.dmgResistances.find(type) !== undefined) {
+		if (this.data.dmgImmunities.includes(type) !== undefined) return;
+		if (this.data.dmgResistances.includes(type) !== undefined) {
 			amount = Math.floor(amount / 2);
 		}
 		this.hp = Math.max(0, this.hp - amount);
@@ -283,11 +284,17 @@ class Token extends TileObject {
 		this.stats.set(StatType.Constitution, new Dice(1, 20, Math.floor(schema.con / 2) - 5));
 		this.stats.set(StatType.Initiative, new Dice(1, 20, Math.floor(schema.dex / 2) - 5));
 
+
+		var ACTION_SCHEMA = new ActionSchema({name: 'Test Axe'});
+
 		// Load all of the actions
+		/* SHIT BROKE
 		schema.actions.forEach((actionId) => {
 			let actionSchema = globalData.find(actionId);
 			this.actions.push(new Action(actionSchema));
 		});
+		*/
+		this.actions.push(new Action(ACTION_SCHEMA))
 
 		// Load the behavior
 		if (schema.defaultBehavior === BehaviorType.Random) {
