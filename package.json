@@ -23,7 +23,9 @@
   "homepage": "https://github.com/combatshoppe/combat-shoppe#readme",
   "dependencies": {
     "angular": "^1.8.2",
+    "bootstrap": "^5.1.3",
     "express": "^4.17.2",
+    "jquery": "^3.6.0",
     "mongoose": "^6.2.1"
   }
 }

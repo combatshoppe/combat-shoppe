@@ -21,6 +21,8 @@
 
     <!-- ANGULAR CUSTOM -->
 		<script src="js/modules/data-utils.js"></script>
+		<script src="js/modules/parser.js"></script>
+		<script src="js/modules/behavior.js"></script>
 		<script src="js/modules/ui.js"></script>
 		<script src="js/modules/simulator-utils.js"></script>
 		<script src="js/modules/data.js"></script>
@@ -40,25 +42,81 @@
 
 
 <body ng-app="combatShoppeApp" ng-controller="MainController">
-	<div class="container-fluid">
-		<!-- HEADER -->
-		<div class="container bg-purple">
-			<nav class="navbar navbar-inverse navbar-custom">
-					<ul class="nav navbar-nav">
-							<a class="homebrew button" href="/homebrewBuilder">Homebrew Builder</a>
-					</ul>
-					<div class="navbar-header">
-							<a class="navbar-brand" href="/">5e Combat Shoppe</a>
-					</div>
-					<ul class="nav navbar-nav">
-							<a class="simulator button" href="/simulator">Battle Simulator</a>
-					</ul>
-			</nav>
-		</div>
-		<!-- ANGULAR DYNAMIC CONTENT -->
-		<div class="container ng-fill bg-blue" ng-view> </div>
+    <div class="container-fluid">
 
-	</div>
+        <!-- HEADER -->
+        <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: gray;">
+            <!-- <a class="navbar-brand " href="# ">5e Combat Shoppe</a> -->
+            <div class="pad-right navbar-toggler remove-border" data-toggle="collapse " data-target="#navbarNav " aria-controls="navbarNav " aria-expanded="false ">
+                <a class="small-header button" href="/homebrewBuilder ">Homebrew Builder</a>
+            </div>
+            <div class="navbar-toggler remove-border" data-toggle="collapse " data-target="#navbarNav " aria-controls="navbarNav " aria-expanded="false ">
+                <a href="/ ">
+                    <img src="/images/dndcslogo.ico " alt="Description for image " width="60 " height="60 ">
+                </a>
+            </div>
+            <div class="pad-left navbar-toggler remove-border" data-toggle="collapse " data-target="#navbarNav " aria-controls="navbarNav " aria-expanded="false ">
+                <a class="small-header button" href="/simulator ">Battle Simulator</a>
+            </div>
+            <div class="collapse navbar-collapse justify-content-md-center " id="navbarNav ">
+                <ul class="navbar-nav ">
+                    <li class="nav-item ">
+                        <div class="pad-right ">
+                            <a class="header button " href="/homebrewBuilder ">Homebrew Builder</a>
+                        </div>
+                    </li>
+                    <li class="nav-item ">
+                        <a href="/ ">
+                            <img src="/images/dndcslogo.ico " alt="Description for image " width="60 " height="60 ">
+                        </a>
+                    </li>
+                    <li class="nav-item ">
+                        <div class="navbar-header">
+                            <a class="title " href="/ ">5e Combat Shoppe</a>
+                        </div>
+                    </li>
+                    <li class="nav-item ">
+                        <a href="/ ">
+                            <img src="/images/dndcslogo.ico " alt="Description for image " width="60 " height="60 ">
+                        </a>
+                    </li>
+                    <li class="nav-item ">
+                        <div class="pad-left ">
+                            <a class="header button " href="/simulator ">Battle Simulator</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- <div id="header ">
+            <nav class="navbar navbar-custom ">
+                <div class="navbar-nav ">
+                    <a class="header button " href="/homebrewBuilder ">Homebrew Builder</a>
+                </div>
+
+                <a href="/ ">
+                    <img src="/images/dndcslogo.ico " alt="Description for image " width="60 " height="60 ">
+                </a>
+
+                <div class="navbar-header ">
+                    <a class="title " href="/ ">5e Combat Shoppe</a>
+                </div>
+
+                <a href="/ ">
+                    <img src="/images/dndcslogo.ico " alt="Description for image " width="60 " height="60 ">
+                </a>
+                
+                <div class="navbar-nav ">
+                    <a class="header button " href="/simulator ">Battle Simulator</a>
+                </div>
+            </nav>
+        </div> -->
+
+        <!-- ANGULAR DYNAMIC CONTENT -->
+        <div class="container ng-fill bg-blue " ng-view> </div>
+
+    </div>
 
 </body>
 
