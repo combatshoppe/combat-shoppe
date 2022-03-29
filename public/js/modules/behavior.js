@@ -13,43 +13,61 @@ class Behavior {
     } //ngl i might have missed this in other places
 
 
-    do(tokenTarget, rankedPositions){//tokenTarget
+    do(targetPosistion, possibleTargets){//tokenTarget
         //Get new target
 
         //Loop through all ranked Posistions and compare if they are 
         //distance of attack range
-
-        for (trgt in rankedPosition){
-            if(trgt != null && trgt.hp > 0){
-
-            }
-            if (trgt.row.inRange(this.target.row-1,this.target.row+1) && trgt.row.inRange(this.target.col-1,this.target.col+1)){
-                
-            }
-        }
-
-        if(target == null && rankedPositions.length() == 0){
+        
+        //Hit attack
+        if(possibleTargets.length == 0 || (spentMovement >= this._movement && this._action <= 0)){
             return false;
         }
-        out = false;
-        if(spentMovement > 0){
-            out = true;
-            if(target == null){
-                //Find new target
-                //target = smthing
+        possibleChoices = []
+        for (trgt in possibleTargets){
+            if (trgt.row.inRange(this.target.row-1,this.target.row+1) && trgt.row.inRange(this.target.col-1,this.target.col+1)){
+                possibleChoices.add(trgt);
             }
         }
-        if(target != null && this.action > 0){
-            out = true;
+        if(possibleChoices.length > 0){
             chosenAction = mostDamagingAction(actions);
-            this.target.attackToHit(chosenAction.toHitBonus, chosenAction.primaryDamage, chosenAction.primary.roll(), chosenAction.secondaryDamage, chosenAction.secondary.roll(),)
-            //Attack target, use mostDamagingAction(actions) and 
-            //update _action -= action.cost
+            chooseTarget(possibleChoices).attackToHit(chosenAction.toHitBonus, chosenAction.primaryDamage, chosenAction.primary.roll(), chosenAction.secondaryDamage, chosenAction.secondary.roll())
+            this._action -= 1;
+            return true;
         }
-        return out;
+        if(spentMovement >= this._movement){
+            return false;
+        }
+        possibleChoices = []
+        for (trgt in possibleTargets){
+            
+            if(trgt != null && trgt.hp > 0){
+                
+            }
+            range = this.token._movement/5;
+            if (trgt.row.inRange(this.target.row-range,this.target.row+range) && trgt.row.inRange(this.target.col-range,this.target.col+range)){
+                possibleChoices.add(trgt);
+            }
+            if(possibleChoices.length == 0){
+                for(trgt in possibleTargets){
+                    possibleChoices.add(trgt);
+                }
+            }
+        }
+        let tokenTarget = chooseTarget(possibleChoices);
+        targetPosistion.x = tokenTarget.row;
+        targetPosistion.y = tokenTarget.col;
+        spentMovement = this._movement;
+        return true;
+        
     } //Virtual function!!!!!!!!!
     // rankedPosition should be an empty vector that is returned. 
     //The function should return false when if cannot do anything anymore
+    chooseTarget(possibleChoices){
+        throw "Error: no behavior type defined";
+        //return possibleChoices[Math.floor(Math.random*possibleChoices.length)];
+    }
+
     start(){
         this._action = 1.0;
         this.spentMovement = 0;
@@ -87,6 +105,12 @@ class Behavior {
         dieArr = dieString.split("d");
         return dieArr[0]*((dieArr[1]+1)/2);
     }*/
+}
+
+class RandomBehavior extends Behavior {
+    chooseTarget(possibleChoices){
+        return possibleChoices[Math.floor(Math.random*possibleChoices.length)];
+    }
 }
 
 
