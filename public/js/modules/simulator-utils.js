@@ -98,15 +98,14 @@ class Grid {
 	 */
 	add(position, object) {
 		// Convert the position to a indexable string
-		let pString = position.toString();
+		let positionString = position.toString();
 		// Make sure there is a tile at the position
-		if (!this._grid.has(pString)) { this._grid.set(pString, new Tile()); }
-		// Update the token position
+		if (!this._grid.has(positionString)) { this._grid.set(positionString, new Tile()); }
+		// Get the tile
+		let tile = this._grid.get(positionString);
+		// Update the tile
 		object.row = position.x;
 		object.column = position.y;
-		console.log(`==> ${object.row}, ${object.column}`)
-		// Get the tile
-		let tile = this._grid.get(pString);
 		// Add the object to the Tile
 		tile.add(object);
 	}
@@ -144,8 +143,11 @@ class Grid {
 	 * @return {Boolean} - True if the object was moved sucessflly
 	 */
 	move(object, to, from) {
+		// Convert the positions to a basic object
+		let toString = to.toString();
+		let fromString = from.toString();
 		// Remove the object
-		if (!this.remove(from, object)) { return false; }
+		if (!this.remove(fromString, object)) { console.log("REMOVING");return false; }
 		// Update the tile
 		object.row = to.x;
 		object.column = to.y;
@@ -224,6 +226,7 @@ class Token extends TileObject {
 		if (this.data.ac > toHit) return false;
 		this._dealDamage(primaryDamageType, primaryDamage);
 		this._dealDamage(secondaryDamageType, secondaryDamage);
+		console.log("Attack!");
 		return true;
 	}
 
@@ -241,12 +244,14 @@ class Token extends TileObject {
 	 * @member {int} amount -
 	 */
 	_dealDamage(type, amount) {
+		this.hp -= amount;
 		if (type === null || amount == 0) return;
-		if (this.data.dmgImmunities.find(type) !== undefined) return;
-		if (this.data.dmgResistances.find(type) !== undefined) {
+		if (this.data.dmgImmunities.includes(type) !== undefined) return;
+		if (this.data.dmgResistances.includes(type) !== undefined) {
 			amount = Math.floor(amount / 2);
 		}
 		this.hp = Math.max(0, this.hp - amount);
+		
 	}
 
 	/**
@@ -284,11 +289,17 @@ class Token extends TileObject {
 		this.stats.set(StatType.Constitution, new Dice(1, 20, Math.floor(schema.con / 2) - 5));
 		this.stats.set(StatType.Initiative, new Dice(1, 20, Math.floor(schema.dex / 2) - 5));
 
+
+		var ACTION_SCHEMA = new ActionSchema({name: 'Test Axe'});
+
 		// Load all of the actions
+		/* SHIT BROKE
 		schema.actions.forEach((actionId) => {
 			let actionSchema = localData.actions.get(actionId);
 			this.actions.push(new Action(actionSchema));
 		});
+		*/
+		this.actions.push(new Action(ACTION_SCHEMA))
 
 		// Load the behavior
 		if (schema.defaultBehavior === BehaviorType.Random) {
