@@ -205,6 +205,10 @@ dt {
     padding-right: 50px;
 }
 
+.pad-bottom {
+    padding-bottom: 10px;
+}
+
 .navbar-header {
     padding-left: 20px;
     padding-right: 20px;
