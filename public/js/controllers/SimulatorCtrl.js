@@ -30,7 +30,6 @@ angular.module('SimulatorCtrl', ['WindowModule'])
 		globalMainWindow.addDisplay(globalGrid);
 		// Add the 'Add' button to the globalSideWindow
 		globalSideWindow.addDisplay(new AddTokenDisplay());
-
 	});
 
 

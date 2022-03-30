@@ -145,7 +145,6 @@ class Grid {
 	 */
 	move(object, to, from) {
 		// Remove the object
-		console.log("I am the worst code ever")
 		if (!this.remove(from, object)) { return false; }
 		// Update the tile
 		object.row = to.x;
