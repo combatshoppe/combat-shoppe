@@ -26,8 +26,13 @@ class Behavior {
         //distance of attack range
         if(token2 != null)
             this.thisToken = token2;
+        if(this.thisToken.hp <= 0){
+            console.log("\tI am dead");
+            return true;
+        }
         //Hit attack
         if(possibleTargets.length == 0 || (this.spentMovement >= this._movement && this._action <= 0)){
+            this.start();
             return true;
         }
         let possibleChoices = [];
@@ -46,14 +51,24 @@ class Behavior {
             //console.log(chosenAction);
             //let chosenAction = this.actions[0];
             // console.log(this.chooseTarget(possibleChoices));
-
             // this.chooseTarget(possibleChoices).attackToHit(chosenAction.stats.toHitBonus, chosenAction.stats.primaryDamage, chosenAction.primary.roll(), chosenAction.stats.secondaryDamage, chosenAction.secondary.roll())
-            possibleChoices[0].attackToHit(chosenAction.stats.toHitBonus, chosenAction.stats.primaryDamage, chosenAction.primary.roll(), chosenAction.stats.secondaryDamage, chosenAction.secondary.roll())
-
+            let tgt = this.chooseTarget(possibleChoices);
+            while(tgt.hp <= 0){
+                possibleChoices.pop(tgt);
+                if(possibleChoices.length == 0){
+                    this._action -= 1;
+                    console.log("\tno alive targets");
+                    return false;
+                }
+                tgt = this.chooseTarget(possibleChoices);
+            }
+            console.log("\tAttack!");
+            tgt.attackToHit(chosenAction.stats.toHitBonus + Math.floor(Math.random()*20), chosenAction.stats.primaryDamage, chosenAction.primary.roll(), chosenAction.stats.secondaryDamage, chosenAction.secondary.roll())
             this._action -= 1;
             return false;
         }
         if(this.spentMovement >= this._movement){
+            this.start();
             return true;
         }
         possibleChoices = []
@@ -74,13 +89,18 @@ class Behavior {
             });
         }
 
-        console.log("Move!");
+        console.log("\tMove!");
         
         let tokenTarget = this.chooseTarget(possibleChoices);
         targetPosistion.x = tokenTarget.row;
         targetPosistion.y = tokenTarget.column;
         this.spentMovement = this._movement;
-        return true;
+        if(this._action > 0){
+            return false;
+        } else {
+            this.start();
+            return true;
+        }
         
     } //Virtual function!!!!!!!!!
     // rankedPosition should be an empty vector that is returned. 
@@ -138,7 +158,7 @@ class Behavior {
 class RandomBehavior extends Behavior {
     chooseTarget(possibleChoices){
         // console.log(possibleChoices);
-        return possibleChoices[1];                          //  THIS NEEDS TO BE FIXED TOO AT SOME POINT
+        return possibleChoices[0];                          //  THIS NEEDS TO BE FIXED TOO AT SOME POINT
         // return possibleChoices[Math.floor(Math.random*possibleChoices.length)];
     }
 }

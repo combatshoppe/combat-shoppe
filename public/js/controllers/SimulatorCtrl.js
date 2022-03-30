@@ -45,17 +45,6 @@ function Edit() {
 	/* TESTING THE SIMULATOR HERE */
 
 	// Substituting null for deltas since those aren't implemented yet
-	sim = new Simulator(globalGrid, null);
-	console.log(sim);
-
-	let initiative = [];
-	globalSideWindow.displays.forEach((display) => {
-		if (display.token !== undefined) {
-			initiative.push(display.token);
-		}
-	});
-	sim._forward(initiative);
-	sim.updateDisplay();
 }
 
 function onKeyPress(event) {
@@ -73,6 +62,17 @@ function Back() {
 
 function Play() {
     console.log("Play");
+	sim = new Simulator(globalGrid, null);
+	console.log(sim);
+
+	let initiative = [];
+	globalSideWindow.displays.forEach((display) => {
+		if (display.token !== undefined) {
+			initiative.push(display.token);
+		}
+	});
+	sim._forward(initiative);
+	sim.updateDisplay();
 }
 
 function Forward() {

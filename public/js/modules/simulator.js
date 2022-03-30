@@ -101,11 +101,12 @@ class Simulator {
 			let token = initiative[i];
 
 			let done = false;
+			console.log("Begin Do Function:");
 			while (!done) {
 
 				let currentPosition = new Position(token.row, token.column);
 				let moveTo = new Position(token.row, token.column);
-
+				
 				done = token.behavior.do(moveTo, initiative, token);
 
 				let positions = this._pathfind(this.copyGrid, currentPosition, moveTo);

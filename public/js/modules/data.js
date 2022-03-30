@@ -124,9 +124,9 @@ class CreatureSchema extends DataSchema {
 	con = 10;
 	wis = 10;
 	speed = 0;
-	ac = 0;
+	ac = 10;
 	pb = 1;
-	hp = 1;
+	hp = 10;
 	dmgResistances = [];
 	dmgImmunities = [];
 	darkvision = 0;

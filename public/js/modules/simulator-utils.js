@@ -127,7 +127,7 @@ class Grid {
 		let tile = this._grid.get(position);
 		// Remove the tile if this is the last object
 		if (tile.objects.length <= 1) {
-			console.log("I am the best code ever")
+			//console.log("I am the best code ever")
 			this._grid.delete(position);
 			return true;
 		}
@@ -223,10 +223,11 @@ class Token extends TileObject {
 	 * @returns {Boolean} - Returns true if the target was hit
 	 */
 	attackToHit(toHit, primaryDamageType, primaryDamage, secondaryDamageType = null, secondaryDamage = 0) {
-		if (this.data.ac > toHit) return false;
+		if (this.data.ac > toHit) {console.log("\t\tMiss!"); return false;}
+		console.log("\t\tHit!");
 		this._dealDamage(primaryDamageType, primaryDamage);
-		this._dealDamage(secondaryDamageType, secondaryDamage);
-		console.log("Attack!");
+		//this._dealDamage(secondaryDamageType, secondaryDamage);
+		
 		return true;
 	}
 
@@ -244,7 +245,9 @@ class Token extends TileObject {
 	 * @member {int} amount -
 	 */
 	_dealDamage(type, amount) {
-		this.hp -= amount;
+		this.hp = Math.max(0, this.hp - amount);
+		console.log("\t\tOW! I am now at:", this.hp);
+		return;
 		if (type === null || amount == 0) return;
 		if (this.data.dmgImmunities.includes(type) !== undefined) return;
 		if (this.data.dmgResistances.includes(type) !== undefined) {
