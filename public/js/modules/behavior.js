@@ -24,7 +24,6 @@ class Behavior {
         //Get new target
         //Loop through all ranked Posistions and compare if they are 
         //distance of attack range
-        console.log("do");
         if(token2 != null)
             this.thisToken = token2;
         //Hit attack
@@ -139,7 +138,7 @@ class Behavior {
 
 class RandomBehavior extends Behavior {
     chooseTarget(possibleChoices){
-        console.log(possibleChoices);
+        // console.log(possibleChoices);
         return possibleChoices[1];                          //  THIS NEEDS TO BE FIXED TOO AT SOME POINT
         // return possibleChoices[Math.floor(Math.random*possibleChoices.length)];
     }

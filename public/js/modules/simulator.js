@@ -115,14 +115,8 @@ class Simulator {
 					pos = new Position(positions[positions.length-1].x, positions[positions.length-1].y);
 
 				if (pos.x !== token.row || pos.y !== token.column) {
-					console.log("PATHFINDING TO ", pos);
-					// let positions = this._pathfind(this.copyGrid, currentPosition, moveTo);
-					// moveTo.x = pos.x;
-					// moveTo.y = pos.y;
 
-					console.log("VALUES", token.row, token.column, pos.x, pos.y);
 					this.copyGrid.move(token, pos, currentPosition);
-					console.log("VALUES 2",token.row, token.column, pos.x, pos.y);
 				}
 			}
 		}
@@ -185,7 +179,6 @@ class Simulator {
 				}
 				finalPath = finalPath.reverse();
 				finalPath.pop();
-				console.log(finalPath);
 				return finalPath;
 			}
 
