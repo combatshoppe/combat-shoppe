@@ -33,10 +33,12 @@ class Behavior {
         let possibleChoices = [];
         //let trgt = possibleTargets[0];
         for (let i = 0; i < possibleTargets.length; i++){
-            let trgt = possibleTargets[i];;
+            let trgt = possibleTargets[i];
+            if(trgt != this.thisToken){
 
-            if (this.inRange2(trgt.row,this.thisToken.row-1,this.thisToken.row+1) && this.inRange2(trgt.column,this.thisToken.column-1,this.thisToken.column+1)){
+                if (this.inRange2(trgt.row,this.thisToken.row-1,this.thisToken.row+1) && this.inRange2(trgt.column,this.thisToken.column-1,this.thisToken.column+1)){
                 possibleChoices.push(trgt);
+                }
             }
         }
         if(possibleChoices.length > 0){
@@ -56,12 +58,13 @@ class Behavior {
         }
         possibleChoices = []
         possibleTargets.forEach((trgt) => {
-            if(trgt != null && trgt.hp > 0){
+            if(trgt != null && trgt.hp > 0 && (trgt.row == this.thisToken.row && trgt.column == this.thisToken.column)){
                 
-            }
-            let range = this.thisToken._movement/5;
-            if (this.inRange2(trgt.row,this.thisToken.row-range,this.thisToken.row+range) && this.inRange2(trgt.column,this.thisToken.column-range,this.thisToken.column+range)){
-                possibleChoices.push(trgt);
+            } else{
+                let range = this.thisToken._movement/5;
+                if (this.inRange2(trgt.row,this.thisToken.row-range,this.thisToken.row+range) && this.inRange2(trgt.column,this.thisToken.column-range,this.thisToken.column+range)){
+                    possibleChoices.push(trgt);
+                }
             }
         });
 
@@ -135,7 +138,7 @@ class RandomBehavior extends Behavior {
     chooseTarget(possibleChoices){
         console.log(Math.floor(Math.random*possibleChoices.length));
         console.log(possibleChoices);
-        return possibleChoices[1];                          //  THIS NEEDS TO BE FIXED TOO AT SOME POINT
+        return possibleChoices[0];                          //  THIS NEEDS TO BE FIXED TOO AT SOME POINT
         // return possibleChoices[Math.floor(Math.random*possibleChoices.length)];
     }
 }

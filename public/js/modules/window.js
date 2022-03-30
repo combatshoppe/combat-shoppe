@@ -89,7 +89,7 @@ class GridDisplay extends Display {
 		this._deleteGrid();
 		// Make the objects
 		this.objects.forEach((object, i) => {
-			let offset = new Position(object.column * this.grid.size, object.row * this.grid.size);
+			let offset = new Position(object.row * this.grid.size, object.column * this.grid.size);
 			offset.x += -this.gridOffset.x + this.offset.x;
 			offset.y += -this.gridOffset.y + this.offset.y;
 			object.make(offset, this.grid.size, this.grid.size, this.parent);
