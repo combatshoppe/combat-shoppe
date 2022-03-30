@@ -106,6 +106,7 @@ class Grid {
 		// Update the tile
 		object.row = position.x;
 		object.column = position.y;
+
 		// Add the object to the Tile
 		tile.add(object);
 	}
@@ -150,7 +151,7 @@ class Grid {
 		object.row = to.x;
 		object.column = to.y;
 		// Add the object
-		this.add(toString, object);
+		this.add(to, object);
 		return true;
 	}
 }

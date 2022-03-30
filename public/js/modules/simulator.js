@@ -120,9 +120,9 @@ class Simulator {
 					// moveTo.x = pos.x;
 					// moveTo.y = pos.y;
 
-					console.log("VALUES");
-					console.log(token.row, token.column, pos.x, pos.y);
+					console.log("VALUES", token.row, token.column, pos.x, pos.y);
 					this.copyGrid.move(token, pos, currentPosition);
+					console.log("VALUES 2",token.row, token.column, pos.x, pos.y);
 				}
 			}
 		}
