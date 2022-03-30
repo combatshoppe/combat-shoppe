@@ -1,6 +1,5 @@
 var ParserModule = angular.module('ParserModule', ['DataModule'])
-//var localData = new Map();
-var ActionIds = [];
+var localData = new Map();
 
 class Parser {
 
@@ -11,7 +10,7 @@ class Parser {
     }
 
     jsonToSchema(json){
-        //Figure out 
+        //Figure out
     }
 
     _monsterJsonToSchema(json){
@@ -35,19 +34,19 @@ class Parser {
         let truesight = 0; //Special use "Senses"
         let features = []; //What are features?
         let defaultBehavior = ""; //keep as ""
+				let creatureActions = []
+				if (monster.Actions !== undefined) {
+					creatureActions = this.parseAction(monster.Actions);
+				}
 
-        const creatureActions = this.parseAction(monster.Actions);
-        if(creatureActions.length <1){
-            return;
-        }
         //console.log(creatureActions);
         const creature = new CreatureSchema( {name:name,int:int,cha:cha,dex:dex,str:str,con:con,wis:wis,speed:speed,ac:ac,pb:pb,hp:hp,actions:creatureActions} );
 
-        this.localData.set(creature._id,creature);
+        localData.set(creature._id,creature);
         //console.log(localData);
 
     } // Automatically detects the type of DataSchema to make. This is a BUILDER
-    
+
     //https://gist.github.com/tkfu/9819e4ac6d529e225e9fc58b358c3479
 
     getSpeed(String){
@@ -76,7 +75,6 @@ class Parser {
     }
 
     parseAction(str){
-
         //gets the melee action name matches
         const regex1 = /strong>[A-z ()]*\.<\/strong><\/em>[<>a-z ]*Melee Weapon Attack/gm;
         let meleeArray = str.match(regex1);
@@ -85,8 +83,8 @@ class Parser {
         //const regex2 = /k:<\/em>[<>a-z+,.\/ 0-9:A-Z(]*\) [a-z. 0-9(),'A-Z-]*</gm;
         const regex2 = /Melee Weapon Attack:<\/em>[<>a-z\+\−,.\/ 0-9:A-Z(]*\) [a-z. 0-9(),'A-Z-]*</gm;
         let meleeAttributesArray = str.match(regex2);
-        
-        if(meleeAttributesArray == null){
+
+        if(meleeAttributesArray == null || meleeArray == null){
             return [];
         }
 
@@ -94,7 +92,7 @@ class Parser {
         var regex3 = /[a-zA-Z ]*\./gm;
 
         var arrayLength=0;
-        
+
         if(meleeArray.length>meleeAttributesArray.length){
             arrayLength = meleeAttributesArray.length;
         }else{
@@ -102,11 +100,11 @@ class Parser {
         }
 
         //holds the action ids that correspond to a monster
-        var ActionIdArray = [];
+        let actionIdArray = [];
 
         //loop that acquires the name and attributes, further parsing them
         for (var q = 0; q < arrayLength; q++) {
-            
+
             //parses to get name of action
             const name = meleeArray[q].match(regex3);
             var parsedName = name[0].substring(0,name[0].length -1);
@@ -146,11 +144,11 @@ class Parser {
 
             //generating actionschema of creature
             const action =  new ActionSchema( {name: parsedName, toHitBonus: attributes[0], range: attributes[1], primaryDamage: attributes[2], primaryDice: attributes[3]+"d"+attributes[4]+"+"+attributes[5] });
-            ActionIdArray.push(action._id);//adding the corresponding action id
-            this.localData.set(action._id, action); //storing the action schemas to an overall hashmap
+            actionIdArray.push(action._id);//adding the corresponding action id
+            localData.set(action._id, action); //storing the action schemas to an overall hashmap
         }
-        
-        return ActionIdArray;
+
+        return actionIdArray;
     }
 
 }
@@ -160,42 +158,17 @@ class Parser {
 
 //import jsonData from '../../data/srd_5e_monsters.json';
 
-var dataall;
 //var creatureData = new Map();
 async function loadCreatures() {
-    var parser = new Parser();
-    const response = await fetch('../../data/srd_5e_monsters.json');
-    dataall = await response.json();
-    for (let index = 0; index < dataall.length; index++) {
-        
-        parser._monsterJsonToSchema(dataall[index]);
-    }
-    console.log(dataall);
-    //console.log(parser);
+	let dataall;
+  var parser = new Parser();
+  const response = await fetch('../../data/srd_5e_monsters.json');
+  dataall = await response.json();
+  for (let index = 0; index < dataall.length; index++) {
+      parser._monsterJsonToSchema(dataall[index]);
+  }
+	console.log("Data loaded!")
+	console.log(localData);
 }
 
-/*
-var parser2 = new Parser();
-fetch("../../data/srd_5e_monsters.json")
-    .then(function(resp){
-        return resp.json();
-    } )
-    .then(function(data) {
-        dataall = data;
-        for (let index = 0; index < creatures.length; index++) {
-        
-            parser2._monsterJsonToSchema(data[index]);
-        }
-
-    });
-*/
-//loadCreatures();
-//console.log(dataall);
-//console.log(bruh);
-//console.log(parserData.get(1));
-
-//const jsonData= require('../../data/srd_5e_monsters.json'); 
-//console.log(jsonData);
-//var parser1 = new Parser();
-//parser1.readJson();
-//console.log(parser1.bruha);
+loadCreatures();
