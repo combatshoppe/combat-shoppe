@@ -15,21 +15,44 @@
 
 
 
-    <div class="container-fluid bg-red">
+    <div class="container-fluid bg-purple">
         <div class="row toprow bg-blue">
             <div class="col mainwin" name="MainWindow"> </div>
-            <div class="col sidewin" name="SideWindow"> </div>
+            <div class="col sidewin sideborder" name="SideWindow"> </div>
         </div>
-        <div class="row botrow bg-blue">
+        <div class="row botrow bg-gray align-items-center pad-bottom">
+            <div class="row text-center">
+                <div class="col-1">
+                    <a class="sim-button" onclick=" Edit() ">Edit</a>
+                </div>
+                <div class="col-1">
+                    <a class="sim-button" onclick="Reset() ">Reset</a>
+                    <div class="reset"></div>
+                </div>
+                <div class="col-2">
+                    <!-- For Spacing -->
+                </div>
+                <div class="col-1">
+                    <a class="sim-button" onclick="Back() ">Back</a>
+                </div>
+                <div class="col-2">
+                    <a class="sim-button play" onclick="Play() ">Play</a>
+                </div>
+                <div class="col-1">
+                    <a class="sim-button" onclick="Forward() ">Forward</a>
+                </div>
+                <div class="col-2">
+                    <!-- For Spacing -->
+                </div>
+                <div class="col-1">
+                    <a class="sim-button" onclick="Settings() ">Settings</a>
+                </div>
+                <div class="col-1">
+                    <a class="sim-button" onclick="Import() ">Import</a>
+                </div>
+            </div>
         </div>
     </div>
-
-    <a class="edit button" onclick="Edit()">Edit</a>
-    <a class="leftarrow button" onclick="LeftArrow()">&lt--</a>
-    <a class="rightarrow button" onclick="RightArrow()">--&gt</a>
-    <a class="leftarrow button" onclick="DubLeftArrow()" style="right: 59%;">&lt&lt--</a>
-    <a class="rightarrow button" onclick="DubRightArrow()" style="left: 59%;">--&gt&gt</a>
-
 </body>
 
 </html>

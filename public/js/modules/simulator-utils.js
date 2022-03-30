@@ -106,7 +106,6 @@ class Grid {
 		// Update the tile
 		object.row = position.x;
 		object.column = position.y;
-
 		// Add the object to the Tile
 		tile.add(object);
 	}
@@ -120,12 +119,15 @@ class Grid {
 	remove(position, object = null) {
 		// Convert the position to a basic object
 		position = position.toString();
+		console.log(this._grid)
+		console.log(position)
 		// Stop if there is no tile
 		if (!this._grid.has(position)) { return false; }
 		// Get the tile
 		let tile = this._grid.get(position);
-		// Remove the tile if object is null
-		if (object === null) {
+		// Remove the tile if this is the last object
+		if (tile.objects.length <= 1) {
+			console.log("I am the best code ever")
 			this._grid.delete(position);
 			return true;
 		}
@@ -144,7 +146,6 @@ class Grid {
 		// Convert the positions to a basic object
 		let toString = to.toString();
 		let fromString = from.toString();
-
 		// Remove the object
 		if (!this.remove(fromString, object)) { console.log("REMOVING");return false; }
 		// Update the tile
@@ -294,7 +295,7 @@ class Token extends TileObject {
 		// Load all of the actions
 		/* SHIT BROKE
 		schema.actions.forEach((actionId) => {
-			let actionSchema = globalData.find(actionId);
+			let actionSchema = localData.actions.get(actionId);
 			this.actions.push(new Action(actionSchema));
 		});
 		*/

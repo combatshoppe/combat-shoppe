@@ -33,6 +33,11 @@ version history: [location of file]
     src: url("fonts/Buttons.ttf")
 }
 
+@font-face {
+    font-family: "Body";
+    src: url("fonts/Body.ttf")
+}
+
 
 /* Remove margin, padding and border from everything
 -----------------------------------------------------------------------------*/
@@ -65,9 +70,10 @@ version history: [location of file]
 
 body {
     font: 62.5%/1.5 "Lucida Grande", "Lucida Sans", Tahoma, Verdana, sans-serif;
-    background: url(/images/background.jpg) repeat;
+    background: rgb(48, 0, 50) repeat;
     color: #000000;
     text-align: center;
+    overflow: hidden;
 }
 
 #wrapper {
@@ -136,7 +142,7 @@ dt {
 
 .title {
     font-family: "Title";
-    font-size: 43px;
+    font-size: 50px;
     text-decoration: none;
     color: black
 }
@@ -204,6 +210,10 @@ dt {
     padding-right: 50px;
 }
 
+.pad-bottom {
+    padding-bottom: 10px;
+}
+
 .navbar-header {
     padding-left: 20px;
     padding-right: 20px;
@@ -224,6 +234,28 @@ dt {
 
 /* Homepage
 -----------------------------------------------------------------------------*/
+
+.page-title {
+    font-size: 40px;
+    font-family: Title;
+    color: white;
+    padding: 10px;
+}
+
+.page-subtitle {
+    font-size: 30px;
+    font-family: Title;
+    color: white;
+    padding: 10px;
+}
+
+.page-body {
+    font-size: 20px;
+    font-family: Body;
+    color: white;
+    margin-left: 90px;
+    margin-right: 90px;
+}
 
 
 /* Your template
@@ -266,6 +298,42 @@ dt {
     background-color: orange;
 }
 
+.sim-button {
+    padding: 10px;
+    font-size: 15px;
+    text-align: center;
+    text-decoration: none;
+    font-family: "Buttons";
+    cursor: pointer;
+    outline: none;
+    color: #fff;
+    background-color: red;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 5px #999;
+}
+
+.sim-button:hover {
+    background-color: lightcoral
+}
+
+.sim-button:active {
+    background-color: darkred;
+    box-shadow: 0 3px #666;
+    transform: translateY(4px);
+}
+
+.play {
+    font-size: 20px;
+}
+
+.sideborder {
+    border-style: double;
+    border-color: darkred;
+    border-radius: 5px;
+    border-width: 5px;
+}
+
 
 /* Forms
 -----------------------------------------------------------------------------*/
@@ -294,19 +362,20 @@ td {
 -----------------------------------------------------------------------------*/
 
 .sidewin {
-    -ms-flex: 0 0 230px;
-    flex: 0 0 230px;
-    background-color: greenyellow;
+    -ms-flex: 0 0 220px;
+    flex: 0 0 220px;
+    background-color: #ff4747;
 }
 
 .mainwin {
-	margin: 0px;
-	padding: 0px;
-	background-color: purple;
-	width: calc(100% - 230px);
-	min-width: calc(100% - 230px);
-	height: 100%;
-	min-height: 100%;
+    margin: 0px;
+    padding: 0px;
+    /* background-color: purple; */
+    background: url("../images/grass.jpg");
+    width: calc(100% - 220px);
+    min-width: calc(100% - 220px);
+    height: 100%;
+    min-height: 100%;
 }
 
 .toprow {
@@ -314,8 +383,8 @@ td {
     background-color: #123456;
     width: 100%;
     min-width: 100%;
-    height: calc(100% - 70px);
-    min-height: calc(100% - 70px);
+    height: calc(100% - 80px);
+    min-height: calc(100% - 80px);
 }
 
 .botrow {
@@ -323,8 +392,8 @@ td {
     background-color: #123456;
     width: 100%;
     min-width: 100%;
-    height: 70px;
-    min-height: 70px;
+    height: 80px;
+    min-height: 80px;
 }
 
 .bg-purple {

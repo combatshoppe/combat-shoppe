@@ -1,40 +1,50 @@
-class Parser {
+var ParserModule = angular.module('ParserModule', ['DataModule'])
+var localData = {actions: new Map(), creatures: new Map()}
 
+class Parser {
     schemaToJson(schema){
         JSON.stringify(schema);
     }
 
     jsonToSchema(json){
-        //Figure out 
+        //Figure out
     }
 
     _monsterJsonToSchema(json){
-        const monster = JSON.parse(json);
-        
-        int = monster.INT;
-        cha = monster.CHA;
-        dex = monster.DEX;
-        str = monster.STR;
-        con = monster.CON;
-        wis = monster.WIS;
+        const monster = JSON.parse(JSON.stringify(json));
+        //const monster = JSON.parse(json);
+        const name = monster.name;
+        const int = monster.INT;
+        const cha = monster.CHA;
+        const dex = monster.DEX;
+        const str = monster.STR;
+        const con = monster.CON;
+        const wis = monster.WIS;
         //Make movement action out of speed!!!
-        speed = this.getSpeed(monster.Speed); //Special for "Speed"
-        ac = getArmorClass(monster['Armor Class']); //Special for "Armor Class"
-        pb = getProficiencyBonus(monster.Challenge); //Special for prof bonus (use "Challenge")
-        dmgResistances = []; //Special for "Damage Resistances"
-        dmgImmunities = []; //Special for "Damage Immunities"
-        darkvision = 0; //Special use "Senses"
-        truesight = 0; //Special use "Senses"
-        actions = []; //Special use "Actions"
-        features = []; //What are features?
-        defaultBehavior = ""; //keep as ""
+        const speed = this.getSpeed(monster.Speed); //Special for "Speed"
+        const ac = this.getArmorClass(monster['Armor Class']); //Special for "Armor Class"
+        const pb = this.getProficiencyBonus(monster.Challenge); //Special for prof bonus (use "Challenge")
+        const hp = this.getHitPoints(monster['Hit Points']);
+        let dmgResistances = []; //Special for "Damage Resistances"
+        let dmgImmunities = []; //Special for "Damage Immunities"
+        let darkvision = 0; //Special use "Senses"
+        let truesight = 0; //Special use "Senses"
+        let features = []; //What are features?
+        let defaultBehavior = ""; //keep as ""
+				let creatureActions = []
+				let src = monster.img_url;
+				if (monster.Actions !== undefined) {
+					creatureActions = this.parseAction(monster.Actions);
+				}
 
-        const creature = new CreatureSchema({int: int});
+        //console.log(creatureActions);
+        const creature = new CreatureSchema( {name:name,int:int,cha:cha,dex:dex,str:str,con:con,wis:wis,speed:speed,ac:ac,pb:pb,hp:hp,actions:creatureActions,src:src} );
 
+        localData.creatures.set(creature._id,creature);
+        //console.log(localData);
 
-        return creature; //returns DataSchema
     } // Automatically detects the type of DataSchema to make. This is a BUILDER
-    
+
     //https://gist.github.com/tkfu/9819e4ac6d529e225e9fc58b358c3479
 
     getSpeed(String){
@@ -46,7 +56,11 @@ class Parser {
     }
 
     getProficiencyBonus(String){
-        return 2 + floor(Math.abs((parseInt(String.split(" ")[0])-1))/4);
+        return 2 + Math.floor(Math.abs((parseInt(String.split(" ")[0])-1))/4);
+    }
+
+    getHitPoints(String){
+        return parseInt(String.split(" ")[0]);;
     }
 
     fiveEtoolsToSchema(String, json){
@@ -55,20 +69,104 @@ class Parser {
     } // converts a json string from 5e tools to our schema structure. Automatically detects the type of DataSchema. This is a BUILDER.
 
     actionJsonToSchema(json){
-
+        return null;
     }
 
     parseAction(str){
-        let nameRex = new RegExp("[A-z ]*\.");
-        let name = str.match(nameRex)[0];
+        //gets the melee action name matches
+        const regex1 = /strong>[A-z ()]*\.<\/strong><\/em>[<>a-z ]*Melee Weapon Attack/gm;
+        let meleeArray = str.match(regex1);
 
-        let toHitRex = new RegExp("[ ][+][0-9]*");
-        //let toHit = (str.match(toHitRex)[0])[1:-2];
-        //^^ why no string???
+        //gets the melee action attributes matches
+        //const regex2 = /k:<\/em>[<>a-z+,.\/ 0-9:A-Z(]*\) [a-z. 0-9(),'A-Z-]*</gm;
+        const regex2 = /Melee Weapon Attack:<\/em>[<>a-z\+\−,.\/ 0-9:A-Z(]*\) [a-z. 0-9(),'A-Z-]*</gm;
+        let meleeAttributesArray = str.match(regex2);
 
+        if(meleeAttributesArray == null || meleeArray == null){
+            return [];
+        }
 
-        //https://regex101.com/
-        //[A-z ]*\.
-        //[ ][+][0-9]*
+        //gets the exact name from the action matches
+        var regex3 = /[a-zA-Z ]*\./gm;
+
+        var arrayLength=0;
+
+        if(meleeArray.length>meleeAttributesArray.length){
+            arrayLength = meleeAttributesArray.length;
+        }else{
+            arrayLength = meleeArray.length;
+        }
+
+        //holds the action ids that correspond to a monster
+        let actionIdArray = [];
+
+        //loop that acquires the name and attributes, further parsing them
+        for (var q = 0; q < arrayLength; q++) {
+
+            //parses to get name of action
+            const name = meleeArray[q].match(regex3);
+            var parsedName = name[0].substring(0,name[0].length -1);
+
+            //attributes of the action
+            var attributes = [];
+            //temp string holding the numbers of the attributes to be added to the attributes array
+            let temp = "";
+            for (let i = 0; i < meleeAttributesArray[q].length; i++) {
+
+                //getting only ints
+                if( (!isNaN(meleeAttributesArray[q][i])) && !(meleeAttributesArray[q][i] == " ") ){
+                    temp+=meleeAttributesArray[q][i];
+                    continue;
+
+                }else{
+
+                    if(temp.length == 0){
+                        continue; //no ints found, continue loop
+
+                    }else{
+
+                        if(i<2){ //turns attribute string into ints unless for damage roll strings
+                            attributes.push(parseInt(temp));
+                        }else{
+                            attributes.push(temp);
+                        }
+                        temp = "";
+
+                    }
+                }
+            }
+
+            if(temp.length != 0){
+                attributes.push(temp); //add attribute to attribute array
+            }
+
+            //generating actionschema of creature
+            const action =  new ActionSchema( {name: parsedName, toHitBonus: attributes[0], range: attributes[1], primaryDamage: attributes[2], primaryDice: attributes[3]+"d"+attributes[4]+"+"+attributes[5] });
+            actionIdArray.push(action._id);//adding the corresponding action id
+            localData.actions.set(action._id, action); //storing the action schemas to an overall hashmap
+        }
+
+        return actionIdArray;
     }
+
 }
+
+
+//parser.parseAction("<p><em><strong>Bite.</strong></em> <em>Melee Weapon Attack:</em> +6 to hit, reach 5 ft., one target. <em>Hit:</em> 10 (1d10 + 5) piercing damage. </p><p><em><strong>Claw.</strong></em> <em>Melee Weapon Attack:</em> +6 to hit, reach 5 ft., one target. <em>Hit:</em> 12 (2d6 + 5) slashing damage.</p>");
+
+//import jsonData from '../../data/srd_5e_monsters.json';
+
+//var creatureData = new Map();
+async function loadCreatures() {
+	let dataall;
+  var parser = new Parser();
+  const response = await fetch('../../data/srd_5e_monsters.json');
+  dataall = await response.json();
+  for (let index = 0; index < dataall.length; index++) {
+      parser._monsterJsonToSchema(dataall[index]);
+  }
+	console.log("Data loaded!")
+	console.log(localData);
+}
+
+loadCreatures();

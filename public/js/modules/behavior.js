@@ -4,7 +4,7 @@
  */
 
 /** Create a new AngularJS module */
-var DataUtilsModule = angular.module('BehaviorModule', [])
+var BehaviorModule = angular.module('BehaviorModule', [])
 
 class Behavior {
     actions = [];

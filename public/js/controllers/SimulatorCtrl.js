@@ -36,7 +36,6 @@ angular.module('SimulatorCtrl', ['WindowModule'])
 		globalMainWindow.addDisplay(globalGrid);
 		// Add the 'Add' button to the globalSideWindow
 		globalSideWindow.addDisplay(new AddTokenDisplay());
-
 	});
 
 
@@ -55,35 +54,35 @@ function Edit() {
 			initiative.push(display.token);
 		}
 	});
-
-	//initiative[0].row = 0;
-	//initiative[0].column = 0;
-	//initiative[1].row = 1;
-	//initiative[1].column = 1;
-
-	console.log(initiative)
 	sim._forward(initiative);
-	// console.log(initiative);
 	sim.updateDisplay();
 }
 
 function onKeyPress(event) {
-	globalMainWindow.onKeyPress(event)
-	globalSideWindow.onKeyPress(event)
+    globalMainWindow.onKeyPress(event)
+    globalSideWindow.onKeyPress(event)
 }
 
-function LeftArrow() {
-	console.log("LeftArrow");
+function Reset() {
+    console.log("Reset");
 }
 
-function RightArrow() {
-	console.log("RightArrow");
+function Back() {
+    console.log("Back");
 }
 
-function DubLeftArrow() {
-	console.log("DubLeftArrow");
+function Play() {
+    console.log("Play");
 }
 
-function DubRightArrow() {
-	console.log("DubRightArrow");
+function Forward() {
+    console.log("Forward");
+}
+
+function Settings() {
+    console.log("Settings");
+}
+
+function Import() {
+    console.log("Import");
 }
