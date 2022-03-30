@@ -76,7 +76,8 @@ class Behavior {
             });
         }
 
-        console.log("Move!")
+        console.log("Move!");
+        
         let tokenTarget = this.chooseTarget(possibleChoices);
         targetPosistion.x = tokenTarget.row;
         targetPosistion.y = tokenTarget.column;
@@ -139,7 +140,7 @@ class Behavior {
 class RandomBehavior extends Behavior {
     chooseTarget(possibleChoices){
         console.log(possibleChoices);
-        return possibleChoices[0];                          //  THIS NEEDS TO BE FIXED TOO AT SOME POINT
+        return possibleChoices[1];                          //  THIS NEEDS TO BE FIXED TOO AT SOME POINT
         // return possibleChoices[Math.floor(Math.random*possibleChoices.length)];
     }
 }

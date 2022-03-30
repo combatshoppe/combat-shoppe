@@ -141,15 +141,16 @@ class Grid {
 	 */
 	move(object, to, from) {
 		// Convert the positions to a basic object
-		to = to.toString();
-		from = from.toString();
+		let toString = to.toString();
+		let fromString = from.toString();
+
 		// Remove the object
-		if (!this.remove(from, object)) { return false; }
+		if (!this.remove(fromString, object)) { console.log("REMOVING");return false; }
 		// Update the tile
 		object.row = to.x;
 		object.column = to.y;
 		// Add the object
-		this.add(to, object);
+		this.add(toString, object);
 		return true;
 	}
 }
