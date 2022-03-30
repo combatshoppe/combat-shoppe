@@ -33,6 +33,11 @@ version history: [location of file]
     src: url("fonts/Buttons.ttf")
 }
 
+@font-face {
+    font-family: "Body";
+    src: url("fonts/Body.ttf")
+}
+
 
 /* Remove margin, padding and border from everything
 -----------------------------------------------------------------------------*/
@@ -65,7 +70,7 @@ version history: [location of file]
 
 body {
     font: 62.5%/1.5 "Lucida Grande", "Lucida Sans", Tahoma, Verdana, sans-serif;
-    background: url(/images/background.jpg) repeat;
+    background: rgb(48, 0, 50) repeat;
     color: #000000;
     text-align: center;
     overflow: hidden;
@@ -137,7 +142,7 @@ dt {
 
 .title {
     font-family: "Title";
-    font-size: 43px;
+    font-size: 50px;
     text-decoration: none;
     color: black
 }
@@ -229,6 +234,28 @@ dt {
 
 /* Homepage
 -----------------------------------------------------------------------------*/
+
+.page-title {
+    font-size: 40px;
+    font-family: Title;
+    color: white;
+    padding: 10px;
+}
+
+.page-subtitle {
+    font-size: 30px;
+    font-family: Title;
+    color: white;
+    padding: 10px;
+}
+
+.page-body {
+    font-size: 20px;
+    font-family: Body;
+    color: white;
+    margin-left: 90px;
+    margin-right: 90px;
+}
 
 
 /* Your template
