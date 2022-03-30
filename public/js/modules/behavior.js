@@ -24,11 +24,12 @@ class Behavior {
         //Get new target
         //Loop through all ranked Posistions and compare if they are 
         //distance of attack range
+        console.log("do");
         if(token2 != null)
             this.thisToken = token2;
         //Hit attack
         if(possibleTargets.length == 0 || (this.spentMovement >= this._movement && this._action <= 0)){
-            return false;
+            return true;
         }
         let possibleChoices = [];
         //let trgt = possibleTargets[0];
@@ -41,7 +42,7 @@ class Behavior {
                 }
             }
         }
-        if(possibleChoices.length > 0){
+        if(possibleChoices.length > 0 && this._action > 0){
             let chosenAction = this.mostDamagingAction(this.actions);
             //console.log(chosenAction);
             //let chosenAction = this.actions[0];
@@ -51,10 +52,11 @@ class Behavior {
             possibleChoices[0].attackToHit(chosenAction.stats.toHitBonus, chosenAction.stats.primaryDamage, chosenAction.primary.roll(), chosenAction.stats.secondaryDamage, chosenAction.secondary.roll())
 
             this._action -= 1;
-            return true;
+            console.log("trueatk");
+            return false;
         }
         if(this.spentMovement >= this._movement){
-            return false;
+            return true;
         }
         possibleChoices = []
         possibleTargets.forEach((trgt) => {
@@ -74,7 +76,7 @@ class Behavior {
             });
         }
 
-
+        console.log("Move!")
         let tokenTarget = this.chooseTarget(possibleChoices);
         targetPosistion.x = tokenTarget.row;
         targetPosistion.y = tokenTarget.column;
@@ -136,7 +138,6 @@ class Behavior {
 
 class RandomBehavior extends Behavior {
     chooseTarget(possibleChoices){
-        console.log(Math.floor(Math.random*possibleChoices.length));
         console.log(possibleChoices);
         return possibleChoices[0];                          //  THIS NEEDS TO BE FIXED TOO AT SOME POINT
         // return possibleChoices[Math.floor(Math.random*possibleChoices.length)];

@@ -241,12 +241,14 @@ class Token extends TileObject {
 	 * @member {int} amount -
 	 */
 	_dealDamage(type, amount) {
+		this.hp -= amount;
 		if (type === null || amount == 0) return;
 		if (this.data.dmgImmunities.includes(type) !== undefined) return;
 		if (this.data.dmgResistances.includes(type) !== undefined) {
 			amount = Math.floor(amount / 2);
 		}
 		this.hp = Math.max(0, this.hp - amount);
+		
 	}
 
 	/**

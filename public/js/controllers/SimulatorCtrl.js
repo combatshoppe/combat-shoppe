@@ -56,10 +56,10 @@ function Edit() {
 		}
 	});
 
-	initiative[0].row = 0;
-	initiative[0].column = 0;
-	initiative[1].row = 1;
-	initiative[1].column = 1;
+	//initiative[0].row = 0;
+	//initiative[0].column = 0;
+	//initiative[1].row = 1;
+	//initiative[1].column = 1;
 
 	console.log(initiative)
 	sim._forward(initiative);
