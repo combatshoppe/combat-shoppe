@@ -51,7 +51,6 @@ class Behavior {
             possibleChoices[0].attackToHit(chosenAction.stats.toHitBonus, chosenAction.stats.primaryDamage, chosenAction.primary.roll(), chosenAction.stats.secondaryDamage, chosenAction.secondary.roll())
 
             this._action -= 1;
-            console.log("trueatk");
             return false;
         }
         if(this.spentMovement >= this._movement){

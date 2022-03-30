@@ -225,7 +225,7 @@ class Token extends TileObject {
 		if (this.data.ac > toHit) return false;
 		this._dealDamage(primaryDamageType, primaryDamage);
 		this._dealDamage(secondaryDamageType, secondaryDamage);
-		console.log("attack!");
+		console.log("Attack!");
 		return true;
 	}
 
