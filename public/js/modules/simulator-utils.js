@@ -286,7 +286,7 @@ class Token extends TileObject {
 
 		// Load all of the actions
 		schema.actions.forEach((actionId) => {
-			let actionSchema = globalData.find(actionId);
+			let actionSchema = localData.actions.get(actionId);
 			this.actions.push(new Action(actionSchema));
 		});
 

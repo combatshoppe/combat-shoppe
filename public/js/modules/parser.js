@@ -1,10 +1,7 @@
 var ParserModule = angular.module('ParserModule', ['DataModule'])
-var localData = new Map();
+var localData = {actions: new Map(), creatures: new Map()}
 
 class Parser {
-
-    localData = new Map();
-
     schemaToJson(schema){
         JSON.stringify(schema);
     }
@@ -35,14 +32,15 @@ class Parser {
         let features = []; //What are features?
         let defaultBehavior = ""; //keep as ""
 				let creatureActions = []
+				let src = monster.img_url;
 				if (monster.Actions !== undefined) {
 					creatureActions = this.parseAction(monster.Actions);
 				}
 
         //console.log(creatureActions);
-        const creature = new CreatureSchema( {name:name,int:int,cha:cha,dex:dex,str:str,con:con,wis:wis,speed:speed,ac:ac,pb:pb,hp:hp,actions:creatureActions} );
+        const creature = new CreatureSchema( {name:name,int:int,cha:cha,dex:dex,str:str,con:con,wis:wis,speed:speed,ac:ac,pb:pb,hp:hp,actions:creatureActions,src:src} );
 
-        localData.set(creature._id,creature);
+        localData.creatures.set(creature._id,creature);
         //console.log(localData);
 
     } // Automatically detects the type of DataSchema to make. This is a BUILDER
@@ -145,7 +143,7 @@ class Parser {
             //generating actionschema of creature
             const action =  new ActionSchema( {name: parsedName, toHitBonus: attributes[0], range: attributes[1], primaryDamage: attributes[2], primaryDice: attributes[3]+"d"+attributes[4]+"+"+attributes[5] });
             actionIdArray.push(action._id);//adding the corresponding action id
-            localData.set(action._id, action); //storing the action schemas to an overall hashmap
+            localData.actions.set(action._id, action); //storing the action schemas to an overall hashmap
         }
 
         return actionIdArray;

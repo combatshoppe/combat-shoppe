@@ -56,7 +56,7 @@ class GridDisplay extends Display {
 		offset.y += this.offset.y - this.gridOffset.y
 		// Make the token
 		let token = new Token(offset, this.grid.size, this.grid.size, this.parent);
-		token.setSchema(STOCK_SCHEMA);
+		token.setSchema(schema);
 		token.setPosition(row, column);
 		// Save and rteturn the token
 		this.grid.add(new Position(row, column), token);
@@ -391,17 +391,16 @@ class AddTokenDisplay extends Display {
 	 * @param {Position} position - The position of the click
 	 */
 	onLeftClick(position) {
-		let token = globalGrid.addToken(0, 0, STOCK_SCHEMA);
+		let keys = Array.from(localData.creatures.keys()); // change ourGlobalSchemaMap
+		let schema = localData.creatures.get(keys[Math.floor(Math.random() * keys.length)]);
+		let token = globalGrid.addToken(0, 0, schema);
 		globalSideWindow.addDisplay(new InitiativeDisplay().linkToken(token));
 	}
 
 	onKeyPress(key) {
-		if (key === 'CapsLock') {
-			let schema = STOCK_SCHEMA;
-			/* Uncomment this when we can have the map in parser
-			let keys = ourGlobalSchemaMap.from(collection.keys()); // change ourGlobalSchemaMap
-			schema = ourGlobalSchemaMap.get(keys[Math.floor(Math.random() * keys.length)]);
-			*/
+		if (key === ' ') {
+			let keys = Array.from(localData.creatures.keys()); // change ourGlobalSchemaMap
+			let schema = localData.creatures.get(keys[Math.floor(Math.random() * keys.length)]);
 			let token = globalGrid.addToken(0, 0, schema);
 			globalSideWindow.addDisplay(new InitiativeDisplay().linkToken(token));
 		}
@@ -479,7 +478,6 @@ class SortedListPlacement extends Placement {
 		// Update the position of every display in list
 		let y = 0;
 		allDisplays.forEach((_display, i) => {
-			console.log(_display)
 			// If the display is not active, skip it
 			if (!_display.active) return;
 			// If the display is not in the calculated position, deactivate it and reactivate it
