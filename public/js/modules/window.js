@@ -228,8 +228,23 @@ class GridDisplay extends Display {
 	}
 
 	onKeyPress(key) {
-		console.log(key)
 		if (this.selectedObject === null) return;
+		if (key === 'Delete' || key === 'Backspace') {
+			// Remove from inistaive
+			globalSideWindow.displays.forEach((display) => {
+				if (display.token === this.selectedObject) {
+					globalSideWindow.removeDisplay(display);
+				}
+			})
+			// Remove from storage
+			this.grid.remove(new Position(this.selectedObject.row, this.selectedObject.column), this.selectedObject);
+			let index = this.objects.indexOf(this.selectedObject);
+			if (index > -1) { this.objects.splice(index, 1); }
+			this.selectedObject.delete();
+			this.selectedObject = null;
+			return;
+		}
+
 		let from = new Position(this.selectedObject.row, this.selectedObject.column);
 		let to = new Position(this.selectedObject.row, this.selectedObject.column);
 		if (key === 'w') {
@@ -436,20 +451,8 @@ class SortedListPlacement extends Placement {
 		display.activate(new Position(rect.x, rect.y), parent, this.width, this.displayHeight);
 		// Sort the current display list
 		allDisplays.sort(function(a, b) { return a._rank < b._rank ? 1 : -1; });
-		// Update the position of every display in list
-		let y = 0;
-		allDisplays.forEach((_display, i) => {
-			// If the display is not active, skip it
-			if (!_display.active) return;
-			// If the display is not in the calculated position, deactivate it and reactivate it
-			let rect = _display.parent.getBoundingClientRect();
-			if (_display.offset.y !== rect.y + y) {
-				_display.deactivate();
-				_display.activate(new Position(rect.x, rect.y + y), parent, this.width, this.displayHeight);
-			}
-			// Increase the y position of the display
-			y += _display.height;
-		});
+		// Update the visual
+		this._update(allDisplays);
 	}
 
 	/**
@@ -460,5 +463,26 @@ class SortedListPlacement extends Placement {
 	deactivateDisplay(display, allDisplays) {
 		// Remove the display
 		display.deactivate();
+		// Update the visual
+		this._update(allDisplays);
+	}
+
+	_update(allDisplays) {
+		// Update the position of every display in list
+		let y = 0;
+		allDisplays.forEach((_display, i) => {
+			console.log(_display)
+			// If the display is not active, skip it
+			if (!_display.active) return;
+			// If the display is not in the calculated position, deactivate it and reactivate it
+			let parent = _display.parent;
+			let rect = parent.getBoundingClientRect();
+			if (_display.offset.y !== rect.y + y) {
+				_display.deactivate();
+				_display.activate(new Position(rect.x, rect.y + y), parent, this.width, this.displayHeight);
+			}
+			// Increase the y position of the display
+			y += _display.height;
+		});
 	}
 }
