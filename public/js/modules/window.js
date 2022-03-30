@@ -108,6 +108,20 @@ class GridDisplay extends Display {
 		}
 	}
 
+	removeToken(token) {
+		// Remove from inistaive
+		globalSideWindow.displays.forEach((display) => {
+			if (display.token === token) {
+				globalSideWindow.removeDisplay(display);
+			}
+		})
+		// Remove from storage
+		this.grid.remove(new Position(token.row, token.column), token);
+		let index = this.objects.indexOf(this.selectedObject);
+		if (index > -1) { this.objects.splice(index, 1); }
+		token.delete();
+	}
+
 	/**
  	 * Virtual function that visually creates and activates a display.
  	 */
@@ -230,17 +244,7 @@ class GridDisplay extends Display {
 	onKeyPress(key) {
 		if (this.selectedObject === null) return;
 		if (key === 'Delete' || key === 'Backspace') {
-			// Remove from inistaive
-			globalSideWindow.displays.forEach((display) => {
-				if (display.token === this.selectedObject) {
-					globalSideWindow.removeDisplay(display);
-				}
-			})
-			// Remove from storage
-			this.grid.remove(new Position(this.selectedObject.row, this.selectedObject.column), this.selectedObject);
-			let index = this.objects.indexOf(this.selectedObject);
-			if (index > -1) { this.objects.splice(index, 1); }
-			this.selectedObject.delete();
+			this.removeToken(this.selectedObject);
 			this.selectedObject = null;
 			return;
 		}
@@ -392,9 +396,13 @@ class AddTokenDisplay extends Display {
 	}
 
 	onKeyPress(key) {
-		console.log(`${key} ==`)
 		if (key === 'CapsLock') {
-			let token = globalGrid.addToken(0, 0, STOCK_SCHEMA);
+			let schema = STOCK_SCHEMA;
+			/* Uncomment this when we can have the map in parser
+			let keys = ourGlobalSchemaMap.from(collection.keys()); // change ourGlobalSchemaMap
+			schema = ourGlobalSchemaMap.get(keys[Math.floor(Math.random() * keys.length)]);
+			*/
+			let token = globalGrid.addToken(0, 0, schema);
 			globalSideWindow.addDisplay(new InitiativeDisplay().linkToken(token));
 		}
 	}
