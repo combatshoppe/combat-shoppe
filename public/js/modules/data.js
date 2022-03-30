@@ -132,8 +132,8 @@ class CreatureSchema extends DataSchema {
 	darkvision = 0;
 	truesight = 0;
 	actions = [];
+	defaultBehavior = 0;
 	features = [];
-	defaultBehavior = "";
 
     constructor(object) {
         super(); this.make(object);

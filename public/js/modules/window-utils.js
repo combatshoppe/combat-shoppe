@@ -69,7 +69,7 @@ class Window {
 		if (i == -1) return;
 		// Remove the display if it exists
 		this.displays.splice(i, 1);
-		this.placement.removeDisplay(display, this.displays);
+		this.placement.deactivateDisplay(display, this.displays);
 	}
 
 	/**
@@ -413,7 +413,7 @@ class Placement {
 	 */
 	onKeyPress(key, allDisplays) {
 		// Loop through all displays
-		allDisplays.every((display, i) => {
+		allDisplays.forEach((display, i) => {
 			display.onKeyPress(key);
 		});
 	}

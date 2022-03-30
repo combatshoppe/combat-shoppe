@@ -98,11 +98,15 @@ class Grid {
 	 */
 	add(position, object) {
 		// Convert the position to a indexable string
-		position = position.toString();
+		let pString = position.toString();
 		// Make sure there is a tile at the position
-		if (!this._grid.has(position)) { this._grid.set(position, new Tile()); }
+		if (!this._grid.has(pString)) { this._grid.set(pString, new Tile()); }
+		// Update the token position
+		object.row = position.x;
+		object.column = position.y;
+		console.log(`==> ${object.row}, ${object.column}`)
 		// Get the tile
-		let tile = this._grid.get(position);
+		let tile = this._grid.get(pString);
 		// Add the object to the Tile
 		tile.add(object);
 	}
@@ -116,12 +120,15 @@ class Grid {
 	remove(position, object = null) {
 		// Convert the position to a basic object
 		position = position.toString();
+		console.log(this._grid)
+		console.log(position)
 		// Stop if there is no tile
 		if (!this._grid.has(position)) { return false; }
 		// Get the tile
 		let tile = this._grid.get(position);
-		// Remove the tile if object is null
-		if (object === null) {
+		// Remove the tile if this is the last object
+		if (tile.objects.length <= 1) {
+			console.log("I am the best code ever")
 			this._grid.delete(position);
 			return true;
 		}
@@ -137,11 +144,11 @@ class Grid {
 	 * @return {Boolean} - True if the object was moved sucessflly
 	 */
 	move(object, to, from) {
-		// Convert the positions to a basic object
-		to = to.toString();
-		from = from.toString();
 		// Remove the object
 		if (!this.remove(from, object)) { return false; }
+		// Update the tile
+		object.row = to.x;
+		object.column = to.y;
 		// Add the object
 		this.add(to, object);
 		return true;
@@ -285,7 +292,7 @@ class Token extends TileObject {
 
 		// Load the behavior
 		if (schema.defaultBehavior === BehaviorType.Random) {
-			this.behavior = new RandomBehavior(this.actions);
+			this.behavior = new RandomBehavior(this.actions, this);
 		}
 
 		// Load the image
