@@ -56,7 +56,7 @@ class GridDisplay extends Display {
 		offset.y += this.offset.y - this.gridOffset.y
 		// Make the token
 		let token = new Token(offset, this.grid.size, this.grid.size, this.parent);
-		token.setSchema(STOCK_SCHEMA);
+		token.setSchema(schema);
 		token.setPosition(row, column);
 		this.grid.add(new Position(row, column), token);
 		this.objects.push(token);
