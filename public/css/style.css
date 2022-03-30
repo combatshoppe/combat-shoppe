@@ -296,6 +296,13 @@ dt {
     font-size: 20px;
 }
 
+.sideborder {
+    border-style: double;
+    border-color: darkred;
+    border-radius: 5px;
+    border-width: 5px;
+}
+
 
 /* Forms
 -----------------------------------------------------------------------------*/
@@ -326,7 +333,7 @@ td {
 .sidewin {
     -ms-flex: 0 0 220px;
     flex: 0 0 220px;
-    background-color: greenyellow;
+    background-color: #ff4747;
 }
 
 .mainwin {
