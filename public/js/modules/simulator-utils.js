@@ -326,3 +326,58 @@ class Token extends TileObject {
 		return dice.roll();
 	}
 }
+
+/**
+ * Class representing a wall.
+ */
+ class Wall extends TileObject{
+
+	/**
+	 * Member variables
+	 * @member {int} ac - armor class of wall
+	 * @member {int} hp - hitpoints of wall
+	 * @member {int} currentHP - current hitpoints of wall
+	 */
+	ac = 0;
+	hp = 0;
+	currentHP = 0;
+
+	/**
+	 * checks if wall has HP left
+	 * @return {Boolean} - True if the wall has HP<=0 otherwise false
+	 */
+	hasHP(){
+		//checks if hp is all lost
+		if(currentHP <= 0){ 
+			return false; 
+		}else{
+			 return true; 
+		}
+	}
+
+	/**
+	 * sets armor class
+	 * @param {int} armorClass
+	 */
+	setAC(armorClass){
+		this.ac = armorClass;
+	}
+
+	/**
+	 * sets hitpoints and currentHP
+	 * @param {int} hitpoints - hitpoints of wall
+	 */
+	 setHP(hitpoints){
+		this.hp = hitpoints;
+		this.currentHP = hitpoints;
+	}
+
+	/**
+	 * sets the currenthp dependent on attack on wall
+	 * @param {int} damage
+	 */
+	 attacked(damage){
+		this.currentHP -= damage;
+	}
+
+ }
