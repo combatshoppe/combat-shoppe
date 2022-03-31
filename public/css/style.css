@@ -362,18 +362,17 @@ td {
 -----------------------------------------------------------------------------*/
 
 .sidewin {
-    -ms-flex: 0 0 220px;
-    flex: 0 0 220px;
+    -ms-flex: 0 0 25%;
+    flex: 0 0 25%;
     background-color: #ff4747;
 }
 
 .mainwin {
     margin: 0px;
     padding: 0px;
-    /* background-color: purple; */
     background: url("../images/grass.jpg");
-    width: calc(100% - 220px);
-    min-width: calc(100% - 220px);
+    width: calc(100% - 25%);
+    min-width: calc(100% - 25%);
     height: 100%;
     min-height: 100%;
 }
