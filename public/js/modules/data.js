@@ -109,6 +109,7 @@ class CreatureSchema extends DataSchema {
 	 * @member {int} ac - Optional
 	 * @member {int} pb - Optional
 	 * @member {int} hp - Optional
+	 * @member {int} size - Optional
 	 * @member {DamageType[]} dmgResistances - Optional
 	 * @member {DamageType[]} dmgImmunities - Optional
 	 * @member {int} darkvision - optional
@@ -127,6 +128,7 @@ class CreatureSchema extends DataSchema {
 	ac = 10;
 	pb = 1;
 	hp = 10;
+	size = 1;
 	dmgResistances = [];
 	dmgImmunities = [];
 	darkvision = 0;
