@@ -1,18 +1,28 @@
+/**
+ * parser.js
+ * A file for all things related to parsing and reading in files
+ */
+
+/** Create a new AngularJS module */
 var ParserModule = angular.module('ParserModule', ['DataModule'])
+/** Used in order to load/access action and creatureschemas */
 var localData = {actions: new Map(), creatures: new Map()}
 
+/**
+ * Class for parsing a json file of monster/character sheets
+ */
 class Parser {
-    schemaToJson(schema){
-        JSON.stringify(schema);
-    }
-
-    jsonToSchema(json){
-        //Figure out
-    }
-
+    
+	/**
+	 * Converts json to schemas to be added to either actions map or creatures map
+	 * @param {Object} json - json object to be parsed
+	 */
     _monsterJsonToSchema(json){
+
+        //properly converts the json to be used
         const monster = JSON.parse(JSON.stringify(json));
-        //const monster = JSON.parse(json);
+
+        //saves variables to be used for the creatureschema
         const name = monster.name;
         const int = monster.INT;
         const cha = monster.CHA;
@@ -20,7 +30,6 @@ class Parser {
         const str = monster.STR;
         const con = monster.CON;
         const wis = monster.WIS;
-        //Make movement action out of speed!!!
         const speed = this.getSpeed(monster.Speed); //Special for "Speed"
         const ac = this.getArmorClass(monster['Armor Class']); //Special for "Armor Class"
         const pb = this.getProficiencyBonus(monster.Challenge); //Special for prof bonus (use "Challenge")
@@ -31,57 +40,74 @@ class Parser {
         let truesight = 0; //Special use "Senses"
         let features = []; //What are features?
         let defaultBehavior = ""; //keep as ""
-				let creatureActions = []
-				let src = monster.img_url;
-				if (monster.Actions !== undefined) {
-					creatureActions = this.parseAction(monster.Actions);
-				}
+        let creatureActions = []
+        let src = monster.img_url;
 
-        //console.log(creatureActions);
+        //adds the corresponding actions to overall map 
+        if (monster.Actions !== undefined) {
+            creatureActions = this.parseAction(monster.Actions);
+        }
+
+        //creates creature schema
         const creature = new CreatureSchema( {name:name,int:int,cha:cha,dex:dex,str:str,con:con,wis:wis,speed:speed,ac:ac,pb:pb,hp:hp,actions:creatureActions,src:src} );
 
+        //adds creatures schema to overall map
         localData.creatures.set(creature._id,creature);
-        //console.log(localData);
 
-    } // Automatically detects the type of DataSchema to make. This is a BUILDER
+    } 
 
-    //https://gist.github.com/tkfu/9819e4ac6d529e225e9fc58b358c3479
-
+	/**
+	 * Parses string and calculates to get the proper speed as an int
+	 * @param {String} String - speed string
+     * @returns {int}
+	 */
     getSpeed(String){
         return parseInt(String.split(" ")[0])/5;
     }
 
+	/**
+	 * Parses string and gets armor class as an int
+	 * @param {String} String - speed string
+     * @returns {int}
+	 */
     getArmorClass(String){
         return parseInt(String.split(" ")[0]);
     }
 
+	/**
+	 * Parses string and calculates to get the proper pb as an int
+	 * @param {String} String - speed string
+     * @returns {int}
+	 */
     getProficiencyBonus(String){
         return 2 + Math.floor(Math.abs((parseInt(String.split(" ")[0])-1))/4);
     }
 
+	/**
+	 * Parses string to get hitpoints as an int
+	 * @param {String} String - speed string
+     * @returns {int}
+	 */
     getHitPoints(String){
         return parseInt(String.split(" ")[0]);;
     }
 
-    fiveEtoolsToSchema(String, json){
-
-        return null; //returns DataSchema
-    } // converts a json string from 5e tools to our schema structure. Automatically detects the type of DataSchema. This is a BUILDER.
-
-    actionJsonToSchema(json){
-        return null;
-    }
-
+	/**
+	 * Parses string and calculates to get the proper speed as an int
+	 * @param {String} String - speed string
+     * @returns {int}
+	 */
     parseAction(str){
-        //gets the melee action name matches
+
+        //gets the melee action name matches, not fully parsed
         const regex1 = /strong>[A-z ()]*\.<\/strong><\/em>[<>a-z ]*Melee Weapon Attack/gm;
         let meleeArray = str.match(regex1);
 
-        //gets the melee action attributes matches
-        //const regex2 = /k:<\/em>[<>a-z+,.\/ 0-9:A-Z(]*\) [a-z. 0-9(),'A-Z-]*</gm;
+        //gets the melee action attributes matches, not fully parsed
         const regex2 = /Melee Weapon Attack:<\/em>[<>a-z\+\−,.\/ 0-9:A-Z(]*\) [a-z. 0-9(),'A-Z-]*</gm;
         let meleeAttributesArray = str.match(regex2);
 
+        //if no melee actions then return an empty array;
         if(meleeAttributesArray == null || meleeArray == null){
             return [];
         }
@@ -91,10 +117,13 @@ class Parser {
 
         var arrayLength=0;
 
+        //checks if proper 
         if(meleeArray.length>meleeAttributesArray.length){
             arrayLength = meleeAttributesArray.length;
+            
         }else{
             arrayLength = meleeArray.length;
+
         }
 
         //holds the action ids that correspond to a monster
@@ -130,7 +159,7 @@ class Parser {
                         }else{
                             attributes.push(temp);
                         }
-                        temp = "";
+                        temp = "";//resetting temp string for next attribute
 
                     }
                 }
@@ -146,27 +175,31 @@ class Parser {
             localData.actions.set(action._id, action); //storing the action schemas to an overall hashmap
         }
 
+        //returns the action id arrays for the creatureshema to store
         return actionIdArray;
     }
 
 }
 
-
-//parser.parseAction("<p><em><strong>Bite.</strong></em> <em>Melee Weapon Attack:</em> +6 to hit, reach 5 ft., one target. <em>Hit:</em> 10 (1d10 + 5) piercing damage. </p><p><em><strong>Claw.</strong></em> <em>Melee Weapon Attack:</em> +6 to hit, reach 5 ft., one target. <em>Hit:</em> 12 (2d6 + 5) slashing damage.</p>");
-
-//import jsonData from '../../data/srd_5e_monsters.json';
-
-//var creatureData = new Map();
+/**
+ * Parses string and calculates to get the proper speed as an int
+ * @param {String} String - speed string
+ * @returns {int}
+ */
 async function loadCreatures() {
-	let dataall;
-  var parser = new Parser();
-  const response = await fetch('../../data/srd_5e_monsters.json');
-  dataall = await response.json();
-  for (let index = 0; index < dataall.length; index++) {
-      parser._monsterJsonToSchema(dataall[index]);
-  }
+    //store the what is read from the json 
+    let dataall;
+    var parser = new Parser();
+    const response = await fetch('../../data/srd_5e_monsters.json');
+    dataall = await response.json();
+    for (let index = 0; index < dataall.length; index++) {
+        parser._monsterJsonToSchema(dataall[index]);
+    }
 	console.log("Data loaded!")
-	console.log(localData);
 }
 
+/**
+ * reading the json file and converting into action and creatures,
+ * putting them in their respective maps
+ */
 loadCreatures();
