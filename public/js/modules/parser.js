@@ -22,6 +22,24 @@ class Parser {
         //properly converts the json to be used
         const monster = JSON.parse(JSON.stringify(json));
 
+        //gets correct size
+        let size = monster.meta.split(" ")[0];
+        let intSize = 0;
+        if(size == "Tiny"){
+            intSize = 0.25;
+        }else if(size == "Small"){
+            intSize = 0.5;
+        }else if(size == "Medium"){
+            intSize = 1;
+        }else if(size == "Large"){
+            intSize = 2;
+        }else if(size == "Huge"){
+            intSize = 3;
+        }else{
+            intSize = 4;
+        }
+        console.log(intSize);
+
         //saves variables to be used for the creatureschema
         const name = monster.name;
         const int = monster.INT;
@@ -49,7 +67,7 @@ class Parser {
         }
 
         //creates creature schema
-        const creature = new CreatureSchema( {name:name,int:int,cha:cha,dex:dex,str:str,con:con,wis:wis,speed:speed,ac:ac,pb:pb,hp:hp,actions:creatureActions,src:src} );
+        const creature = new CreatureSchema( {name:name,int:int,cha:cha,dex:dex,str:str,con:con,wis:wis,speed:speed,ac:ac,pb:pb,hp:hp,actions:creatureActions,src:src,size:intSize} );
 
         //adds creatures schema to overall map
         localData.creatures.set(creature._id,creature);
