@@ -107,6 +107,9 @@ class GridDisplay extends Display {
 		}
 	}
 
+	/**
+	 * Remove a token from the grid
+	 */
 	removeToken(token) {
 		// Remove from inistaive
 		globalSideWindow.displays.forEach((display) => {
@@ -240,14 +243,19 @@ class GridDisplay extends Display {
 		});
 	}
 
+	/**
+	 * Defines what happens when a key is pressed.
+	 * @param {String} key - The key pressed
+	 */
 	onKeyPress(key) {
+		// Make sure there is a selected token
 		if (this.selectedObject === null) return;
 		if (key === 'Delete' || key === 'Backspace') {
 			this.removeToken(this.selectedObject);
 			this.selectedObject = null;
 			return;
 		}
-
+		// Move the token
 		let from = new Position(this.selectedObject.row, this.selectedObject.column);
 		let to = new Position(this.selectedObject.row, this.selectedObject.column);
 		if (key === 'w') {
@@ -270,7 +278,6 @@ class GridDisplay extends Display {
 			this.grid.move(this.selectedObject, to, from);
 			this._redrawGrid();
 		}
-
 	}
 }
 
@@ -396,7 +403,12 @@ class AddTokenDisplay extends Display {
 		globalSideWindow.addDisplay(new InitiativeDisplay().linkToken(token));
 	}
 
+	/**
+	 * Defines what happens when a key is pressed.
+	 * @param {String} key - The key pressed
+	 */
 	onKeyPress(key) {
+		// Add token
 		if (key === ' ') {
 			let keys = Array.from(localData.creatures.keys()); // change ourGlobalSchemaMap
 			let schema = localData.creatures.get(keys[Math.floor(Math.random() * keys.length)]);
@@ -473,6 +485,10 @@ class SortedListPlacement extends Placement {
 		this._update(allDisplays);
 	}
 
+	/**
+	 * Defines what happens when a key is pressed.
+	 * @param {Display[]} allDisplays - All current displays
+	 */
 	_update(allDisplays) {
 		// Update the position of every display in list
 		let y = 0;

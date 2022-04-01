@@ -12,7 +12,7 @@ var localData = {actions: new Map(), creatures: new Map()}
  * Class for parsing a json file of monster/character sheets
  */
 class Parser {
-    
+
 	/**
 	 * Converts json to schemas to be added to either actions map or creatures map
 	 * @param {Object} json - json object to be parsed
@@ -61,7 +61,7 @@ class Parser {
         let creatureActions = []
         let src = monster.img_url;
 
-        //adds the corresponding actions to overall map 
+        //adds the corresponding actions to overall map
         if (monster.Actions !== undefined) {
             creatureActions = this.parseAction(monster.Actions);
         }
@@ -72,7 +72,7 @@ class Parser {
         //adds creatures schema to overall map
         localData.creatures.set(creature._id,creature);
 
-    } 
+    }
 
 	/**
 	 * Parses string and calculates to get the proper speed as an int
@@ -135,10 +135,10 @@ class Parser {
 
         var arrayLength=0;
 
-        //checks if proper 
+        //checks if proper
         if(meleeArray.length>meleeAttributesArray.length){
             arrayLength = meleeAttributesArray.length;
-            
+
         }else{
             arrayLength = meleeArray.length;
 
@@ -205,7 +205,7 @@ class Parser {
  * @returns {int}
  */
 async function loadCreatures() {
-    //store the what is read from the json 
+    //store the what is read from the json
     let dataall;
     var parser = new Parser();
     const response = await fetch('../../data/srd_5e_monsters.json');

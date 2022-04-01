@@ -163,20 +163,18 @@ class Grid {
 class Token extends TileObject {
 	/**
 	 * Member variables
-	 * @member {int} hp - The width/height of the grid in px
-	 * @member {int} team - Map of Positions mapped to Tiles
-	 * @member {Behavior} behavior - The width/height of the grid in px
-	 * @member {CreatureSchema} _grid - Map of Positions mapped to Tiles
-	 * @member {Boolean} size - The width/height of the grid in px
-	 * @member {int} actions - Map of Positions mapped to Tiles
-	 * @member {int} conditions - Map of Positions mapped to Tiles
-	 * @member {Map<StatType:Dice>} stats - Map of Positions mapped to Tiles
+	 * @member {int} hp - Current HP
+	 * @member {int} team - Team id
+	 * @member {Behavior} behavior - Behavior the token should use for desicion making
+	 * @member {CreatureSchema} data - The static data of the token
+	 * @member {ActionSchema[]} actions - List of all actions the Token can use
+	 * @member {ConditionType[]} conditions - Map of Positions mapped to Tiles
+	 * @member {Map<StatType:Dice>} stats - Roll type mapped to a rollable die
 	 */
 	hp = 0;
 	team = 0;
 	behavior = null;
 	data = null;
-	hasCastSpell = false;
 	actions = [];
 	conditions = [];
 	stats = new Map();
@@ -215,11 +213,11 @@ class Token extends TileObject {
 
 	/**
 	 * Function to attack and deal damage to the token
-	 * @member {int} toHit -
-	 * @member {DamageType} primaryDamageType -
-	 * @member {int} primaryDamage -
-	 * @member {DamageType} secondaryDamageType -
-	 * @member {int} secondaryDamage -
+	 * @member {int} toHit - bonus to hit
+	 * @member {DamageType} primaryDamageType - primary type of damage dealt
+	 * @member {int} primaryDamage - amount of damage dealt
+	 * @member {DamageType} secondaryDamageType - secondary type of damage dealt
+	 * @member {int} secondaryDamage - amount of damage dealt
 	 * @returns {Boolean} - Returns true if the target was hit
 	 */
 	attackToHit(toHit, primaryDamageType, primaryDamage, secondaryDamageType = null, secondaryDamage = 0) {
@@ -227,13 +225,13 @@ class Token extends TileObject {
 		console.log("\t\tHit!");
 		this._dealDamage(primaryDamageType, primaryDamage);
 		//this._dealDamage(secondaryDamageType, secondaryDamage);
-		
+
 		return true;
 	}
 
 	/**
 	 * Heals the token by a certain amount
-	 * @member {int} amount -
+	 * @member {int} amount - amount of HP to restore
 	 */
 	heal(amount) {
 		this.hp = Math.min(this.data.hp, this.hp + amount);
@@ -254,14 +252,14 @@ class Token extends TileObject {
 			amount = Math.floor(amount / 2);
 		}
 		this.hp = Math.max(0, this.hp - amount);
-		
+
 	}
 
 	/**
 	 * Function that opens up the TokenSettingDisplay
 	 */
 	onRightClick() {
-		// To do : implement this function
+		// TODO : implement this function
 	}
 
 	/**
@@ -348,10 +346,10 @@ class Token extends TileObject {
 	 */
 	hasHP(){
 		//checks if hp is all lost
-		if(currentHP <= 0){ 
-			return false; 
+		if(currentHP <= 0){
+			return false;
 		}else{
-			 return true; 
+			 return true;
 		}
 	}
 

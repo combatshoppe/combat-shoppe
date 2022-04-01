@@ -259,7 +259,7 @@ class Display {
 	/**
 	 * Function that defines what happens when a key is pressed. Unless overriden,
 	 * nothing it done.
-	 * @param {String} key - The movement in the x direction
+	 * @param {String} key - The key pressed
 	 */
 	onKeyPress(key) {
 		return;
@@ -308,6 +308,7 @@ class Placement {
 	/**
 	 * Virtual function that activates a display in the window. Must be overriden
 	 * by a subclass.
+	 * @param {DOM} parent - The DOM the display is in
 	 * @param {Display} display - The display being removed
 	 * @param {Array[Display]} allDisplays - All other existing displays
 	 * @throws If Placement.activateDisplay is not defined
@@ -407,9 +408,8 @@ class Placement {
 
 	/**
 	 * Call onRightClick for all displays
-	 * @param {Position} position - Position of the mouse
+	 * @param {String} key - The key pressed
 	 * @param {Array[Display]} allDisplays - All existing displays
-	 * @param {float} direction - The distance scrolled
 	 */
 	onKeyPress(key, allDisplays) {
 		// Loop through all displays
