@@ -202,7 +202,6 @@ class GridLine extends ElementHTML {
  * Subclass of the ElementHTML that represents an image.
  */
 class Text extends ElementHTML {
-
 	/**
 	 * The DOM type to create
 	 */
@@ -232,7 +231,6 @@ class Image extends ElementHTML {
 	 * @member {String} src - DOM linked to the class
 	 */
 	src = '';
-
 
 	/**
 	 * The DOM type to create
@@ -264,6 +262,12 @@ class Image extends ElementHTML {
  * define the tileobject model
  */
 class TileObject extends Image {
+	/**
+	 * Member variables
+	 * @member {int} row - Row the object is at
+	 * @member {int} column - Column the object is at
+	 * @member {int} height - the height of the tile object
+	 */
 	row = 0;
 	column = 0;
 	height = 0;
