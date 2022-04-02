@@ -119,8 +119,6 @@ class Grid {
 	remove(position, object = null) {
 		// Convert the position to a basic object
 		position = position.toString();
-		console.log(this._grid)
-		console.log(position)
 		// Stop if there is no tile
 		if (!this._grid.has(position)) { return false; }
 		// Get the tile
@@ -142,12 +140,12 @@ class Grid {
 	 * @param {Position} from - What position of the grid to use
 	 * @return {Boolean} - True if the object was moved sucessflly
 	 */
-	move(object, to, from) {
+	async move(object, to, from) {
 		// Convert the positions to a basic object
 		let toString = to.toString();
 		let fromString = from.toString();
 		// Remove the object
-		if (!this.remove(fromString, object)) { console.log("REMOVING");return false; }
+		if (!this.remove(fromString, object)) { return false; }
 		// Update the tile
 		object.row = to.x;
 		object.column = to.y;

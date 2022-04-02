@@ -109,6 +109,22 @@ class ElementHTML {
 	}
 
 	/**
+	 * Slides the DOM by a certain amount
+	 * @param {float} dx - The movement in the x direction
+	 * @param {float} dy - The movement in the y direction
+	 * @param {float} time - Time the move should take
+	 */
+	async slide(dx, dy, time) {
+		let max = Math.max(Math.abs(dx), Math.abs(dy));
+		dx /= max;
+		dy /= max;
+		for (let i = 0; i < max; i++) {
+			this.move(dx, dy);
+			await new Timer().delay(time / max);
+		}
+	}
+
+	/**
 	 * Returns if the given position is inside the element
 	 * @param {Position} position - The position to check if it is inside the element
 	 * @returns {Boolean}

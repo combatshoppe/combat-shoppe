@@ -63,6 +63,11 @@ class GridDisplay extends Display {
 		return token;
 	}
 
+	async moveToken(token, to, from, time) {
+		await token.slide(this.grid.size * (to.x - from.x), this.grid.size * (to.y - from.y), time);
+		await this.grid.move(token, to, from)
+	}
+
 	/**
  	 * Clear the grid.
  	 */
@@ -95,16 +100,20 @@ class GridDisplay extends Display {
 		});
 		// Make the vertical grid lines
 		let x = -(this.gridOffset.x % this.grid.size)
-		for (x -= this.grid.size; x < this.width; x += this.grid.size) {
+		for (x -= this.grid.size; x < this.width + this.grid.size; x += this.grid.size) {
 			let offset = new Position(x + this.offset.x, this.offset.y);
 			this.vLines.push(new GridLine(offset, 2, this.height, this.parent));
 		}
 		// Make the horizontal grid lines
 		let y = -(this.gridOffset.y % this.grid.size)
-		for (y -= this.grid.size; y < this.height; y += this.grid.size) {
+		for (y -= this.grid.size; y < this.height + this.grid.size; y += this.grid.size) {
 			let offset = new Position(this.offset.x, y + this.offset.y);
 			this.hLines.push(new GridLine(offset, this.width, 2, this.parent));
 		}
+
+		// Fix some visual bugs
+		this.onDrag(-1, -1);
+		this.onDrag(1, 1);
 	}
 
 	/**
@@ -155,6 +164,8 @@ class GridDisplay extends Display {
 		}
 		// Click on filled space
 		this.selectedObject = tile.objects[0];
+		//this.selectedObject.slide();
+		console.log(this.selectedObject)
 	}
 
 	/**
