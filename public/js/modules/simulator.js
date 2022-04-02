@@ -34,7 +34,7 @@ class Simulator {
 	}
 
 	/*
-	 * 	
+	 *
 	 */
 	updateDisplay() {
 		this.display.grid = this.copyGrid;
@@ -46,7 +46,7 @@ class Simulator {
 	 * @param {GridDisplay} display - display of the grid
 	 * @param {Token[]} initiative - an ordered list of Token objects
 	 */
-	run(display, initiative) {
+	async run(display, initiative) {
 		let turnLimit = 30;
 		for (let turn = 1; turn < turnLimit; turn++) {
 
@@ -58,8 +58,7 @@ class Simulator {
 			}
 
 			// Run one round on grid without updating displays
-			this._forward(initiative);
-
+			await this._forward(initiative);
 		}
 
 		// Update displays and animations after simulation is complete
@@ -91,7 +90,7 @@ class Simulator {
 	/**
 	 * Run the simulation through one turn of combat without updating displays
 	 */
-	_forward(initiative) {
+	async _forward(initiative) {
 		// throw 'Simulator._forward is not defined!';
 
 		// Loop through ordered list of Tokens
@@ -106,21 +105,23 @@ class Simulator {
 
 				let currentPosition = new Position(token.row, token.column);
 				let moveTo = new Position(token.row, token.column);
-				
+
 				done = token.behavior.do(moveTo, initiative, token);
 
 				let positions = this._pathfind(this.copyGrid, currentPosition, moveTo);
 
-				let pos = moveTo;
-				if (positions.length > 0)
-					pos = new Position(positions[positions.length-1].x, positions[positions.length-1].y);
-
-				if (pos.x !== token.row || pos.y !== token.column) {
-
-					this.copyGrid.move(token, pos, currentPosition);
+				//let pos = moveTo;
+				for (let i = 1; i < positions.length; ++i) {
+					//pos = new Position(positions[positions.length-1].x, positions[positions.length-1].y);
+					if (positions[i].x !== token.row || positions[i].y !== token.column) {
+						await this.display.moveToken(token, positions[i], new Position(token.row, token.column), 0.5);
+						await new Timer().delay(0.05);
+					}
 				}
 			}
 		}
+		// Make sure things are still snapped to the grid
+		this.display._redrawGrid();
 	}
 
 	/**
@@ -186,7 +187,7 @@ class Simulator {
 			// Generate children
 			let x = currentNode.position.x;
 			let y = currentNode.position.y;
-			
+
 			let neighbors = []
 
 			// Check if each adjacent tile is walkable
@@ -223,9 +224,9 @@ class Simulator {
 					if (neighbor.equals(node.position)) {
 						// neighbor.parent = currentNode;
 						if (currentNode.g + weight <= neighbor.g) {
-							
+
 							openNode = node;
-							return;	
+							return;
 						}
 					}
 				});
@@ -238,10 +239,10 @@ class Simulator {
 						if (currentNode.g + weight <= neighbor.g) {
 
 							closedNode = node;
-							return;	
+							return;
 						}
 					}
-				});			
+				});
 
 				// If not in open and closed lists, add node to open list
 				let newNode = new Node(new Position(neighbor.x, neighbor.y), neighbor.g, neighbor.h, currentNode);

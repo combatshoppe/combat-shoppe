@@ -38,7 +38,7 @@ class Parser {
         }else{
             intSize = 4;
         }
-        console.log(intSize);
+        //console.log(intSize);
 
         //saves variables to be used for the creatureschema
         const name = monster.name;

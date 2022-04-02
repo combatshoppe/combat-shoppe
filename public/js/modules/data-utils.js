@@ -25,6 +25,16 @@ DamageType = createEnum(['Acid', 'Bludgeoning', 'Cold', 'Fire', 'Force', 'Lightn
 RechargeType = createEnum(['ShortRest', 'LongRest', 'Dawn', 'Round', 'StartOfTurn', 'D6G4', 'D6G5'], [0, 1, 2, 3, 4, 5, 6])
 StatType = createEnum(['Initiative', 'Init', 'Strength', 'Str', 'Dexterity', 'Dex', 'Charisma', 'Cha', 'Intelligence', 'Int', 'Wisdom', 'Wis', 'Constitution', 'Con'], [0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6])
 
+class Timer {
+	delay(time) {
+	  return new Promise(resolve => {
+		  setTimeout(() => {
+		    resolve(time);
+		  }, time * 1000);
+		});
+	}
+}
+
 /**
  * Class representing a point.
  */
@@ -112,7 +122,7 @@ class Dice {
         }
         return sum + this._modifier;
     }
-		
+
 		average(){
 				return this._diceCount*((this._diceSize+1)/2)+this._modifier;
 		}
