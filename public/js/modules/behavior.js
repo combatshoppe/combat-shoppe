@@ -20,6 +20,13 @@ class Behavior {
         this.actions = actions;
     } //ngl i might have missed this in other places
 
+    /**
+	 * Runs and controls the token's actions on the map
+	 * @param {Token} targetPosistion - to me modified if the token is to be moved
+	 * @param {Token[]} possibleTargets - list of all possible tokens on the map
+	 * @param {Token} token2 - sends in itself as a reference for the Behavior to use
+	 * @returns {Boolean} - true if it is done with all actions, false if it still has more to do
+	 */
     do(targetPosistion, possibleTargets, token2=null){//tokenTarget
         //Get new target
         //Loop through all ranked Posistions and compare if they are 
@@ -102,14 +109,24 @@ class Behavior {
             return true;
         }
         
-    } //Virtual function!!!!!!!!!
-    // rankedPosition should be an empty vector that is returned. 
-    //The function should return false when if cannot do anything anymore
+    } 
+
+    /**
+	 * Chooses target based on behavior type
+	 * @param {Token[]} possibleChoices - list of all possible token targets
+	 * @returns {Token} - The choice of target
+	 */
     chooseTarget(possibleChoices){
         throw "Error: no behavior type defined";
         //return possibleChoices[Math.floor(Math.random*possibleChoices.length)];
     }
 
+
+    /**
+	 * Selects the action that does the most damage from all actions in "actions"
+	 * @param {Action[]} actions - list of all possible actions
+	 * @returns {Action} - returns most damaging action
+	 */
     mostDamagingAction(actions){
         //How tf do you get the actions, asume actions has the actual combat actions
         if (actions.length == 0)
