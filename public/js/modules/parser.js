@@ -85,7 +85,7 @@ class Parser {
 
 	/**
 	 * Parses string and gets armor class as an int
-	 * @param {String} String - speed string
+	 * @param {String} String - armor string
      * @returns {int}
 	 */
     getArmorClass(String){
@@ -94,7 +94,7 @@ class Parser {
 
 	/**
 	 * Parses string and calculates to get the proper pb as an int
-	 * @param {String} String - speed string
+	 * @param {String} String - pb string
      * @returns {int}
 	 */
     getProficiencyBonus(String){
@@ -103,7 +103,7 @@ class Parser {
 
 	/**
 	 * Parses string to get hitpoints as an int
-	 * @param {String} String - speed string
+	 * @param {String} String - hp string
      * @returns {int}
 	 */
     getHitPoints(String){
@@ -111,8 +111,8 @@ class Parser {
     }
 
 	/**
-	 * Parses string and calculates to get the proper speed as an int
-	 * @param {String} String - speed string
+	 * Parses string to get correct action to add correct action schemas to map
+	 * @param {String} String - action string
      * @returns {int}
 	 */
     parseAction(str){
@@ -200,16 +200,17 @@ class Parser {
 }
 
 /**
- * Parses string and calculates to get the proper speed as an int
- * @param {String} String - speed string
- * @returns {int}
+ * asynchronous function that uses promises to read in the json file
+ * that contains statblocks
  */
 async function loadCreatures() {
     //store the what is read from the json 
     let dataall;
     var parser = new Parser();
+    //read the file
     const response = await fetch('../../data/srd_5e_monsters.json');
     dataall = await response.json();
+    //read in the jsons
     for (let index = 0; index < dataall.length; index++) {
         parser._monsterJsonToSchema(dataall[index]);
     }
