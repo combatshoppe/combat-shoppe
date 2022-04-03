@@ -230,10 +230,11 @@ class Text extends ElementHTML {
 	 * @member {String} src - The link to the image
 	 * @returns {Text}
 	 */
-	setText(text) {
+	setText(text, align = 'left') {
 		this.dom.textContent = text;
 		this.dom.onselectstart = function() { return false; };
 		this.dom.style.cursor = 'default';
+		this.dom.style.textAlign = align;
 		return this;
 	}
 }
