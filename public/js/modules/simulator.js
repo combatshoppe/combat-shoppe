@@ -115,7 +115,7 @@ class Simulator {
 				// Find a path to the destination
 				let positions = this._pathfind(this.copyGrid, currentPosition, moveTo);
 
-				for (let i = 1; i < positions.length; ++i) {
+				for (let i = 1; i < Math.min(positions.length, token.data.speed); ++i) {
 					//pos = new Position(positions[positions.length-1].x, positions[positions.length-1].y);
 					if (positions[i].x !== token.row || positions[i].y !== token.column) {
 						await this.display.moveToken(token, positions[i], new Position(token.row, token.column), 0.5);
