@@ -159,13 +159,26 @@ class GridDisplay extends Display {
 		let tile = this.grid.get(clampPosition);
 		// Click on empyt space
 		if (tile === undefined || tile.objects.length === 0) {
-			this.selectedObject = null;
+			// If there was an object selcted
+			if (this.selectedObject != null) {
+				// Reset the object
+				this.selectedObject = null;
+				// Hide the details of the object
+				// Show the initiative
+				globalSideWindow.displays.forEach((display) => {
+					globalSideWindow.placement.activateDisplay(globalSideWindow.dom, display, globalSideWindow.displays);
+				})
+			}
 			return;
 		}
 		// Click on filled space
 		this.selectedObject = tile.objects[0];
-		//this.selectedObject.slide();
-		console.log(this.selectedObject)
+		// Hide the initiative
+		globalSideWindow.displays.forEach((display) => {
+			globalSideWindow.placement.deactivateDisplay(display, globalSideWindow.displays);
+		});
+		// Show the details of this object
+
 	}
 
 	/**

@@ -25,7 +25,6 @@ angular.module('SimulatorCtrl', ['WindowModule'])
 		globalSideWindow.addDisplay(new AddTokenDisplay());
 	});
 
-
 function Edit() {
 	console.log("Edit");
 }
