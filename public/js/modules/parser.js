@@ -109,6 +109,7 @@ class Parser {
         return parseInt(String.split(" ")[0]);;
     }
 
+
 	/**
 	 * Parses string to get correct action to add correct action schemas to map
 	 * @param {String} String - action string
@@ -140,6 +141,7 @@ class Parser {
         let finalActionIds = []; //overall array
         let meleeActionIds; //stores ranged attack id keys of the global map
 
+        //does the final parse if melee actions exist properly
         if(meleeArray != null && meleeAttributesArray != null){
             //checks if proper
             if(meleeArray.length>meleeAttributesArray.length){
@@ -149,14 +151,14 @@ class Parser {
                 arrayLength = meleeArray.length;
             }
 
-            meleeActionIds = meleeActionIds = this.parseActionFinal(arrayLength, meleeArray, meleeAttributesArray,0);
-            finalActionIds.concat(meleeActionIds);
+            meleeActionIds = this.parseActionFinal(arrayLength, meleeArray, meleeAttributesArray,0);
+            finalActionIds.concat(meleeActionIds);//adds the melee actions ids to overall actions array
         }
 
         arrayLength=0;
         let rangeActionIds; //stores ranged attack id keys of the global map
 
-        //checks if proper
+        //does the final parse if range actions exist properly
         if(rangeArray != null && rangeAttributesArray != null){
             if(rangeArray.length>rangeAttributesArray.length){
                 arrayLength = rangeAttributesArray.length;
@@ -166,7 +168,7 @@ class Parser {
             }
 
             rangeActionIds = this.parseActionFinal(arrayLength, rangeArray, rangeAttributesArray,1);
-            finalActionIds.concat(rangeActionIds);
+            finalActionIds.concat(rangeActionIds);//adds the range actions ids to overall actions array
         }
         
         return finalActionIds;
