@@ -38,7 +38,6 @@ class Parser {
         }else{
             intSize = 4;
         }
-        //console.log(intSize);
 
         //saves variables to be used for the creatureschema
         const name = monster.name;
@@ -110,6 +109,7 @@ class Parser {
         return parseInt(String.split(" ")[0]);;
     }
 
+
 	/**
 	 * Parses string to get correct action to add correct action schemas to map
 	 * @param {String} String - action string
@@ -125,44 +125,97 @@ class Parser {
         const regex2 = /Melee Weapon Attack:<\/em>[<>a-z\+\−,.\/ 0-9:A-Z(]*\) [a-z. 0-9(),'A-Z-]*</gm;
         let meleeAttributesArray = str.match(regex2);
 
-        //if no melee actions then return an empty array;
-        if(meleeAttributesArray == null || meleeArray == null){
+        //gets the ranged action name matches, not fully parsed
+        const regexRange = /strong>[A-z ()]*\.<\/strong><\/em>[<>a-z ]*Ranged Weapon Attack/gm;
+        let rangeArray = str.match(regexRange);
+        //gets the ranged action attributes matches, not fully parsed
+        const regexRangeAttributes = /Ranged Weapon Attack:<\/em>[<>a-z\+\−,.\/ 0-9:A-Z(]*\) [a-z. 0-9(),'A-Z-]*</gm;
+        let rangeAttributesArray = str.match(regexRangeAttributes);
+
+        //if no melee actions or range actions then return an empty array;
+        if(( meleeArray == null || meleeAttributesArray == null) && (rangeArray == null || rangeAttributesArray == null) ){
             return [];
         }
 
-        //gets the exact name from the action matches
-        var regex3 = /[a-zA-Z ]*\./gm;
-
         var arrayLength=0;
+        let finalActionIds = []; //overall array
+        let meleeActionIds; //stores ranged attack id keys of the global map
 
-        //checks if proper
-        if(meleeArray.length>meleeAttributesArray.length){
-            arrayLength = meleeAttributesArray.length;
+        //does the final parse if melee actions exist properly
+        if(meleeArray != null && meleeAttributesArray != null){
+            //checks if proper
+            if(meleeArray.length>meleeAttributesArray.length){
+                arrayLength = meleeAttributesArray.length;
 
-        }else{
-            arrayLength = meleeArray.length;
+            }else{
+                arrayLength = meleeArray.length;
+            }
 
+            meleeActionIds = this.parseActionFinal(arrayLength, meleeArray, meleeAttributesArray,0);
+            finalActionIds.concat(meleeActionIds);//adds the melee actions ids to overall actions array
         }
 
+        arrayLength=0;
+        let rangeActionIds; //stores ranged attack id keys of the global map
+
+        //does the final parse if range actions exist properly
+        if(rangeArray != null && rangeAttributesArray != null){
+            if(rangeArray.length>rangeAttributesArray.length){
+                arrayLength = rangeAttributesArray.length;
+
+            }else{
+                arrayLength = rangeArray.length;
+            }
+
+            rangeActionIds = this.parseActionFinal(arrayLength, rangeArray, rangeAttributesArray,1);
+            finalActionIds.concat(rangeActionIds);//adds the range actions ids to overall actions array
+        }
+        
+        return finalActionIds;
+    }
+
+    /**
+	 * Parses string to get correct action and attributes in the 
+     * global map, and returns the corresponding action ids in array form
+	 * @param {int} arrayLength - length of array to loop over
+     * @param {int} type - action type
+     * @param {String[]} actionArray - array of action strings to be completely parsed
+     * @param {String[]} attributesArray - array of attributes to be completely parsed
+     * @returns {int[]} 
+	 */
+    parseActionFinal(arrayLength, actionArray, attributesArray, type){
         //holds the action ids that correspond to a monster
         let actionIdArray = [];
+        //gets the exact name from the action matches
+        var parseRegex = /[a-zA-Z ]*\./gm;
+        var parseRegex2 = /[a-zA-Z ]*\(/gm; 
 
         //loop that acquires the name and attributes, further parsing them
         for (var q = 0; q < arrayLength; q++) {
-
+            
             //parses to get name of action
-            const name = meleeArray[q].match(regex3);
-            var parsedName = name[0].substring(0,name[0].length -1);
+            let name = actionArray[q].match(parseRegex);
 
+            //parses name correctly if runs into a form dependent action
+            if(name == "."){
+                name = actionArray[q].match(parseRegex2);
+            }
+
+            var parsedName = name[0].substring(0,name[0].length -1);
             //attributes of the action
             var attributes = [];
             //temp string holding the numbers of the attributes to be added to the attributes array
             let temp = "";
-            for (let i = 0; i < meleeAttributesArray[q].length; i++) {
+            for (let i = 0; i < attributesArray[q].length; i++) {
+
+                //if ranged type, then don't use the 3rd parsed int
+                if(type == 1 && i == 2){
+                    continue;
+                }
 
                 //getting only ints
-                if( (!isNaN(meleeAttributesArray[q][i])) && !(meleeAttributesArray[q][i] == " ") ){
-                    temp+=meleeAttributesArray[q][i];
+                if( (!isNaN(attributesArray[q][i])) && !(attributesArray[q][i] == " ") ){
+                    temp+=attributesArray[q][i];
                     continue;
 
                 }else{
@@ -195,9 +248,10 @@ class Parser {
 
         //returns the action id arrays for the creatureshema to store
         return actionIdArray;
+    
     }
-
 }
+
 
 /**
  * asynchronous function that uses promises to read in the json file
@@ -205,14 +259,14 @@ class Parser {
  */
 async function loadCreatures() {
     //store the what is read from the json
-    let dataall;
+    let dataAll;
     var parser = new Parser();
     //read the file
     const response = await fetch('../../data/srd_5e_monsters.json');
-    dataall = await response.json();
+    dataAll = await response.json();
     //read in the jsons
-    for (let index = 0; index < dataall.length; index++) {
-        parser._monsterJsonToSchema(dataall[index]);
+    for (let index = 0; index < dataAll.length; index++) {
+        parser._monsterJsonToSchema(dataAll[index]);
     }
 	console.log("Data loaded!")
 }
