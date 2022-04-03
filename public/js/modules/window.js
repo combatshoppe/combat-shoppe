@@ -18,6 +18,7 @@ class GridDisplay extends Display {
 	 * @member {GridLine[]} vLines - Array of grid lines
 	 * @member {TileObject[]} objects - Array of all TileObjects
 	 * @member {TileObject} selectedObject - Array of all TileObjects
+	 * @member {Display} settingDisplay - Connected token setting display
  	 */
 	 grid = new Grid();
 	 gridOffset = new Position(0, 0);
@@ -25,6 +26,7 @@ class GridDisplay extends Display {
 	 vLines = [];
 	 objects = [];
 	 selectedObject = null;
+	 settingDisplay = null;
 
 	/**
 	 * Adds a token to the grid at the nearest unoccupied spot to row, col with a given schema
@@ -159,13 +161,38 @@ class GridDisplay extends Display {
 		let tile = this.grid.get(clampPosition);
 		// Click on empyt space
 		if (tile === undefined || tile.objects.length === 0) {
-			this.selectedObject = null;
+			// If there was an object selcted
+			if (this.selectedObject != null) {
+				// If the object is not a token, return
+				if (this.selectedObject.constructor.name !== "Token") { return; }
+				// Hide the details of the object
+				globalSideWindow.removeDisplay(this.settingDisplay);
+				// Show the initiative
+				globalSideWindow.displays.forEach((display) => {
+					globalSideWindow.placement.activateDisplay(globalSideWindow.dom, display, globalSideWindow.displays);
+				})
+				// Reset
+				this.selectedObject = null;
+				this.settingDisplay = null;
+			}
 			return;
 		}
 		// Click on filled space
 		this.selectedObject = tile.objects[0];
-		//this.selectedObject.slide();
-		console.log(this.selectedObject)
+		// Remove the current setting display if there is one
+		if (this.settingDisplay !== null) {
+			globalSideWindow.removeDisplay(this.settingDisplay);
+			this.settingDisplay = null;
+		}
+		// If the object is not a token, return
+		if (this.selectedObject.constructor.name !== "Token") { return; }
+		// Hide the initiative
+		globalSideWindow.displays.forEach((display) => {
+			globalSideWindow.placement.deactivateDisplay(display, globalSideWindow.displays);
+		});
+		// Show the details of this object
+		this.settingDisplay = new TokenSettingDisplay().linkToken(this.selectedObject);
+		globalSideWindow.addDisplay(this.settingDisplay);
 	}
 
 	/**
@@ -426,6 +453,70 @@ class AddTokenDisplay extends Display {
 			let token = globalGrid.addToken(0, 0, schema);
 			globalSideWindow.addDisplay(new InitiativeDisplay().linkToken(token));
 		}
+	}
+}
+
+/**
+ * Subclass of the Placement that only holds one active window.
+ */
+class TokenSettingDisplay extends Display {
+	/**
+ 	 * Member variables
+ 	 * @member {Position} _rank - Order in a list to use
+ 	 * @member {Image} image - The image itself
+ 	 * @member {Image} src - The image src to use
+ 	 * @member {Text[]} text - Array of text
+ 	 */
+	_rank = 0;
+	_src = 'https://cdn.onlinewebfonts.com/svg/img_45824.png';
+	image = null;
+	text = [];
+	token = null;
+
+	/**
+ 	 * Virtual function that visually creates and activates a display.
+ 	 */
+ 	_activate() {
+		// Get an offset
+		let offset = new Position(this.offset.x, this.offset.y);
+		offset.x += 10;
+		offset.y += 10
+		// Add the image
+		this.image = new Image(offset, this.height, this.height, this.parent);
+		this.image.setImage(this._src);
+		offset.y += this.height + 2;
+		// Add the text
+		for (let i = 0; i < 3; i++) {
+			this.text.push(new Text(offset, this.width, this.height, this.parent));
+			console.log(window.getComputedStyle(this.text[i].dom))
+			offset.y += parseInt(window.getComputedStyle(this.text[i].dom).fontSize) + 2;
+		}
+		this.text[0].setText('HP: ' + this.token.hp.toString() + '/' + this.token.data.hp.toString());
+		this.text[1].setText('Speed: ' + (this.token.data.speed * 5).toString() + ' ft.');
+		this.text[2].setText('AC: ' + this.token.data.ac);
+ 	}
+
+ 	/**
+ 	 * Function that removes a display from the visual window.
+ 	 */
+ 	_deactivate() {
+		if (this.image !== null) this.image.delete();
+		this.image = null;
+		this.text.forEach((paragraph) => {
+			paragraph.delete();
+		})
+		this.text = [];
+ 	}
+
+	/**
+	 * Initializes a token into the display and rolls its initiative
+	 * @member {Token} token - the token to link
+	 * @returns {InitiativeDisplay}
+	 */
+	linkToken(token) {
+		this._src = token.data.src;
+		this.token = token;
+		return this;
 	}
 }
 
