@@ -174,9 +174,7 @@ class Behavior {
 
 class RandomBehavior extends Behavior {
     chooseTarget(possibleChoices){
-        // console.log(possibleChoices);
-        return possibleChoices[0];                          //  THIS NEEDS TO BE FIXED TOO AT SOME POINT
-        // return possibleChoices[Math.floor(Math.random*possibleChoices.length)];
+        return possibleChoices[Math.floor(Math.random()*possibleChoices.length)];
     }
 }
 
