@@ -337,6 +337,7 @@ class GridDisplay extends Display {
             this.grid.move(this.selectedObject, to, from);
             this._redrawGrid();
         }
+        this.selectedObject.dom.className = "token-selected";
     }
 }
 
