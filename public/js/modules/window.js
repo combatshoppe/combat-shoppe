@@ -41,7 +41,17 @@ class GridDisplay extends Display {
 		while (!done) {
 			for (let x = a; x >= -a; --x) {
 				for (let y = a; y >= -a; --y) {
-					if (this.grid.get(new Position(x, y)) === undefined) {
+					let goodSpot = true;
+					for (let xx = Math.ceil(schema.size - 1); xx >= 0; --xx) {
+						for (let yy = Math.ceil(schema.size - 1); yy >= 0; --yy) {
+							if (this.grid.get(new Position(x + xx, y + yy)) !== undefined) {
+								goodSpot = false;
+								break;
+							}
+							if (goodSpot === false) { break; }
+						}
+					}
+					if (goodSpot) {
 						row += x;
 						column += y;
 						done = true;
@@ -57,7 +67,7 @@ class GridDisplay extends Display {
 		offset.x += this.offset.x - this.gridOffset.x
 		offset.y += this.offset.y - this.gridOffset.y
 		// Make the token
-		let token = new Token(offset, this.grid.size, this.grid.size, this.parent);
+		let token = new Token(offset, schema.size * this.grid.size, schema.size * this.grid.size, this.parent);
 		token.setSchema(schema);
 		token.setPosition(row, column);
 		this.grid.add(new Position(row, column), token);
@@ -93,13 +103,6 @@ class GridDisplay extends Display {
 	_redrawGrid() {
 		// Delete the current grid
 		this._deleteGrid();
-		// Make the objects
-		this.objects.forEach((object, i) => {
-			let offset = new Position(object.row * this.grid.size, object.column * this.grid.size);
-			offset.x += -this.gridOffset.x + this.offset.x;
-			offset.y += -this.gridOffset.y + this.offset.y;
-			object.make(offset, this.grid.size, this.grid.size, this.parent);
-		});
 		// Make the vertical grid lines
 		let x = -(this.gridOffset.x % this.grid.size)
 		for (x -= this.grid.size; x < this.width + this.grid.size; x += this.grid.size) {
@@ -112,7 +115,13 @@ class GridDisplay extends Display {
 			let offset = new Position(this.offset.x, y + this.offset.y);
 			this.hLines.push(new GridLine(offset, this.width, 2, this.parent));
 		}
-
+		// Make the objects
+		this.objects.forEach((object, i) => {
+			let offset = new Position(object.row * this.grid.size, object.column * this.grid.size);
+			offset.x += -this.gridOffset.x + this.offset.x;
+			offset.y += -this.gridOffset.y + this.offset.y;
+			object.make(offset, object.data.size * this.grid.size, object.data.size * this.grid.size, this.parent);
+		});
 		// Fix some visual bugs
 		this.onDrag(-1, -1);
 		this.onDrag(1, 1);
@@ -290,6 +299,13 @@ class GridDisplay extends Display {
 		if (this.selectedObject === null) return;
 		if (key === 'Delete' || key === 'Backspace') {
 			this.removeToken(this.selectedObject);
+			// Hide the details of the token
+			globalSideWindow.removeDisplay(this.settingDisplay);
+			// Show the initiative
+			globalSideWindow.displays.forEach((display) => {
+				globalSideWindow.placement.activateDisplay(globalSideWindow.dom, display, globalSideWindow.displays);
+			})
+			this.settingDisplay = null;
 			this.selectedObject = null;
 			return;
 		}
@@ -425,7 +441,7 @@ class AddTokenDisplay extends Display {
  	 * Function that removes a display from the visual window.
  	 */
  	_deactivate() {
-		if (this.image !== null) this.image.delete();
+		this.image.delete();
 		this.image = null;
  	}
 
@@ -486,21 +502,21 @@ class TokenSettingDisplay extends Display {
 		this.image.setImage(this._src);
 		offset.y += this.height + 2;
 		// Add the text
-		for (let i = 0; i < 3; i++) {
+		for (let i = 0; i < 4; i++) {
 			this.text.push(new Text(offset, this.width, this.height, this.parent));
-			console.log(window.getComputedStyle(this.text[i].dom))
 			offset.y += parseInt(window.getComputedStyle(this.text[i].dom).fontSize) + 2;
 		}
-		this.text[0].setText('HP: ' + this.token.hp.toString() + '/' + this.token.data.hp.toString());
-		this.text[1].setText('Speed: ' + (this.token.data.speed * 5).toString() + ' ft.');
-		this.text[2].setText('AC: ' + this.token.data.ac);
+		this.text[0].setText(this.token.data.name);
+		this.text[1].setText('HP: ' + this.token.hp.toString() + '/' + this.token.data.hp.toString());
+		this.text[2].setText('Speed: ' + (this.token.data.speed * 5).toString() + ' ft.');
+		this.text[3].setText('AC: ' + this.token.data.ac);
  	}
 
  	/**
  	 * Function that removes a display from the visual window.
  	 */
  	_deactivate() {
-		if (this.image !== null) this.image.delete();
+		this.image.delete();
 		this.image = null;
 		this.text.forEach((paragraph) => {
 			paragraph.delete();
