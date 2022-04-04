@@ -97,17 +97,21 @@ class Grid {
 	 * @param {TileObject} object - Object to add
 	 */
 	add(position, object) {
-		// Convert the position to a indexable string
-		let positionString = position.toString();
-		// Make sure there is a tile at the position
-		if (!this._grid.has(positionString)) { this._grid.set(positionString, new Tile()); }
-		// Get the tile
-		let tile = this._grid.get(positionString);
-		// Update the tile
-		object.row = position.x;
-		object.column = position.y;
-		// Add the object to the Tile
-		tile.add(object);
+		for (let x = Math.ceil(object.data.size) - 1; x >= 0; x--) {
+			for (let y = Math.ceil(object.data.size) - 1; y >= 0; y--) {
+				// Convert the position to a indexable string
+				let positionString = new Position(position.x + x, position.y + y).toString();
+				// Make sure there is a tile at the position
+				if (!this._grid.has(positionString)) { this._grid.set(positionString, new Tile()); }
+				// Get the tile
+				let tile = this._grid.get(positionString);
+				// Update the tile
+				object.row = position.x;
+				object.column = position.y;
+				// Add the object to the Tile
+				tile.add(object);
+			}
+		}
 	}
 
 	/**
@@ -117,20 +121,32 @@ class Grid {
 	 * @return {Boolean} - True if the object was removed sucessflly
 	 */
 	remove(position, object = null) {
-		// Convert the position to a basic object
-		position = position.toString();
-		// Stop if there is no tile
-		if (!this._grid.has(position)) { return false; }
-		// Get the tile
-		let tile = this._grid.get(position);
-		// Remove the tile if this is the last object
-		if (tile.objects.length <= 1) {
-			//console.log("I am the best code ever")
-			this._grid.delete(position);
-			return true;
+		// Check all the spaces the object should be in
+		for (let x = Math.ceil(object.data.size) - 1; x >= 0; x--) {
+			for (let y = Math.ceil(object.data.size) - 1; y >= 0; y--) {
+				// Stop if there is no tile
+				if (!this._grid.has(new Position(position.x + x, position.y + y)).toString()) {
+					return false;
+				}
+			}
 		}
-		// Otherwise, remove the object from the Tile
-		return this._grid.get(position).remove(object);
+		// Remove the object
+		for (let x = Math.ceil(object.data.size) - 1; x >= 0; x--) {
+			for (let y = Math.ceil(object.data.size) - 1; y >= 0; y--) {
+				let loopPosition = new Position(position.x + x, position.y + y);
+				loopPosition = loopPosition.toString();
+				// Get the tile
+				let tile = this._grid.get(loopPosition);
+				// Remove the tile if this is the last object
+				if (tile !== undefined && tile.objects.length <= 1) {
+					this._grid.delete(loopPosition);
+					continue;
+				}
+				// Otherwise, remove the object from the Tile
+				this._grid.get(loopPosition).remove(object);
+			}
+		}
+		return true;
 	}
 
 	/**
@@ -141,11 +157,8 @@ class Grid {
 	 * @return {Boolean} - True if the object was moved sucessflly
 	 */
 	async move(object, to, from) {
-		// Convert the positions to a basic object
-		let toString = to.toString();
-		let fromString = from.toString();
 		// Remove the object
-		if (!this.remove(fromString, object)) { return false; }
+		if (!this.remove(from, object)) { return false; }
 		// Update the tile
 		object.row = to.x;
 		object.column = to.y;
