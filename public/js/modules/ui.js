@@ -125,6 +125,18 @@ class ElementHTML {
     }
 
     /**
+     * Fades away token when removed
+     */
+    async fade() {
+        var op = 1; // initial opacity
+        for (let i = 0; i < 7; i++) {
+            op -= 0.1;
+            this.dom.style.opacity = op;
+            await new Timer().delay(.1);
+        }
+    }
+
+    /**
      * Returns if the given position is inside the element
      * @param {Position} position - The position to check if it is inside the element
      * @returns {Boolean}
