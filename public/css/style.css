@@ -334,6 +334,12 @@ dt {
     border-width: 5px;
 }
 
+.token-selected {
+    border-style: solid;
+    border-color: darkred;
+    border-width: 10px;
+}
+
 
 /* Forms
 -----------------------------------------------------------------------------*/
