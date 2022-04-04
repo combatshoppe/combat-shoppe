@@ -75,10 +75,6 @@ class GridDisplay extends Display {
         return token;
     }
 
-    async fadeToken(token) {
-        await token.fade();
-    }
-
     async moveToken(token, to, from, time) {
         await token.slide(this.grid.size * (to.x - from.x), this.grid.size * (to.y - from.y), time);
         await this.grid.move(token, to, from)
@@ -136,7 +132,7 @@ class GridDisplay extends Display {
      */
     async removeToken(token) {
         // Fade away token
-        await this.fadeToken(token)
+        await token.fade();
 
         // Remove from inistaive
         globalSideWindow.displays.forEach((display) => {
@@ -309,11 +305,11 @@ class GridDisplay extends Display {
      * Defines what happens when a key is pressed.
      * @param {String} key - The key pressed
      */
-    onKeyPress(key) {
+    async onKeyPress(key) {
         // Make sure there is a selected token
         if (this.selectedObject === null) return;
         if (key === 'Delete' || key === 'Backspace') {
-            this.removeToken(this.selectedObject);
+            await this.removeToken(this.selectedObject);
             // Hide the details of the token
             globalSideWindow.removeDisplay(this.settingDisplay);
             // Show the initiative
