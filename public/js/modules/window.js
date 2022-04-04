@@ -75,6 +75,10 @@ class GridDisplay extends Display {
         return token;
     }
 
+    async fadeToken(token) {
+        await token.fade();
+    }
+
     async moveToken(token, to, from, time) {
         await token.slide(this.grid.size * (to.x - from.x), this.grid.size * (to.y - from.y), time);
         await this.grid.move(token, to, from)
@@ -130,7 +134,10 @@ class GridDisplay extends Display {
     /**
      * Remove a token from the grid
      */
-    removeToken(token) {
+    async removeToken(token) {
+        // Fade away token
+        await this.fadeToken(token)
+
         // Remove from inistaive
         globalSideWindow.displays.forEach((display) => {
                 if (display.token === token) {
