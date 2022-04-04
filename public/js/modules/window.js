@@ -441,7 +441,7 @@ class AddTokenDisplay extends Display {
  	 * Function that removes a display from the visual window.
  	 */
  	_deactivate() {
-		this.image.delete();
+		if (this.image != null) { this.image.delete(); }
 		this.image = null;
  	}
 
