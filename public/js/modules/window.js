@@ -188,6 +188,9 @@ class GridDisplay extends Display {
             return;
         }
         // Click on filled space
+        if (this.selectedObject != null) {
+            this.selectedObject.dom.className = "";
+        }
         this.selectedObject = tile.objects[0];
         this.selectedObject.dom.className = "token-selected";
 

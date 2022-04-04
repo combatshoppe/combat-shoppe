@@ -337,7 +337,7 @@ dt {
 .token-selected {
     border-style: solid;
     border-color: darkred;
-    border-width: 10px;
+    border-width: 5px;
 }
 
 
