@@ -10,7 +10,7 @@ const PORT = 3000;
 
 // config files
 var db = require('./config/db');
-console.log("connecting--", db);
+//console.log("connecting--", db);
 // mongoose.connect(db.url); // Mongoose connection created - disable until db is created
 
 //defining route
@@ -47,4 +47,4 @@ app.get('/api/monster', function(req, res) {
 */
 
 // startup our app at http://localhost:3000
-app.listen(PORT, () => console.log(`Example app listening on http://127.0.0.1:${PORT}`));
+app.listen(PORT, () => console.log(`Combat-Shoppe listening on http://127.0.0.1:${PORT}`));
