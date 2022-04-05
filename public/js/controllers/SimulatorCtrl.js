@@ -73,6 +73,7 @@ function Log() {
     // Hide log button
     document.getElementById('log-button').style.display = "none";
     document.getElementById('back-button').style.display = "inline";
+    document.getElementById('log-text').style.display = "block";
     // Hide the initiative
     globalSideWindow.displays.forEach((display) => {
         globalSideWindow.placement.deactivateDisplay(display, globalSideWindow.displays);
@@ -83,6 +84,7 @@ function Back() {
     // Hide log button
     document.getElementById('log-button').style.display = "inline";
     document.getElementById('back-button').style.display = "none";
+    document.getElementById('log-text').style.display = "none";
     // Show the initiative
     globalSideWindow.displays.forEach((display) => {
         globalSideWindow.placement.activateDisplay(globalSideWindow.dom, display, globalSideWindow.displays);
