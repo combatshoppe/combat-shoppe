@@ -67,4 +67,13 @@ function Settings() {
 
 function Import() {
     console.log("Import");
+	//document.getElementById('file').click();
+	var myUploadedFile = document.getElementById("file").files[0];
+	console.log(myUploadedFile);
+	//console.log(document.getElementById('file').click());
+
+	//document.querySelector('#fileUpload').addEventListener('change', handleFileUpload, false);
+	//console.log('previous save: ', retrieveSave());
+
+
 }
