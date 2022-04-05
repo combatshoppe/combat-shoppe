@@ -65,6 +65,29 @@ function Settings() {
     console.log("Settings");
 }
 
+/**
+ * Called to acquire the user uploaded file and parse it to be added to the overall
+ * creatures/action maps
+ */
 function Import() {
-    console.log("Import");
+
+    console.log("Imported!");
+
+	var importedFile = document.getElementById('file').files[0]; //grabs the uploaded file
+	var reader = new FileReader();
+
+	/**
+	 * when loaded onto the filereader, parse the json file to acquire each
+	 * creature the user uploaded
+	 */
+    reader.onload = function() {
+		var parser = new Parser();
+		var fileContent = JSON.parse(reader.result);
+		for(let i = 0; i<fileContent.length;i++){
+			parser._monsterJsonToSchema(fileContent[i]);
+		}
+		
+	  };
+	reader.readAsText(importedFile);
+	  
 }
