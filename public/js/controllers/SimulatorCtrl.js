@@ -66,14 +66,19 @@ function Settings() {
 }
 
 function Import() {
-    console.log("Import");
-	//document.getElementById('file').click();
-	var myUploadedFile = document.getElementById("file").files[0];
-	console.log(myUploadedFile);
-	//console.log(document.getElementById('file').click());
-
-	//document.querySelector('#fileUpload').addEventListener('change', handleFileUpload, false);
-	//console.log('previous save: ', retrieveSave());
-
-
+    console.log("Imported!");
+	var importedFile = document.getElementById('file').files[0];
+	console.log(importedFile);
+	var reader = new FileReader();
+	
+    reader.onload = function() {
+		var parser = new Parser();
+		var fileContent = JSON.parse(reader.result);
+		for(let i = 0; i<fileContent.length;i++){
+			parser._monsterJsonToSchema(fileContent[i]);
+		}
+		
+	  };
+	reader.readAsText(importedFile);
+	  
 }

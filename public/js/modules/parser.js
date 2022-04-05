@@ -20,7 +20,7 @@ class Parser {
     _monsterJsonToSchema(json){
 
         //properly converts the json to be used
-        const monster = JSON.parse(JSON.stringify(json));
+        const monster = json;
 
         //gets correct size
         let size = monster.meta.split(" ")[0];
@@ -256,17 +256,18 @@ class Parser {
 /**
  * asynchronous function that uses promises to read in the json file
  * that contains statblocks
+ * @param {str} fileName - string of json file name to be loaded in
  */
-async function loadCreatures() {
+async function loadCreatures(fileName) {
     //store the what is read from the json
     let dataAll;
     var parser = new Parser();
     //read the file
-    const response = await fetch('../../data/srd_5e_monsters.json');
+    const response = await fetch(fileName);
     dataAll = await response.json();
     //read in the jsons
     for (let index = 0; index < dataAll.length; index++) {
-        parser._monsterJsonToSchema(dataAll[index]);
+        parser._monsterJsonToSchema(JSON.parse(JSON.stringify(dataAll[index])));
     }
 	console.log("Data loaded!")
 }
@@ -275,4 +276,4 @@ async function loadCreatures() {
  * reading the json file and converting into action and creatures,
  * putting them in their respective maps
  */
-loadCreatures();
+//loadCreatures("../../data/srd_5e_monsters.json");
