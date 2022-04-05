@@ -323,6 +323,25 @@ dt {
     transform: translateY(4px);
 }
 
+.log-button {
+    padding: 5px;
+    font-size: 20px;
+    text-align: center;
+    text-decoration: none;
+    font-family: "Buttons";
+    cursor: pointer;
+    outline: none;
+    color: black;
+    background-color: white;
+    border: solid;
+    border-color: black;
+    border-width: 1px;
+    border-radius: 5px;
+    position: relative;
+    left: 120px;
+    top: 450px;
+}
+
 .play {
     font-size: 20px;
 }

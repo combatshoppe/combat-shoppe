@@ -8,25 +8,25 @@ var globalMainWindow, globalSideWindow, globalGrid;
 
 /** Create a new AngularJS module and attach a controller */
 angular.module('SimulatorCtrl', ['WindowModule'])
-	/** On page load */
-	.controller('SimulatorController', function($scope, $window) {
-		$scope.tagline = 'Welcome to Simulator section!';
-		// Attach the keydown event
-		document.onkeydown = onKeyPress;
-		// Grab the DOM elements and create Windows with them
-		globalMainWindow = document.querySelectorAll('[name="MainWindow"]')[0];
-		globalSideWindow = document.querySelectorAll('[name="SideWindow"]')[0];
-		globalMainWindow = new Window(globalMainWindow, new SinglePlacement());
-		globalSideWindow = new Window(globalSideWindow, new SortedListPlacement(null, 100));
-		// Make the grid
-		globalGrid = new GridDisplay();
-		globalMainWindow.addDisplay(globalGrid);
-		// Add the 'Add' button to the globalSideWindow
-		globalSideWindow.addDisplay(new AddTokenDisplay());
-	});
+    /** On page load */
+    .controller('SimulatorController', function($scope, $window) {
+        $scope.tagline = 'Welcome to Simulator section!';
+        // Attach the keydown event
+        document.onkeydown = onKeyPress;
+        // Grab the DOM elements and create Windows with them
+        globalMainWindow = document.querySelectorAll('[name="MainWindow"]')[0];
+        globalSideWindow = document.querySelectorAll('[name="SideWindow"]')[0];
+        globalMainWindow = new Window(globalMainWindow, new SinglePlacement());
+        globalSideWindow = new Window(globalSideWindow, new SortedListPlacement(null, 100));
+        // Make the grid
+        globalGrid = new GridDisplay();
+        globalMainWindow.addDisplay(globalGrid);
+        // Add the 'Add' button to the globalSideWindow
+        globalSideWindow.addDisplay(new AddTokenDisplay());
+    });
 
 function Edit() {
-	console.log("Edit");
+    console.log("Edit");
 }
 
 function onKeyPress(event) {
@@ -44,17 +44,17 @@ function Back() {
 
 function Play() {
     console.log("Play");
-	sim = new Simulator(globalGrid, null);
-	console.log(sim);
+    sim = new Simulator(globalGrid, null);
+    console.log(sim);
 
-	let initiative = [];
-	globalSideWindow.displays.forEach((display) => {
-		if (display.token !== undefined) {
-			initiative.push(display.token);
-		}
-	});
-	sim._forward(initiative);
-	sim.updateDisplay();
+    let initiative = [];
+    globalSideWindow.displays.forEach((display) => {
+        if (display.token !== undefined) {
+            initiative.push(display.token);
+        }
+    });
+    sim._forward(initiative);
+    sim.updateDisplay();
 }
 
 function Forward() {
@@ -67,4 +67,8 @@ function Settings() {
 
 function Import() {
     console.log("Import");
+}
+
+function Log() {
+    console.log("Log");
 }
