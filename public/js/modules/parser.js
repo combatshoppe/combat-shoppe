@@ -19,7 +19,7 @@ class Parser {
 	 */
     _monsterJsonToSchema(json){
 
-        //properly converts the json to be used
+        //properly gets the json to be used
         const monster = json;
 
         //gets correct size
@@ -276,4 +276,4 @@ async function loadCreatures(fileName) {
  * reading the json file and converting into action and creatures,
  * putting them in their respective maps
  */
-//loadCreatures("../../data/srd_5e_monsters.json");
+loadCreatures("../../data/srd_5e_monsters.json");
