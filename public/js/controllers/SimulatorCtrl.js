@@ -43,6 +43,7 @@ function Back() {
 }
 
 function Play() {
+    document.getElementById('log').innerHTML += "Play\n";
     console.log("Play");
     sim = new Simulator(globalGrid, null);
     console.log(sim);
@@ -73,7 +74,7 @@ function Log() {
     // Hide log button
     document.getElementById('log-button').style.display = "none";
     document.getElementById('back-button').style.display = "inline";
-    document.getElementById('log-text').style.display = "block";
+    document.getElementById('log').style.display = "block";
     // Hide the initiative
     globalSideWindow.displays.forEach((display) => {
         globalSideWindow.placement.deactivateDisplay(display, globalSideWindow.displays);
@@ -84,7 +85,7 @@ function Back() {
     // Hide log button
     document.getElementById('log-button').style.display = "inline";
     document.getElementById('back-button').style.display = "none";
-    document.getElementById('log-text').style.display = "none";
+    document.getElementById('log').style.display = "none";
     // Show the initiative
     globalSideWindow.displays.forEach((display) => {
         globalSideWindow.placement.activateDisplay(globalSideWindow.dom, display, globalSideWindow.displays);
