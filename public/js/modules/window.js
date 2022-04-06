@@ -178,6 +178,7 @@ class GridDisplay extends Display {
                 // If the object is not a token, return
                 if (this.selectedObject.constructor.name !== "Token") { return; }
                 // Hide the details of the object
+                document.getElementById('log-button').style.display = "inline";
                 globalSideWindow.removeDisplay(this.settingDisplay);
                 // Show the initiative
                 globalSideWindow.displays.forEach((display) => {
@@ -205,6 +206,7 @@ class GridDisplay extends Display {
         // If the object is not a token, return
         if (this.selectedObject.constructor.name !== "Token") { return; }
         // Hide the initiative
+        document.getElementById('log-button').style.display = "none";
         globalSideWindow.displays.forEach((display) => {
             globalSideWindow.placement.deactivateDisplay(display, globalSideWindow.displays);
         });
