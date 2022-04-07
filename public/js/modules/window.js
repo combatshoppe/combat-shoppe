@@ -178,7 +178,7 @@ class GridDisplay extends Display {
                 // If the object is not a token, return
                 if (this.selectedObject.constructor.name !== "Token") { return; }
                 // Hide the details of the object
-                document.getElementById('log-button').style.display = "inline";
+                document.getElementById('log-button').style.display = "inline-block";
                 globalSideWindow.removeDisplay(this.settingDisplay);
                 // Show the initiative
                 globalSideWindow.displays.forEach((display) => {
