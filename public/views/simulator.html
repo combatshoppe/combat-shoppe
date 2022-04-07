@@ -16,52 +16,33 @@
         <div class="row toprow bg-blue">
             <div class="col mainwin" name="MainWindow"> </div>
             <div class="col sidewin sideborder" name="SideWindow">
-                <a id="log-button" class="log-button" onclick=" Log() ">Log</a>
-                <a id="back-button" class="back-button" style="display: none;" onclick=" Back() ">Back</a>
-                <!-- <div id="log-text" class="log" style="display: none;">TEST</div> -->
                 <textarea readonly id="log" class="log" style="display: none;">                                 Start&#10;</textarea>
             </div>
         </div>
         <!-- Bottom Bar -->
         <div class="row botrow bg-gray align-items-center pad-bottom">
-            <div class="row text-center">
-                <!-- Edit Button -->
-                <div class="col-1">
-                    <a class="sim-button" onclick=" Edit() ">Edit</a>
-                </div>
-                <!-- Reset Button -->
-                <div class="col-1">
-                    <a class="sim-button" onclick="Reset() ">Reset</a>
-                    <div class="reset"></div>
-                </div>
-                <!-- For Spacing -->
-                <div class="col-2">
-                </div>
-                <!-- Back Button -->
-                <div class="col-1">
-                    <a class="sim-button" onclick="Back() ">Back</a>
-                </div>
-                <!-- Play Button -->
-                <div class="col-2">
-                    <a class="sim-button play" onclick="Play() ">Play</a>
-                </div>
-                <!-- Forward Button -->
-                <div class="col-1">
-                    <a class="sim-button" onclick="Forward() ">Forward</a>
-                </div>
-                <!-- For Spacing -->
-                <div class="col-2">
-                </div>
+            <div class="row text-center align-items-center">
                 <!-- Import Button -->
-                <div class="col-1">
+                <div class="col-2">
                     <label class="sim-button">
-                        <input type="file" id="file" style="display:none" onchange="Import() "/>
+                        <input type="file" id="file" style="display:none" onchange="Import() ">
                         Import
                     </label>
                 </div>
-                <!-- Setting Button -->
-                <div class="col-1">
-                    <a class="sim-button" onclick="Settings() ">Settings</a>
+                <!-- For Spacing -->
+                <div class="col-2">
+                </div>
+                <!-- Play Button -->
+                <div class="col-4">
+                    <a class="sim-button" onclick="Play() ">Play</a>
+                </div>
+                <!-- For Spacing -->
+                <div class="col-2">
+                </div>
+                <!-- Log Button -->
+                <div class="col-2">
+                    <a id="back-button" class="sim-button" style="display: none;" onclick=" Back() ">Back</a>
+                    <a id="log-button" class="sim-button" onclick=" Log() ">Log</a>
                 </div>
             </div>
         </div>

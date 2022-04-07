@@ -25,21 +25,9 @@ angular.module('SimulatorCtrl', ['WindowModule'])
         globalSideWindow.addDisplay(new AddTokenDisplay());
     });
 
-function Edit() {
-    console.log("Edit");
-}
-
 function onKeyPress(event) {
     globalMainWindow.onKeyPress(event)
     globalSideWindow.onKeyPress(event)
-}
-
-function Reset() {
-    console.log("Reset");
-}
-
-function Back() {
-    console.log("Back");
 }
 
 function Play() {
@@ -58,14 +46,6 @@ function Play() {
     sim.updateDisplay();
 }
 
-function Forward() {
-    console.log("Forward");
-}
-
-function Settings() {
-    console.log("Settings");
-}
-
 /**
  * Called to acquire the user uploaded file and parse it to be added to the overall
  * creatures/action maps
@@ -74,29 +54,29 @@ function Import() {
 
     console.log("Imported!");
 
-	var importedFile = document.getElementById('file').files[0]; //grabs the uploaded file
-	var reader = new FileReader();
+    var importedFile = document.getElementById('file').files[0]; //grabs the uploaded file
+    var reader = new FileReader();
 
-	/**
-	 * when loaded onto the filereader, parse the json file to acquire each
-	 * creature the user uploaded
-	 */
+    /**
+     * when loaded onto the filereader, parse the json file to acquire each
+     * creature the user uploaded
+     */
     reader.onload = function() {
-		var parser = new Parser();
-		var fileContent = JSON.parse(reader.result);
-		for(let i = 0; i<fileContent.length;i++){
-			parser._monsterJsonToSchema(fileContent[i]);
-		}
-		
-	  };
-	reader.readAsText(importedFile);
-	  
+        var parser = new Parser();
+        var fileContent = JSON.parse(reader.result);
+        for (let i = 0; i < fileContent.length; i++) {
+            parser._monsterJsonToSchema(fileContent[i]);
+        }
+
+    };
+    reader.readAsText(importedFile);
+
 }
 
 function Log() {
     // Hide log button
     document.getElementById('log-button').style.display = "none";
-    document.getElementById('back-button').style.display = "inline";
+    document.getElementById('back-button').style.display = "inline-block";
     document.getElementById('log').style.display = "block";
     // Hide the initiative
     globalSideWindow.displays.forEach((display) => {
@@ -106,7 +86,7 @@ function Log() {
 
 function Back() {
     // Hide log button
-    document.getElementById('log-button').style.display = "inline";
+    document.getElementById('log-button').style.display = "inline-block";
     document.getElementById('back-button').style.display = "none";
     document.getElementById('log').style.display = "none";
     // Show the initiative
