@@ -47,6 +47,7 @@ class Parser {
         const str = monster.STR;
         const con = monster.CON;
         const wis = monster.WIS;
+        const cr = this.getCR(monster.Challenge);
         const speed = this.getSpeed(monster.Speed); //Special for "Speed"
         const ac = this.getArmorClass(monster['Armor Class']); //Special for "Armor Class"
         const pb = this.getProficiencyBonus(monster.Challenge); //Special for prof bonus (use "Challenge")
@@ -66,11 +67,19 @@ class Parser {
         }
 
         //creates creature schema
-        const creature = new CreatureSchema( {name:name,int:int,cha:cha,dex:dex,str:str,con:con,wis:wis,speed:speed,ac:ac,pb:pb,hp:hp,actions:creatureActions,src:src,size:intSize} );
-
+        const creature = new CreatureSchema( {cr:cr,name:name,int:int,cha:cha,dex:dex,str:str,con:con,wis:wis,speed:speed,ac:ac,pb:pb,hp:hp,actions:creatureActions,src:src,size:intSize} );
         //adds creatures schema to overall map
         localData.creatures.set(creature._id,creature);
 
+    }
+
+	/**
+	 * Parses string and calculates to get the proper CR score
+	 * @param {String} String - CR string
+     * @returns {String}
+	 */
+     getCR(String){
+        return String.split(" ")[0]
     }
 
 	/**
