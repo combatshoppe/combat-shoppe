@@ -3,6 +3,7 @@
 Our team’s goal is to create a browser-based Dungeons & Dragons combat simulator that is easily accessible, useful to inexperienced and experienced players alike! The combat simulators for Dungeons & Dragons that can be found today aren’t truly user friendly, from their clunky UI, to their scarce customization, just not very appealing to the majority of users. To alleviate this issue of non-appealing combat simulators, our team is to develop a browser based tool that will be able to simulate the optimal/suboptimal combat scenarios that the user desires.
 
 ## Requirements
+All of the following are required for the program to run properly. If you are having issues launching the website or see that things are not working as expected, please make sure you installed **all** of the required programs before moving on to Setup.
 * [Node.js v16.14.x](https://nodejs.org/en/download/)
 * [npm v8.5.x](https://nodejs.org/en/download/)
 * [bower v1.8.x](https://bower.io/#install-bower)
