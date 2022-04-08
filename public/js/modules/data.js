@@ -117,7 +117,7 @@ class CreatureSchema extends DataSchema {
 	 * @member {int[]} actions - Optional
 	 * @member {int[]} features - Optional
 	 * @member {BehaviorType []} defaultBehavior - Optional
-	 * @member {int} cr - Optional
+	 * @member {String} cr - Optional
 	 */
 	int = 10;
 	cha = 10;
@@ -130,7 +130,7 @@ class CreatureSchema extends DataSchema {
 	pb = 1;
 	hp = 10;
 	size = 1;
-	cr = 0;
+	cr = "0";
 	dmgResistances = [];
 	dmgImmunities = [];
 	darkvision = 0;
