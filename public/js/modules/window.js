@@ -308,6 +308,17 @@ class GridDisplay extends Display {
      * @param {String} key - The key pressed
      */
     async onKeyPress(key) {
+				if (key === 'r') {
+					this._deleteGrid();
+					this.grid = new Grid();
+			    this.hLines = [];
+			    this.vLines = [];
+			    this.objects = [];
+					this._redrawGrid();
+					globalSideWindow.displays.forEach((display) => {
+							globalSideWindow.removeDisplay(display);
+					})
+				}
         // Make sure there is a selected token
         if (this.selectedObject === null) return;
         if (key === 'Delete' || key === 'Backspace') {
