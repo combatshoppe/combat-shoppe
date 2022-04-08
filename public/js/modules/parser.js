@@ -68,7 +68,6 @@ class Parser {
 
         //creates creature schema
         const creature = new CreatureSchema( {cr:cr,name:name,int:int,cha:cha,dex:dex,str:str,con:con,wis:wis,speed:speed,ac:ac,pb:pb,hp:hp,actions:creatureActions,src:src,size:intSize} );
-        console.log(creature.cr);
         //adds creatures schema to overall map
         localData.creatures.set(creature._id,creature);
 
