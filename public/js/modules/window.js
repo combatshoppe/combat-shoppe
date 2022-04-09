@@ -309,15 +309,17 @@ class GridDisplay extends Display {
      */
     async onKeyPress(key) {
 				if (key === 'r') {
+					while (globalSideWindow.displays.length > 1) {
+						globalSideWindow.removeDisplay(globalSideWindow.displays[0]);
+					}
 					this._deleteGrid();
 					this.grid = new Grid();
 			    this.hLines = [];
 			    this.vLines = [];
 			    this.objects = [];
 					this._redrawGrid();
-					globalSideWindow.displays.forEach((display) => {
-							globalSideWindow.removeDisplay(display);
-					})
+					
+					return;
 				}
         // Make sure there is a selected token
         if (this.selectedObject === null) return;
