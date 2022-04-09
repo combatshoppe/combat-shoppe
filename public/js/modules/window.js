@@ -308,6 +308,17 @@ class GridDisplay extends Display {
      * @param {String} key - The key pressed
      */
     async onKeyPress(key) {
+				if (key === 'r') {
+					this._deleteGrid();
+					this.grid = new Grid();
+			    this.hLines = [];
+			    this.vLines = [];
+			    this.objects = [];
+					this._redrawGrid();
+					globalSideWindow.displays.forEach((display) => {
+							globalSideWindow.removeDisplay(display);
+					})
+				}
         // Make sure there is a selected token
         if (this.selectedObject === null) return;
         if (key === 'Delete' || key === 'Backspace') {
@@ -516,7 +527,7 @@ class TokenSettingDisplay extends Display {
         this.image.setImage(this._src);
         offset.y += this.height + 2;
         // Add the text
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i < 5; i++) {
             this.text.push(new Text(offset, this.width, this.height, this.parent));
             offset.y += parseInt(window.getComputedStyle(this.text[i].dom).fontSize) + 2;
         }
@@ -524,6 +535,8 @@ class TokenSettingDisplay extends Display {
         this.text[1].setText('HP: ' + this.token.hp.toString() + '/' + this.token.data.hp.toString());
         this.text[2].setText('Speed: ' + (this.token.data.speed * 5).toString() + ' ft.');
         this.text[3].setText('AC: ' + this.token.data.ac);
+				console.log(this.token.data)
+        this.text[4].setText('CR: ' + this.token.data.cr);
     }
 
     /**
