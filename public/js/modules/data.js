@@ -144,19 +144,3 @@ class CreatureSchema extends DataSchema {
 	}
 
 }
-/*
-let a = new CreatureSchema({name: 'donnie', int : 13});
-let b = new CreatureSchema(a);
-
-
-
-console.log(JSON.stringify(a));
-console.log(b);
-
-let re = new RegExp("[-+][0-9]*");
-let str = '"(+17)"';
-
-console.log(str.match(re)[0]);
-*/
-//https://regex101.com/
-//[A-z ]*\.
