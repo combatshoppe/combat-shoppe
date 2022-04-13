@@ -207,6 +207,8 @@ class GridDisplay extends Display {
         if (this.selectedObject.constructor.name !== "Token") { return; }
         // Hide the initiative
         document.getElementById('log-button').style.display = "none";
+        document.getElementById('log').style.display = "none";
+        document.getElementById('back-button').style.display = "none";
         globalSideWindow.displays.forEach((display) => {
             globalSideWindow.placement.deactivateDisplay(display, globalSideWindow.displays);
         });
@@ -308,19 +310,19 @@ class GridDisplay extends Display {
      * @param {String} key - The key pressed
      */
     async onKeyPress(key) {
-				if (key === 'r') {
-					while (globalSideWindow.displays.length > 1) {
-						globalSideWindow.removeDisplay(globalSideWindow.displays[0]);
-					}
-					this._deleteGrid();
-					this.grid = new Grid();
-			    this.hLines = [];
-			    this.vLines = [];
-			    this.objects = [];
-					this._redrawGrid();
-					
-					return;
-				}
+        if (key === 'r') {
+            while (globalSideWindow.displays.length > 1) {
+                globalSideWindow.removeDisplay(globalSideWindow.displays[0]);
+            }
+            this._deleteGrid();
+            this.grid = new Grid();
+            this.hLines = [];
+            this.vLines = [];
+            this.objects = [];
+            this._redrawGrid();
+
+            return;
+        }
         // Make sure there is a selected token
         if (this.selectedObject === null) return;
         if (key === 'Delete' || key === 'Backspace') {
@@ -537,7 +539,7 @@ class TokenSettingDisplay extends Display {
         this.text[1].setText('HP: ' + this.token.hp.toString() + '/' + this.token.data.hp.toString());
         this.text[2].setText('Speed: ' + (this.token.data.speed * 5).toString() + ' ft.');
         this.text[3].setText('AC: ' + this.token.data.ac);
-				console.log(this.token.data)
+        console.log(this.token.data)
         this.text[4].setText('CR: ' + this.token.data.cr);
     }
 
