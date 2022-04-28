@@ -1,31 +1,32 @@
 /**
- * simulator.js
- * A file for the Simulator implimentation
- */
+* simulator.js
+* A file for the Simulator implimentation
+*/
 
- /** Create a new AngularJS module */
- var WindowModule = angular.module('SimulatorModule', ['DataModule'])
+/** Create a new AngularJS module */
+/* exported SimulatorModule */
+var SimulatorModule = angular.module('SimulatorModule', ['DataModule']); // eslint-disable-line no-unused-vars
 
 /**
- * The main class behind the Simulation. It handles pathfinding, running rounds of combat, and updating the displays
- */
+* The main class behind the Simulation. It handles pathfinding, running rounds of combat, and updating the displays
+*/
 class Simulator {
-	/**
-	 * Creates a simulation for the grid
-	 * @constructor
-	 * @param {GridDisplay} initialDisplay - display of the grid
-	 * @param {Delta[][]} deltas - a log of turn deltas, sorted in 1 dimension, where delta[0] corresponds to turn 1
-	 */
-	 constructor(initialDisplay, deltas = null) {
-	 	// Init variables
-	 	this.copyGrid = initialDisplay.grid; // This should be a copy, currently pass by ref
-	 	this.display = initialDisplay;
-	 	this.deltas = deltas; // Currently, deltas are unimplemented
-	 }
+/**
+* Creates a simulation for the grid
+* @constructor
+* @param {GridDisplay} initialDisplay - display of the grid
+* @param {Delta[][]} deltas - a log of turn deltas, sorted in 1 dimension, where delta[0] corresponds to turn 1
+*/
+	constructor(initialDisplay, deltas = null) {
+		// Init variables
+		this.copyGrid = initialDisplay.grid; // This should be a copy, currently pass by ref
+		this.display = initialDisplay;
+		this.deltas = deltas; // Currently, deltas are unimplemented
+	}
 
 	/**
-	 * Resets the simulation back to its starting state
-	 */
+* Resets the simulation back to its starting state
+*/
 	reset() {
 		this.currentDisplay = this.initialDisplay;
 
@@ -34,18 +35,18 @@ class Simulator {
 	}
 
 	/*
-	 * Updates the values stored on the displayed grid and calls a redraw on the display after changes
-	 */
+* Updates the values stored on the displayed grid and calls a redraw on the display after changes
+*/
 	updateDisplay() {
 		this.display.grid = this.copyGrid;
 		this.display._redrawGrid();
 	}
 
 	/**
-	 * Run through the entire simulation until it ends
-	 * @param {GridDisplay} gridDisplay - display of the grid
-	 * @param {Token[]} initiative - an ordered list of Token objects
-	 */
+* Run through the entire simulation until it ends
+* @param {GridDisplay} gridDisplay - display of the grid
+* @param {Token[]} initiative - an ordered list of Token objects
+*/
 	async run(gridDisplay, initiative) {
 		let turnLimit = 30;
 		for (let turn = 1; turn < turnLimit; turn++) {
@@ -53,7 +54,7 @@ class Simulator {
 			// Maybe check for stalling edge case, currently just have turn limit
 
 			// Check if simulation is complete
-			if (simulationComplete()) {
+			if (turn == 2) {
 				break;
 			}
 
@@ -66,33 +67,30 @@ class Simulator {
 	}
 
 	/**
-	 * Run the simulation through one turn of combat and update displays
-	 * @param {GridDisplay} gridDisplay - display of the grid
-	 * @param {Token[]} initiative - an ordered list of Token objects
-	 */
+* Run the simulation through one turn of combat and update displays
+* @param {GridDisplay} gridDisplay - display of the grid
+* @param {Token[]} initiative - an ordered list of Token objects
+*/
 	stepForward(gridDisplay, initiative) {
-		throw 'Simulator.stepForward is not defined!';
-
 		// Loop through all spaces for TileObjects and run their actions
 		// 		or develop deltas system and run through all of those
-		_forward();
+		this._forward();
 		this.updateDisplay();
 
 	}
 
 	/**
-	 * Revert the simulation back one turn of combat and update displays
-	 */
+* Revert the simulation back one turn of combat and update displays
+*/
 	stepBackward() {
-		throw 'Simulator.stepBackward is not defined!';
-		_backward();
+		this._backward();
 		this.updateDisplay();
 	}
 
 	/**
-	 * Run the simulation through one turn of combat without updating displays
-	 * @param {Token[]} initiative - an ordered list of Token objects
-	 */
+* Run the simulation through one turn of combat without updating displays
+* @param {Token[]} initiative - an ordered list of Token objects
+*/
 	async _forward(initiative) {
 
 		// Loop through ordered list of Token objects
@@ -129,27 +127,27 @@ class Simulator {
 	}
 
 	/**
-	 * Revert the simulation back one turn of combat without updating displays
-	 */
+* Revert the simulation back one turn of combat without updating displays
+*/
 	_backward() {
 		throw 'Simulator._backward is not defined!';
 	}
 
 	/**
-	 * Calls all required components in order to update animations
-	 */
+* Calls all required components in order to update animations
+*/
 	_animationUpdate() {
 		throw 'Simulator._animationUpdate is not defined!';
 	}
 
 	/**
-	 * Finds a path on the grid to a given destination tile
-	 * @param {Grid} grid - 2-dimensional matrix of Tile spaces
-	 * @param {Position} start - the starting location
-	 * @param {Position} goal - the destination location
-	 * @returns {Position[]}
-	 */
-	 _pathfind(grid, start, goal) {
+* Finds a path on the grid to a given destination tile
+* @param {Grid} grid - 2-dimensional matrix of Tile spaces
+* @param {Position} start - the starting location
+* @param {Position} goal - the destination location
+* @returns {Position[]}
+*/
+	_pathfind(grid, start, goal) {
 
 		// Init open and closed list
 		let openList = [];
@@ -193,25 +191,25 @@ class Simulator {
 			let x = currentNode.position.x;
 			let y = currentNode.position.y;
 
-			let neighbors = []
+			let neighbors = [];
 
 			// Check if each adjacent tile is walkable
-		 	if (Simulator.isPassable(grid, x+1, y))
-		 		neighbors.push(new Position(x+1, y));
-		 	if (Simulator.isPassable(grid, x+1, y+1))
-		 		neighbors.push(new Position(x+1, y+1));
-		 	if (Simulator.isPassable(grid, x, y+1))
-		 		neighbors.push(new Position(x, y+1));
-		 	if (Simulator.isPassable(grid, x-1, y+1))
-		 		neighbors.push(new Position(x-1, y+1));
-		 	if (Simulator.isPassable(grid, x-1, y))
-		 		neighbors.push(new Position(x-1, y));
-		 	if (Simulator.isPassable(grid, x-1, y-1))
-		 		neighbors.push(new Position(x-1, y-1));
-		 	if (Simulator.isPassable(grid, x, y-1))
-		 		neighbors.push(new Position(x, y-1));
-		 	if (Simulator.isPassable(grid, x+1, y-1))
-		 		neighbors.push(new Position(x+1, y-1));
+			if (Simulator.isPassable(grid, x+1, y))
+				neighbors.push(new Position(x+1, y));
+			if (Simulator.isPassable(grid, x+1, y+1))
+				neighbors.push(new Position(x+1, y+1));
+			if (Simulator.isPassable(grid, x, y+1))
+				neighbors.push(new Position(x, y+1));
+			if (Simulator.isPassable(grid, x-1, y+1))
+				neighbors.push(new Position(x-1, y+1));
+			if (Simulator.isPassable(grid, x-1, y))
+				neighbors.push(new Position(x-1, y));
+			if (Simulator.isPassable(grid, x-1, y-1))
+				neighbors.push(new Position(x-1, y-1));
+			if (Simulator.isPassable(grid, x, y-1))
+				neighbors.push(new Position(x, y-1));
+			if (Simulator.isPassable(grid, x+1, y-1))
+				neighbors.push(new Position(x+1, y-1));
 
 			// Loop through each neighbor position
 			neighbors.forEach((neighbor) => {
@@ -259,10 +257,10 @@ class Simulator {
 	}
 
 	/**
-	 * Finds the Node with the smallest f value from a list of Nodes
-	 * @param {Node[]} list - the list of Nodes being checked
-	 * @returns {Node}
-	 */
+* Finds the Node with the smallest f value from a list of Nodes
+* @param {Node[]} list - the list of Nodes being checked
+* @returns {Node}
+*/
 	static _findSmallestFNode(list) {
 		let minF = 99999;
 		let tempNode = null;
@@ -277,59 +275,59 @@ class Simulator {
 
 
 	/**
-	 * Finds a Tile on a given grid and checks to see if the space is passable while pathfinding.
-	 * @param {Grid} grid - the grid containing the Tile data
-	 * @param {int} x - the x value of the Tile being checked
-	 * @param {int} y - the y value of the Tile being checked
-	 * @returns {Boolean}
-	 */
+* Finds a Tile on a given grid and checks to see if the space is passable while pathfinding.
+* @param {Grid} grid - the grid containing the Tile data
+* @param {int} x - the x value of the Tile being checked
+* @param {int} y - the y value of the Tile being checked
+* @returns {Boolean}
+*/
 	static isPassable(grid, x, y) {
-	 	let tile = grid.get(x, y);
+		let tile = grid.get(x, y);
 
-	 	// Return true if Tile contains nothing
-	 	if (typeof(tile) === "undefined")
-	 		return true;
+		// Return true if Tile contains nothing
+		if (typeof(tile) === 'undefined')
+			return true;
 
-	 	// Loop through all objects on Tile
-	 	tile.foreach((tileObject) => {
-	 		// Return false if the object is not passable
-	 		if (typeof(tileObject) === "Wall") {
-				return false;								// May need to update this to handle more cases
-	 		}
-	 	});
+		// Loop through all objects on Tile
+		tile.foreach((tileObject) => {
+			// Return false if the object is not passable
+			if (typeof(tileObject) === 'Wall') { // eslint-disable-line valid-typeof
+				return false;	// May need to update this to handle more cases
+			}
+		});
 
-	 	// Return true if all objects on Tile are passable
-	 	return true;
+		// Return true if all objects on Tile are passable
+		return true;
 	}
 
 }
 
 /**
- * A helper class which holds a Position and several heuristics for pathfinding purposes
- */
+* A helper class which holds a Position and several heuristics for pathfinding purposes
+*/
 class Node {
-	/**
-	 * Creates a Node
-	 * @constructor
-	 * @param {Position} position - x,y coordinates of Node
-	 * @param {Number} g - distance between current node and start
-	 * @param {Number} h - estimated distance to goal
-	 */
+/**
+* Creates a Node
+* @constructor
+* @param {Position} position - x,y coordinates of Node
+* @param {Number} g - distance between current node and start
+* @param {Number} h - estimated distance to goal
+*/
 	constructor(position, g, h, parent = null) {
-	 	// Init variables
-	 	this.position = position;
-	 	this.g = g;
+		// Init variables
+		this.position = position;
+		this.g = g;
 		this.h = h;
 		this.f = g + h;
 		this.parent = parent;
 	}
 
 	/**
-	 * Calculates the distance from between two Positions
-	 * @param {Position} start - the Position to calculate distance from
-	 * @param {Position} goal - the Position to calculate distance to
-	 * @returns {Number}
-	 */
+* Calculates the distance from between two Positions
+* @param {Position} start - the Position to calculate distance from
+* @param {Position} goal - the Position to calculate distance to
+* @returns {Number}
+*/
 	static distance(start, goal) {
 		let xDiff = Math.abs(start.x - goal.x);
 		let yDiff = Math.abs(start.y - goal.y);

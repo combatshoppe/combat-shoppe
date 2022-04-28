@@ -1,0 +1,60 @@
+{
+    "env": {
+        "browser": true,
+        "commonjs": true,
+        "es2021": true
+    },
+		"globals": {
+				"angular": "writable",
+				"StatType": "writable",
+				"Dice": "writable",
+				"ActionType": "writable",
+				"BehaviorType": "writable",
+				"RandomBehavior": "writable",
+				"TileObject": "writable",
+				"Action": "writable",
+				"Position": "writable",
+				"Timer": "writable",
+				"Token": "writable",
+				"Display": "writable",
+				"Placement": "writable",
+				"Grid": "writable",
+				"GridLine": "writable",
+				"globalSideWindow": "writable",
+				"globalGrid": "writable",
+				"localData": "writable",
+				"ActionSchema": "writable"
+	  },
+    "extends": [
+        "eslint:recommended"
+    ],
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": "latest"
+    },
+    "plugins": [
+
+    ],
+    "rules": {
+        "indent": [
+            "error",
+            "tab"
+        ],
+        "linebreak-style": [
+            "error",
+            "unix"
+        ],
+        "quotes": [
+            "error",
+            "single"
+        ],
+        "semi": [
+            "error",
+            "always"
+        ],
+				"no-unused-vars": "off",
+				"no-useless-escape": "off"
+    }
+}

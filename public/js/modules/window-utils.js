@@ -1,35 +1,36 @@
 /**
- * window.js
- * A file for the Window bridge
- */
+* window.js
+* A file for the Window bridge
+*/
 
 /** Create a new AngularJS module */
-var WindowUtilsModule = angular.module('WindowUtilsModule', ['UiModule'])
+/* exported WindowUtilsModule */
+var WindowUtilsModule = angular.module('WindowUtilsModule', ['UiModule']); // eslint-disable-line no-unused-vars
 
 /** A bridge class whose implementation is held by the display and placement
- * classes. The window knows nothing about which displays are active
- * or how to deal with them. This structure means that the UI can easily be
- * changed!
- */
+* classes. The window knows nothing about which displays are active
+* or how to deal with them. This structure means that the UI can easily be
+* changed!
+*/
 class Window {
-	/**
-	 * Member variables
-	 * @member {DOM} dom - DOM linked to the class
-	 * @member {Dispaly[]} displays - List of all Displays
-	 * @member {Boolean} drag - If a drag action is currently occuring in the Window
-	 * @member {Placement} placement - The placement for the Window to use
-	 */
+/**
+* Member variables
+* @member {DOM} dom - DOM linked to the class
+* @member {Dispaly[]} displays - List of all Displays
+* @member {Boolean} drag - If a drag action is currently occuring in the Window
+* @member {Placement} placement - The placement for the Window to use
+*/
 	dom = null;
 	displays = [];
 	drag = false;
 	placement = null;
 
 	/**
-	 * Creates a visible window
-	 * @constructor
-	 * @param {Position} dom - DOM to attach to the window
-	 * @param {Placement} placement - The placement for the controller to use
-	 */
+* Creates a visible window
+* @constructor
+* @param {Position} dom - DOM to attach to the window
+* @param {Placement} placement - The placement for the controller to use
+*/
 	constructor(dom, placement) {
 		// Init variables
 		this.dom = dom;
@@ -48,9 +49,9 @@ class Window {
 	}
 
 	/**
-	 * Adds a display to the window
-	 * @param {Display} display - The display to add
-	 */
+* Adds a display to the window
+* @param {Display} display - The display to add
+*/
 	addDisplay(display) {
 		// Add the display to the list
 		this.displays.push(display);
@@ -59,9 +60,9 @@ class Window {
 	}
 
 	/**
-	 * Remove a display from the window
-	 * @param {Display} display - The display to remove
-	 */
+* Remove a display from the window
+* @param {Display} display - The display to remove
+*/
 	removeDisplay(display) {
 		// Get index of the display
 		let i = this.displays.indexOf(display);
@@ -73,9 +74,9 @@ class Window {
 	}
 
 	/**
-	 * Handler for a click event
-	 * @param {MouseEvent} event - Occurs when mouse interacts with the window
-	 */
+* Handler for a click event
+* @param {MouseEvent} event - Occurs when mouse interacts with the window
+*/
 	onClick(event) {
 		// Stop if this is the end of a drag
 		if (event.currentTarget.window.drag) {
@@ -94,9 +95,9 @@ class Window {
 	}
 
 	/**
-	 * Handler for a scroll event
-	 * @param {MouseEvent} event - Occurs when mouse interacts with the window
-	 */
+* Handler for a scroll event
+* @param {MouseEvent} event - Occurs when mouse interacts with the window
+*/
 	onScroll(event) {
 		let rect = event.currentTarget.window.dom.getBoundingClientRect();
 		let placement = event.currentTarget.window.placement;
@@ -107,9 +108,9 @@ class Window {
 	}
 
 	/**
-	 * Handler for a move event
-	 * @param {MouseEvent} event - Occurs when mouse interacts with the window
-	 */
+* Handler for a move event
+* @param {MouseEvent} event - Occurs when mouse interacts with the window
+*/
 	onMove(event) {
 		let rect = event.currentTarget.window.dom.getBoundingClientRect();
 		let placement = event.currentTarget.window.placement;
@@ -123,9 +124,9 @@ class Window {
 	}
 
 	/**
-	 * Handler for a keypress event
-	 * @param {KeyboardEvent} event - Occurs when mouse interacts with the window
-	 */
+* Handler for a keypress event
+* @param {KeyboardEvent} event - Occurs when mouse interacts with the window
+*/
 	onKeyPress(event) {
 		// Get the local position and call the proper method
 		this.placement.onKeyPress(event.key, this.displays);
@@ -133,19 +134,19 @@ class Window {
 }
 
 /**
- * Implimentation for the Dispaly class responsible for dealing with the gritty
- * details of the Window
- */
+* Implimentation for the Dispaly class responsible for dealing with the gritty
+* details of the Window
+*/
 class Display {
-	/**
-	 * Member variables
-	 * @member {Boolean} active - Check for if the display is active
-	 * @member {ElementHTML[]} clickable - List of all clickable objects in the Display
-	 * @member {DOM} parent - The DOM associated with the Window class controlling the placement
-	 * @member {Position} offset - The placement of the Dispaly
-	 * @member {int} width - Width of the display
-	 * @member {int} height - Height of the display
-	 */
+/**
+* Member variables
+* @member {Boolean} active - Check for if the display is active
+* @member {ElementHTML[]} clickable - List of all clickable objects in the Display
+* @member {DOM} parent - The DOM associated with the Window class controlling the placement
+* @member {Position} offset - The placement of the Dispaly
+* @member {int} width - Width of the display
+* @member {int} height - Height of the display
+*/
 	active = false;
 	clickable = [];
 	parent = null;
@@ -154,10 +155,10 @@ class Display {
 	height = 0;
 
 	/**
-	 * Returns if the given position is inside the Display
-	 * @param {Position} position - The position to check if it is inside the Display
-	 * @returns {Boolean} - Returns true if inside the display
-	 */
+* Returns if the given position is inside the Display
+* @param {Position} position - The position to check if it is inside the Display
+* @returns {Boolean} - Returns true if inside the display
+*/
 	in(position) {
 		// Check if outside
 		let rect = this.parent.getBoundingClientRect();
@@ -173,30 +174,30 @@ class Display {
 	}
 
 	/**
-	 * Virtual helper that visually creates and activates a display.
-	 */
+* Virtual helper that visually creates and activates a display.
+*/
 	_activate() {
 
 	}
 
 	/**
-	 * Virtual helper function that removes a display from the visual window.
-	 */
+* Virtual helper function that removes a display from the visual window.
+*/
 	_deactivate() {
 
 	}
 
 	/**
-	 * Function that visually creates and activates a display.
-	 * @param {Position} offset - The display being removed
-	 * @param {Position} parent - Parent DOM to attach to the display
-	 * @param {int} width - Width of the display
-	 * @param {int} height - Height of the display
-	 * @throws - If Display._active === true
-	 */
+* Function that visually creates and activates a display.
+* @param {Position} offset - The display being removed
+* @param {Position} parent - Parent DOM to attach to the display
+* @param {int} width - Width of the display
+* @param {int} height - Height of the display
+* @throws - If Display._active === true
+*/
 	activate(offset, parent, width, height) {
 		if (this._active === true) {
-			throw new Error(`Cannot call Display.activate() when the Display is active!`);
+			throw new Error('Cannot call Display.activate() when the Display is active!');
 		}
 		this.offset = offset;
 		this.parent = parent;
@@ -207,12 +208,12 @@ class Display {
 	}
 
 	/**
-	 * Function that removes a display from the visual window.
-	 * @throws - If Display._active === false
-	 */
+* Function that removes a display from the visual window.
+* @throws - If Display._active === false
+*/
 	deactivate() {
 		if (this._active === false) {
-			throw new Error(`Cannot call Display.deactivate() when the Display is not active!`);
+			throw new Error('Cannot call Display.deactivate() when the Display is not active!');
 		}
 		this._deactivate();
 		this.active = false;
@@ -220,85 +221,85 @@ class Display {
 	}
 
 	/**
-	 * Function that defines what to do when the Display is clicked and no
-	 * clickable objects are able to be clicked. Unless overriden, nothing it done.
-	 * @param {Position} position - The position of the click
-	 */
+* Function that defines what to do when the Display is clicked and no
+* clickable objects are able to be clicked. Unless overriden, nothing it done.
+* @param {Position} position - The position of the click
+*/
 	onRightClick(position) {
 		return;
 	}
 
 	/**
-	 * Function that defines what to do when the Display is clicked and no
-	 * clickable objects are able to be clicked. Unless overriden, nothing it done.
-	 * @param {Position} position - The position of the click
-	 */
+* Function that defines what to do when the Display is clicked and no
+* clickable objects are able to be clicked. Unless overriden, nothing it done.
+* @param {Position} position - The position of the click
+*/
 	onLeftClick(position) {
 		return;
 	}
 
 	/**
-	 * Function that defines what to do when the Display is scrolled and no
-	 * clickable objects are able to be scrolled. Unless overriden, nothing it done.
-	 * @param {float} direction - The distance scrolled
-	 */
+* Function that defines what to do when the Display is scrolled and no
+* clickable objects are able to be scrolled. Unless overriden, nothing it done.
+* @param {float} direction - The distance scrolled
+*/
 	onScroll() {
 		return;
 	}
 
 	/**
-	 * Function that defines what to do when the Display is dragged on and no
-	 * clickable objects are able to be dragged. Unless overriden, nothing it done.
-	 * @param {float} dx - The movement in the x direction
-	 * @param {float} dy - The movement in the y direction
-	 */
+* Function that defines what to do when the Display is dragged on and no
+* clickable objects are able to be dragged. Unless overriden, nothing it done.
+* @param {float} dx - The movement in the x direction
+* @param {float} dy - The movement in the y direction
+*/
 	onDrag(dx, dy) {
 		return;
 	}
 
 	/**
-	 * Function that defines what happens when a key is pressed. Unless overriden,
-	 * nothing it done.
-	 * @param {String} key - The key pressed
-	 */
+* Function that defines what happens when a key is pressed. Unless overriden,
+* nothing it done.
+* @param {String} key - The key pressed
+*/
 	onKeyPress(key) {
 		return;
 	}
 }
 
 /**
- * Implimentation for the Window class responsible for placing Displays
- */
+* Implimentation for the Window class responsible for placing Displays
+*/
 class Placement {
-	/**
-	 * Member variables
-	 * @member {int} width - Width of the placement
-	 * @member {int} height - Height of the placement
-	 * @member {int} displayWidth - Height of the display
-	 * @member {int} displayHeight - Width of the display
-	 */
+/**
+* Member variables
+* @member {int} width - Width of the placement
+* @member {int} height - Height of the placement
+* @member {int} displayWidth - Height of the display
+* @member {int} displayHeight - Width of the display
+*/
 	width = 0;
 	height = 0;
 	displayWidth = 0;
 	displayHeight = 0;
 
 	/**
-	 * Inits the ideal display width and height
- 	 * @param {Position} displayWidth - Width of the window
- 	 * @param {Placement} displayHeight - Height of the window
-	 * @constructor
-	 */
+* Inits the ideal display width and height
+* @param {Position} displayWidth - Width of the window
+* @param {Placement} displayHeight - Height of the window
+* @constructor
+*/
 	constructor(displayWidth = null, displayHeight = null) {
 		this.displayWidth = displayWidth;
 		this.displayHeight = displayHeight;
 	}
 
 	/**
- 	 * Inits the placement with its width and height
- 	 * @param {Position} width - Width of the window
- 	 * @param {Placement} height - Height of the window
- 	 */
- 	init(width, height) {
+* Inits the placement with its width and height
+* @param {Position} width - Width of the window
+* @param {Placement} height - Height of the window
+*/
+	init(width, height) {
 		this.width = width;
 		this.height = height;
 		if (this.displayWidth == null) this.displayWidth = this.width;
@@ -306,36 +307,36 @@ class Placement {
 	}
 
 	/**
-	 * Virtual function that activates a display in the window. Must be overriden
-	 * by a subclass.
-	 * @param {DOM} parent - The DOM the display is in
-	 * @param {Display} display - The display being removed
-	 * @param {Array[Display]} allDisplays - All other existing displays
-	 * @throws If Placement.activateDisplay is not defined
-	 */
+* Virtual function that activates a display in the window. Must be overriden
+* by a subclass.
+* @param {DOM} parent - The DOM the display is in
+* @param {Display} display - The display being removed
+* @param {Array[Display]} allDisplays - All other existing displays
+* @throws If Placement.activateDisplay is not defined
+*/
 	activateDisplay(parent, display, allDisplays) {
 		throw 'Placement.activateDisplay is not defined!';
 	}
 
 	/**
-	 * Virtual function that removes a display from the visual window. Must be
-	 * overriden by a subclass.
-	 * @param {Display} display - The display being removed
-	 * @param {Array[Display]} allDisplays - All other existing displays
-	 * @throws If Placement.deactivateDisplay is not defined
-	 */
+* Virtual function that removes a display from the visual window. Must be
+* overriden by a subclass.
+* @param {Display} display - The display being removed
+* @param {Array[Display]} allDisplays - All other existing displays
+* @throws If Placement.deactivateDisplay is not defined
+*/
 	deactivateDisplay(display, allDisplays) {
 		throw 'Placement.deactivateDisplay is not defined!';
 	}
 
 	/**
-	 * Get the display or element in the display who is clicked on, then call the
-	 * proper function
-	 * @param {Position} position - The display to add
-	 * @param {Array[Display]} allDisplays - All existing displays
-	 * @param {String} functionName - The name of the function to call
-	 * @param {Array[]} args - Any additional arguments to apply to the function call
-	 */
+* Get the display or element in the display who is clicked on, then call the
+* proper function
+* @param {Position} position - The display to add
+* @param {Array[Display]} allDisplays - All existing displays
+* @param {String} functionName - The name of the function to call
+* @param {Array[]} args - Any additional arguments to apply to the function call
+*/
 	_call(position, allDisplays, functionName, args) {
 		let captured = false;
 		// Loop through all displays
@@ -362,55 +363,55 @@ class Placement {
 	}
 
 	/**
-	 * Call onRightClick for all displays
-	 * @param {Position} position - Position of the mouse
-	 * @param {Array[Display]} allDisplays - All existing displays
-	 * @returns {Boolean}
-	 */
+* Call onRightClick for all displays
+* @param {Position} position - Position of the mouse
+* @param {Array[Display]} allDisplays - All existing displays
+* @returns {Boolean}
+*/
 	onRightClick(position, allDisplays) {
-		this._call(position, allDisplays, "onRightClick", [position]);
+		this._call(position, allDisplays, 'onRightClick', [position]);
 		// Stop the context menu from appearing
 		return false;
 	}
 
 	/**
-	 * Call onRightClick for all displays
-	 * @param {Position} position - Position of the mouse
-	 * @param {Array[Display]} allDisplays - All existing displays
-	 * @returns {Boolean}
-	 */
+* Call onRightClick for all displays
+* @param {Position} position - Position of the mouse
+* @param {Array[Display]} allDisplays - All existing displays
+* @returns {Boolean}
+*/
 	onLeftClick(position, allDisplays) {
-		this._call(position, allDisplays, "onLeftClick", [position]);
+		this._call(position, allDisplays, 'onLeftClick', [position]);
 		// Stop the context menu from appearing
 		return false;
 	}
 
 	/**
-	 * Call onRightClick for all displays
-	 * @param {Position} position - Position of the mouse
-	 * @param {Array[Display]} allDisplays - All existing displays
-	 * @param {float} direction - The distance scrolled
-	 */
+* Call onRightClick for all displays
+* @param {Position} position - Position of the mouse
+* @param {Array[Display]} allDisplays - All existing displays
+* @param {float} direction - The distance scrolled
+*/
 	onScroll(position, allDisplays, direction) {
-		this._call(position, allDisplays, "onScroll", [direction]);
+		this._call(position, allDisplays, 'onScroll', [direction]);
 	}
 
 	/**
-	 * Call onRightClick for all displays
-	 * @param {Position} position - The display to add
-	 * @param {Array[Display]} allDisplays - All existing displays
-	 * @param {float} dx - The movement in the x direction
-	 * @param {float} dy - The movement in the y direction
-	 */
+* Call onRightClick for all displays
+* @param {Position} position - The display to add
+* @param {Array[Display]} allDisplays - All existing displays
+* @param {float} dx - The movement in the x direction
+* @param {float} dy - The movement in the y direction
+*/
 	onDrag(position, allDisplays, dx, dy) {
-		this._call(position, allDisplays, "onDrag", [dx, dy]);
+		this._call(position, allDisplays, 'onDrag', [dx, dy]);
 	}
 
 	/**
-	 * Call onRightClick for all displays
-	 * @param {String} key - The key pressed
-	 * @param {Array[Display]} allDisplays - All existing displays
-	 */
+* Call onRightClick for all displays
+* @param {String} key - The key pressed
+* @param {Array[Display]} allDisplays - All existing displays
+*/
 	onKeyPress(key, allDisplays) {
 		// Loop through all displays
 		allDisplays.forEach((display, i) => {

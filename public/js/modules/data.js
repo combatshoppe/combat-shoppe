@@ -4,7 +4,7 @@
  */
 
 /** Create a new AngularJS module */
-var DataModule = angular.module('DataModule', ['DataUtilsModule'])
+var DataModule = angular.module('DataModule', ['DataUtilsModule']); // eslint-disable-line no-unused-vars
 
 /** Create a counter var and lock for the DataSchema to have unique ids */
 DataModule.counter = 0;
@@ -54,8 +54,8 @@ class DataSchema {
 	 * @throws If this.key is not defined when it is NOT an optional variable
 	 * @constructor
 	 */
-	 constructor(object) { this.make(object); }
-};
+	constructor(object) { this.make(object); }
+}
 
 /**
  * Class used to hold Action data
@@ -93,7 +93,7 @@ class ActionSchema extends DataSchema {
 	 * @throws If this.key is not defined when it is NOT an optional variable
 	 * @constructor
 	 */
-	 constructor(object) { super(); this.make(object); }
+	constructor(object) { super(); this.make(object); }
 }
 
 class CreatureSchema extends DataSchema {
@@ -130,7 +130,7 @@ class CreatureSchema extends DataSchema {
 	pb = 1;
 	hp = 10;
 	size = 1;
-	cr = "0";
+	cr = '0';
 	dmgResistances = [];
 	dmgImmunities = [];
 	darkvision = 0;
@@ -139,8 +139,8 @@ class CreatureSchema extends DataSchema {
 	defaultBehavior = 0;
 	features = [];
 
-    constructor(object) {
-        super(); this.make(object);
+	constructor(object) {
+		super(); this.make(object);
 	}
 
 }

@@ -30,3 +30,10 @@ node server.js
 #### Routing
 
 To route outside traffic to the server, set up [port forwarding](https://www.lifewire.com/how-to-port-forward-4163829) to the computer running the server on port 3000.
+
+## Development
+To run the linter, use the following command from the main directory:
+
+```
+node linter.js
+```

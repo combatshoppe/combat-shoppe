@@ -1,25 +1,18 @@
+'use strict';
+
 // modules
 const express = require('express');
 const app = express();
-var mongoose = require('mongoose');
 
 // configuration ===========================================
 
 // set our port
 const PORT = 3000;
 
-// config files
-var db = require('./config/db');
-//console.log("connecting--", db);
-// mongoose.connect(db.url); // Mongoose connection created - disable until db is created
-
 //defining route
-app.get('/tproute', function (req, res) {
-   res.send('This is routing for the application developed using Node and Express...');
+app.get('/tproute', function (ignore, res) {
+	res.send('This is routing for the application developed using Node and Express...');
 });
-
-// Angular controller functions
-var db = require('./config/db');
 
 // setting up angular
 app.use(express.static(__dirname + '/public'));

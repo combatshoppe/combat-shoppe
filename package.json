@@ -27,6 +27,15 @@
     "bower": "^1.8.14",
     "express": "^4.17.2",
     "jquery": "^3.6.0",
-    "mongoose": "^6.2.1"
+    "mongoose": "^6.2.1",
+    "shelljs": "^0.8.5"
+  },
+  "devDependencies": {
+    "eslint": "^8.14.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.2.0",
+    "eslint-plugin-promise": "^6.0.0",
+    "eslint-plugin-react": "^7.29.4"
   }
 }
